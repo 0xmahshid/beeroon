@@ -21,7 +21,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         </section>
 
         <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"><div><span className="text-[10px] font-black tracking-[0.2em] text-[#ed0b55]">LOCAL BUSINESSES</span><h2 className="mt-2 text-2xl font-black text-[#382d32]">کسب‌وکارهای این دسته</h2></div><span className="rounded-full bg-[#fff0f3] px-4 py-2 text-xs font-black text-[#c70d46]">{businesses.length} نتیجه</span></div>
-        <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{businesses.map((business) => <BusinessCard key={business.id} b={business} />)}{businesses.length === 0 && <div className="col-span-full rounded-[1.7rem] border border-dashed border-[#d8c8c2] bg-white py-16 text-center"><p className="font-black text-[#3b2d2e]">هنوز کسب‌وکاری در این دسته ثبت نشده.</p><p className="mt-2 text-sm text-[#8a7b79]">اولین کسب‌وکار این دسته باش.</p><Link href="/register-business" className="mt-5 inline-flex rounded-xl bg-[#ed0b55] px-5 py-3 text-sm font-black text-white">ثبت کسب‌وکار</Link></div>}</div>
+        <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{businesses.map((business) => <BusinessCard key={business.id} b={business} />)}{businesses.length === 0 && <div className="col-span-full rounded-[1.7rem] border border-dashed border-[#d8c8c2] bg-white py-16 text-center"><p className="font-black text-[#3b2d2e]">هنوز کسب‌وکاری در این دسته ثبت نشده.</p><p className="mt-2 text-sm text-[#8a7b79]">اولین کسب‌وکار این دسته باش.</p><Link href="/register-business" className="mt-5 inline-flex rounded-xl bg-[#ed0b55] px-5 py-3 text-sm font-black text-white">ثبت کسب‌وکار</Link></div>}</div>
       </div>
     </div>
   );
