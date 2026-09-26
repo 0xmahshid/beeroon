@@ -14,6 +14,7 @@ export default function Header() {
           <Link href="/" className="transition hover:text-[#c91442]">کشف کن</Link>
           <Link href="/category/food" className="transition hover:text-[#c91442]">دسته‌بندی‌ها</Link>
           <Link href="/register-business" className="transition hover:text-[#c91442]">ثبت کسب‌وکار</Link>
+          <Link href="/register-online-shop" className="transition hover:text-[#287c68]">ثبت آنلاین‌شاپ</Link>
         </nav>
         <Link
           href="/register-business"
