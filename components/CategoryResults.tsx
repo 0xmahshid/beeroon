@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import CategoryIcon from "@/components/CategoryIcon";
 import BusinessCard from "@/components/BusinessCard";
 import type { Business, Category, Subcategory } from "@/lib/types";
@@ -13,6 +14,7 @@ type Props = {
   selected?: Subcategory;
   subcategories: Subcategory[];
   businesses: Business[];
+  initialQuery?: { type?: string; price?: string; sort?: string };
 };
 
 type SortOption = "relevant" | "newest" | "name";
@@ -29,6 +31,18 @@ const priceOptions: Array<{ value: PriceTier; label: string }> = [
   { value: 2, label: "متوسط" },
   { value: 3, label: "ویژه" },
 ];
+
+function parseTypes(value?: string): BusinessType[] {
+  return (value?.split(",") || []).filter((item): item is BusinessType => item === "physical" || item === "online_shop");
+}
+
+function parsePrices(value?: string): PriceTier[] {
+  return (value?.split(",") || []).map(Number).filter((item): item is PriceTier => item === 1 || item === 2 || item === 3);
+}
+
+function parseSort(value?: string): SortOption {
+  return value === "newest" || value === "name" ? value : "relevant";
+}
 
 function FilterPanel({
   types,
@@ -83,10 +97,12 @@ function FilterPanel({
   );
 }
 
-export default function CategoryResults({ slug, sub, category, selected, subcategories, businesses }: Props) {
-  const [types, setTypes] = useState<BusinessType[]>([]);
-  const [prices, setPrices] = useState<PriceTier[]>([]);
-  const [sort, setSort] = useState<SortOption>("relevant");
+export default function CategoryResults({ slug, sub, category, selected, subcategories, businesses, initialQuery }: Props) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const [types, setTypes] = useState<BusinessType[]>(() => parseTypes(initialQuery?.type));
+  const [prices, setPrices] = useState<PriceTier[]>(() => parsePrices(initialQuery?.price));
+  const [sort, setSort] = useState<SortOption>(() => parseSort(initialQuery?.sort));
   const categoryName = category?.name || "دسته‌بندی";
   const iconSlug = category?.slug || slug;
   const isSubcategory = Boolean(sub && selected);
@@ -94,8 +110,14 @@ export default function CategoryResults({ slug, sub, category, selected, subcate
   const title = selected?.name || categoryName;
   const eyebrow = isSubcategory ? "تخصص انتخاب‌شده" : "دسته‌بندی";
   const description = isSubcategory
-    ? "گزینه‌های مرتبط با این تخصص را نزدیک و مرتب پیدا کن."
-    : "کسب‌وکارهای واقعی این حوزه را نزدیک و مرتب ببین.";
+    ? "گزینه‌های مرتبط با این تخصص را یک‌جا ببین و قبل از راه افتادن انتخاب کن."
+    : "کسب‌وکارهای این حوزه را مرتب ببین، مقایسه کن و بعد راه بیفت.";
+
+  useEffect(() => {
+    setTypes(parseTypes(initialQuery?.type));
+    setPrices(parsePrices(initialQuery?.price));
+    setSort(parseSort(initialQuery?.sort));
+  }, [initialQuery?.price, initialQuery?.sort, initialQuery?.type]);
 
   const filteredBusinesses = useMemo(() => {
     const filtered = businesses.filter((business) => {
@@ -114,15 +136,29 @@ export default function CategoryResults({ slug, sub, category, selected, subcate
   }, [businesses, prices, sort, types]);
 
   const hasFilters = types.length > 0 || prices.length > 0;
+  const syncUrl = (nextTypes: BusinessType[], nextPrices: PriceTier[], nextSort: SortOption) => {
+    const query = new URLSearchParams();
+    if (nextTypes.length > 0) query.set("type", nextTypes.join(","));
+    if (nextPrices.length > 0) query.set("price", nextPrices.join(","));
+    if (nextSort !== "relevant") query.set("sort", nextSort);
+    const queryString = query.toString();
+    router.replace(pathname + (queryString ? "?" + queryString : ""), { scroll: false });
+  };
   const toggleType = (value: BusinessType) => {
-    setTypes((current) => current.includes(value) ? current.filter((item) => item !== value) : [...current, value]);
+    const next = types.includes(value) ? types.filter((item) => item !== value) : [...types, value];
+    setTypes(next);
+    syncUrl(next, prices, sort);
   };
   const togglePrice = (value: PriceTier) => {
-    setPrices((current) => current.includes(value) ? current.filter((item) => item !== value) : [...current, value]);
+    const next = prices.includes(value) ? prices.filter((item) => item !== value) : [...prices, value];
+    setPrices(next);
+    syncUrl(types, next, sort);
   };
   const clearFilters = () => {
     setTypes([]);
     setPrices([]);
+    setSort("relevant");
+    syncUrl([], [], "relevant");
   };
 
   return (
@@ -201,7 +237,7 @@ export default function CategoryResults({ slug, sub, category, selected, subcate
               </div>
               <label className="flex items-center gap-2 text-[10px] font-bold text-[#87737b]">
                 <span>مرتب‌سازی</span>
-                <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)} className="rounded-lg border border-[#eadfe2] bg-[#fffafa] px-2.5 py-2 text-xs font-bold text-[#3d1833] outline-none">
+                <select value={sort} onChange={(event) => { const next = event.target.value as SortOption; setSort(next); syncUrl(types, prices, next); }} className="rounded-lg border border-[#eadfe2] bg-[#fffafa] px-2.5 py-2 text-xs font-bold text-[#3d1833] outline-none">
                   <option value="relevant">مرتبط‌ترین</option>
                   <option value="newest">جدیدترین</option>
                   <option value="name">الفبایی</option>

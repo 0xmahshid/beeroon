@@ -40,3 +40,11 @@ export async function getBusinesses(params: { categorySlug?: string; subcategory
   if (params.citySlug) query = query.eq("city_id", params.citySlug);
   const { data, error } = await query; if (error) return []; return (data as Business[]).sort(() => Math.random() - 0.5);
 }
+
+export async function getBusinessById(id: string): Promise<Business | null> {
+  const fallback = seedBusinesses.find((business) => business.id === id && business.status === "approved") || null;
+  if (!configured) return fallback;
+  const { data, error } = await supabase.from("businesses").select("*, online_shop_details(*)").eq("id", id).eq("status", "approved").maybeSingle();
+  if (error || !data) return fallback;
+  return data as Business;
+}

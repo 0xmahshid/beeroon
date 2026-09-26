@@ -3,8 +3,8 @@ import "./globals.css";
 import Header from "@/components/Header";
 
 export const metadata: Metadata = {
-  title: "بیرون | کشف کسب‌وکارهای خوب همین نزدیکی",
-  description: "کافه، فروشگاه، متخصص و خدمات شهر را ساده‌تر پیدا کن.",
+  title: "بیرون | قبل از راه افتادن، پیداش کن",
+  description: "چیزی را که در شهرت می‌خواهی جست‌وجو کن، آدرس‌های مرتبط را یک‌جا ببین و بعد راه بیفت.",
   manifest: "/manifest.json",
 };
 
@@ -24,7 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <img src="/beeroon-mark.svg" alt="" className="h-10 w-10 rounded-xl" />
               <div>
                 <p className="font-black text-[#ed0b55]">بیرون</p>
-                <p className="mt-1 text-xs text-[#9b898d]">خوبِ نزدیکت را پیدا کن.</p>
+                <p className="mt-1 text-xs text-[#9b898d]">پیداش کن، بعد راه بیفت.</p>
               </div>
             </div>
             <div className="flex flex-wrap gap-4 text-xs font-bold text-[#7e6d71]">
