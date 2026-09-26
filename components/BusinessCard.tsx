@@ -13,9 +13,9 @@ export default function BusinessCard({ b }: { b: Business }) {
   const instagramUrl = b.instagram?.startsWith("http") ? b.instagram : b.instagram ? "https://instagram.com/" + b.instagram.replace(/^@/, "") : null;
   const mapUrl = b.neshan ? (b.neshan.startsWith("http") ? b.neshan : `https://neshan.org/maps/search/${encodeURIComponent(b.neshan)}`) : b.lat && b.lng ? `https://neshan.org/maps/@${b.lat},${b.lng},16z` : null;
   return (
-    <article className="card-hover group relative overflow-hidden rounded-2xl border border-[#e4e4e7] bg-white p-4">
+    <article className="card-hover group relative overflow-hidden rounded-[1.35rem] border border-[#eadfe2] bg-white p-4 shadow-[0_8px_24px_-20px_rgba(111,35,50,.55)]">
       <div className="flex items-start gap-3">
-        <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-[#fff0f2] text-xl text-[#ef4056]">✦</div>
+        <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#ffdce4] to-[#fff3f5] text-xl text-[#ef4056] shadow-[0_8px_16px_-12px_rgba(239,64,86,.7)]">✦</div>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-1.5">
             <h3 className="truncate text-sm font-black text-[#27272a]">{b.name}</h3>
