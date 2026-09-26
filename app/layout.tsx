@@ -22,15 +22,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <Suspense fallback={<div className="h-[68px] border-b border-[#eadfe2] bg-white" />}><Header cities={cities} /></Suspense>
         <main>{children}</main>
         <footer className="mt-16 border-t border-[#eadfe2] bg-white">
-          <div className="mx-auto flex max-w-7xl flex-col gap-5 px-5 py-9 sm:flex-row sm:items-center sm:justify-between lg:px-8">
-            <div className="flex items-center gap-3">
-              <img src="/beeroon-mark.svg" alt="" className="h-10 w-10 rounded-xl" />
+          <div className="mx-auto flex max-w-7xl flex-col items-center gap-5 px-5 py-9 text-center sm:flex-row sm:items-center sm:justify-between sm:text-right lg:px-8">
+            <div className="flex items-center justify-center gap-3 sm:justify-start">
+              <img src="/beeroon-mark.svg" alt="" className="block h-10 w-10 rounded-xl object-contain" />
               <div>
                 <p className="font-black text-[#ed0b55]">بیرون</p>
                 <p className="mt-1 text-xs text-[#9b898d]">پیداش کن، بعد راه بیفت.</p>
               </div>
             </div>
-            <div className="flex flex-wrap gap-4 text-xs font-bold text-[#7e6d71]">
+            <div className="flex flex-wrap justify-center gap-4 text-xs font-bold text-[#7e6d71] sm:justify-start">
               <a href="/#directory">دسته‌بندی‌ها</a>
               <a href="/register-business">ثبت کسب‌وکار</a>
               <a href="/register-online-shop">ثبت آنلاین‌شاپ</a>
