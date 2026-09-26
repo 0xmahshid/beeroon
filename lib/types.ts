@@ -52,4 +52,5 @@ export type Business = {
   is_supporter: boolean;
   status: "pending" | "approved" | "rejected";
   created_at: string;
+  online_shop_details?: OnlineShopDetails | OnlineShopDetails[] | null;
 };
