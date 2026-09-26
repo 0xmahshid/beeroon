@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import CategoryIcon from "@/components/CategoryIcon";
 import BusinessCard from "@/components/BusinessCard";
-import type { Business, Category, Subcategory } from "@/lib/types";
+import type { Business, Category, City, Subcategory } from "@/lib/types";
 
 type Props = {
   slug: string;
@@ -14,6 +14,7 @@ type Props = {
   selected?: Subcategory;
   subcategories: Subcategory[];
   businesses: Business[];
+  city: City;
   initialQuery?: { type?: string; price?: string; sort?: string };
 };
 
@@ -47,11 +48,13 @@ function parseSort(value?: string): SortOption {
 function FilterPanel({
   types,
   prices,
+  city,
   onTypeToggle,
   onPriceToggle,
 }: {
   types: BusinessType[];
   prices: PriceTier[];
+  city: City;
   onTypeToggle: (value: BusinessType) => void;
   onPriceToggle: (value: PriceTier) => void;
 }) {
@@ -90,14 +93,14 @@ function FilterPanel({
         </div>
       </div>
       <div className="mt-5 border-t border-[#f5ebed] pt-5">
-        <p className="text-xs font-black text-[#3d1833]">محدوده</p>
-        <p className="mt-2 text-[11px] leading-6 text-[#a18e95]">فعلاً گزینه‌های شهر مشهد را می‌بینی.</p>
+        <p className="text-xs font-black text-[#3d1833]">شهر فعال</p>
+        <p className="mt-2 text-[11px] leading-6 text-[#a18e95]">{city.name} · برای تغییر از انتخاب‌گر بالای صفحه استفاده کن.</p>
       </div>
     </div>
   );
 }
 
-export default function CategoryResults({ slug, sub, category, selected, subcategories, businesses, initialQuery }: Props) {
+export default function CategoryResults({ slug, sub, category, selected, subcategories, businesses, city, initialQuery }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const [types, setTypes] = useState<BusinessType[]>(() => parseTypes(initialQuery?.type));
@@ -110,8 +113,9 @@ export default function CategoryResults({ slug, sub, category, selected, subcate
   const title = selected?.name || categoryName;
   const eyebrow = isSubcategory ? "تخصص انتخاب‌شده" : "دسته‌بندی";
   const description = isSubcategory
-    ? "گزینه‌های مرتبط با این تخصص را یک‌جا ببین و قبل از راه افتادن انتخاب کن."
-    : "کسب‌وکارهای این حوزه را مرتب ببین، مقایسه کن و بعد راه بیفت.";
+    ? `گزینه‌های مرتبط با این تخصص در ${city.name} را یک‌جا ببین و قبل از راه افتادن انتخاب کن.`
+    : `کسب‌وکارهای این حوزه در ${city.name} را مرتب ببین، مقایسه کن و بعد راه بیفت.`;
+  const withCity = (path: string) => path + "?city=" + encodeURIComponent(city.slug);
 
   useEffect(() => {
     setTypes(parseTypes(initialQuery?.type));
@@ -141,8 +145,9 @@ export default function CategoryResults({ slug, sub, category, selected, subcate
     if (nextTypes.length > 0) query.set("type", nextTypes.join(","));
     if (nextPrices.length > 0) query.set("price", nextPrices.join(","));
     if (nextSort !== "relevant") query.set("sort", nextSort);
-    const queryString = query.toString();
-    router.replace(pathname + (queryString ? "?" + queryString : ""), { scroll: false });
+    query.set("city", city.slug);
+    const finalQueryString = query.toString();
+    router.replace(pathname + (finalQueryString ? "?" + finalQueryString : ""), { scroll: false });
   };
   const toggleType = (value: BusinessType) => {
     const next = types.includes(value) ? types.filter((item) => item !== value) : [...types, value];
@@ -165,7 +170,7 @@ export default function CategoryResults({ slug, sub, category, selected, subcate
     <div className="min-h-screen bg-[#fcf7f8]">
       <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6 sm:py-8 lg:px-8">
         <div className="flex items-center justify-between">
-          <Link href={isSubcategory ? "/category/" + slug : "/"} className="inline-flex items-center gap-2 rounded-xl border border-[#eadfe2] bg-white px-3 py-2 text-xs font-bold text-[#6f5c64] shadow-[0_8px_18px_-18px_rgba(70,20,38,.5)] transition hover:border-[#ef4056] hover:text-[#ef4056]">
+             <Link href={withCity(isSubcategory ? "/category/" + slug : "/")} className="inline-flex items-center gap-2 rounded-xl border border-[#eadfe2] bg-white px-3 py-2 text-xs font-bold text-[#6f5c64] shadow-[0_8px_18px_-18px_rgba(70,20,38,.5)] transition hover:border-[#ef4056] hover:text-[#ef4056]">
             ← <span>{isSubcategory ? "بازگشت به " + categoryName : "بازگشت به خانه"}</span>
           </Link>
           <span className="hidden text-[11px] font-bold text-[#a18e95] sm:block">بیرون / {categoryName}</span>
@@ -184,14 +189,14 @@ export default function CategoryResults({ slug, sub, category, selected, subcate
               <CategoryIcon slug={iconSlug} className="h-12 w-12 sm:h-14 sm:w-14" />
             </div>
           </div>
-          <div className="relative mt-6 grid grid-cols-2 gap-2 sm:max-w-md">
+           <div className="relative mt-6 grid grid-cols-2 gap-2 sm:max-w-md">
             <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm">
               <span className="block text-[10px] font-bold text-[#ffdce4]">نتیجه‌های این بخش</span>
               <strong className="mt-1 block text-lg font-black text-white">{businesses.length}</strong>
             </div>
             <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm">
-              <span className="block text-[10px] font-bold text-[#ffdce4]">تخصص‌های قابل انتخاب</span>
-              <strong className="mt-1 block text-lg font-black text-white">{subcategories.length}</strong>
+               <span className="block text-[10px] font-bold text-[#ffdce4]">شهر فعال</span>
+               <strong className="mt-1 block text-lg font-black text-white">{city.name}</strong>
             </div>
           </div>
         </section>
@@ -205,8 +210,8 @@ export default function CategoryResults({ slug, sub, category, selected, subcate
             <span className="rounded-full bg-[#fff1f4] px-2.5 py-1 text-[10px] font-bold text-[#d9364b]">{subcategories.length} مورد</span>
           </div>
           <div className="mt-3 flex snap-x snap-mandatory gap-2 overflow-x-auto pb-1 [scrollbar-width:none]">
-            <Link href={"/category/" + slug} className={"shrink-0 snap-start rounded-xl px-4 py-2.5 text-xs font-black transition " + (activeSlug === "__all__" ? "bg-[#ef4056] text-white shadow-[0_8px_16px_-12px_rgba(239,64,86,.8)]" : "border border-[#eadfe2] bg-white text-[#6f5c64] hover:border-[#ef4056] hover:text-[#ef4056]")}>همه</Link>
-            {subcategories.map((item) => <Link key={item.id} href={"/category/" + slug + "/" + item.slug} className={"shrink-0 snap-start rounded-xl px-4 py-2.5 text-xs font-bold transition " + (activeSlug === item.slug ? "bg-[#ef4056] text-white shadow-[0_8px_16px_-12px_rgba(239,64,86,.8)]" : "border border-[#eadfe2] bg-white text-[#6f5c64] hover:border-[#ef4056] hover:text-[#ef4056]")}>{item.name}</Link>)}
+             <Link href={withCity("/category/" + slug)} className={"shrink-0 snap-start rounded-xl px-4 py-2.5 text-xs font-black transition " + (activeSlug === "__all__" ? "bg-[#ef4056] text-white shadow-[0_8px_16px_-12px_rgba(239,64,86,.8)]" : "border border-[#eadfe2] bg-white text-[#6f5c64] hover:border-[#ef4056] hover:text-[#ef4056]")}>همه</Link>
+             {subcategories.map((item) => <Link key={item.id} href={withCity("/category/" + slug + "/" + item.slug)} className={"shrink-0 snap-start rounded-xl px-4 py-2.5 text-xs font-bold transition " + (activeSlug === item.slug ? "bg-[#ef4056] text-white shadow-[0_8px_16px_-12px_rgba(239,64,86,.8)]" : "border border-[#eadfe2] bg-white text-[#6f5c64] hover:border-[#ef4056] hover:text-[#ef4056]")}>{item.name}</Link>)}
           </div>
         </section>
 
@@ -216,7 +221,7 @@ export default function CategoryResults({ slug, sub, category, selected, subcate
             <span className="text-[11px] font-bold text-[#ef4056]">{hasFilters ? "فعال است" : "همه گزینه‌ها"}</span>
           </summary>
           <div className="mt-4 border-t border-[#f5ebed] pt-4">
-            <FilterPanel types={types} prices={prices} onTypeToggle={toggleType} onPriceToggle={togglePrice} />
+             <FilterPanel city={city} types={types} prices={prices} onTypeToggle={toggleType} onPriceToggle={togglePrice} />
           </div>
         </details>
 
@@ -226,7 +231,7 @@ export default function CategoryResults({ slug, sub, category, selected, subcate
               <h2 className="text-sm font-black text-[#3d1833]">فیلترها</h2>
               {hasFilters && <button type="button" onClick={clearFilters} className="text-[10px] font-bold text-[#ef4056] hover:text-[#d9364b]">پاک کردن</button>}
             </div>
-            <FilterPanel types={types} prices={prices} onTypeToggle={toggleType} onPriceToggle={togglePrice} />
+             <FilterPanel city={city} types={types} prices={prices} onTypeToggle={toggleType} onPriceToggle={togglePrice} />
           </aside>
 
           <main className="min-w-0">
@@ -258,8 +263,8 @@ export default function CategoryResults({ slug, sub, category, selected, subcate
                   <p className="mt-2 text-xs leading-7 text-[#87737b]">{businesses.length > 0 ? "فیلترها را کمی بازتر کن تا گزینه‌های بیشتری ببینی." : "اگر کسب‌وکاری را می‌شناسی، کمک کن تا این بخش برای بقیه هم مفیدتر شود."}</p>
                   <div className="mt-5 flex flex-wrap justify-center gap-2">
                     {businesses.length > 0 && <button type="button" onClick={clearFilters} className="rounded-xl bg-[#ef4056] px-5 py-3 text-xs font-black text-white transition hover:bg-[#d9364b]">پاک کردن فیلترها</button>}
-                    <Link href="/register-business" className="rounded-xl border border-[#eadfe2] bg-white px-5 py-3 text-xs font-bold text-[#6f5c64] transition hover:border-[#ef4056] hover:text-[#ef4056]">ثبت کسب‌وکار</Link>
-                    <Link href="/" className="rounded-xl border border-[#eadfe2] bg-white px-5 py-3 text-xs font-bold text-[#6f5c64] transition hover:border-[#ef4056] hover:text-[#ef4056]">کشف دسته‌های دیگر</Link>
+                    <Link href={withCity("/register-business")} className="rounded-xl border border-[#eadfe2] bg-white px-5 py-3 text-xs font-bold text-[#6f5c64] transition hover:border-[#ef4056] hover:text-[#ef4056]">ثبت کسب‌وکار</Link>
+                    <Link href={withCity("/")} className="rounded-xl border border-[#eadfe2] bg-white px-5 py-3 text-xs font-bold text-[#6f5c64] transition hover:border-[#ef4056] hover:text-[#ef4056]">کشف دسته‌های دیگر</Link>
                   </div>
                 </div>
               </div>
