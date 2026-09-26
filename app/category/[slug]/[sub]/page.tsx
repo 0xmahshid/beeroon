@@ -10,7 +10,7 @@ export default async function SubcategoryPage({ params }: { params: Promise<{ sl
   return (
     <div className="min-h-screen bg-[#f5f5f5]">
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <Link href="/category/${slug}" className="text-xs font-bold text-[#71717a] hover:text-[#ef4056]">← بازگشت</Link>
+        <Link href={"/category/" + slug} className="text-xs font-bold text-[#71717a] hover:text-[#ef4056]">← بازگشت</Link>
         <div className="mt-5 rounded-2xl border border-[#e4e4e7] bg-white p-5 sm:p-7">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div><span className="text-[10px] font-bold text-[#ef4056]">تخصص انتخاب‌شده</span><h1 className="mt-2 text-2xl font-black text-[#27272a] sm:text-3xl">{selected?.name || "کسب‌وکارهای محلی"}</h1><p className="mt-2 text-sm text-[#71717a]">کسب‌وکارهای مرتبط را ساده و مرتب پیدا کن.</p></div>
