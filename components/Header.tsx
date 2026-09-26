@@ -7,7 +7,7 @@ export default function Header() {
     <header className="sticky top-0 z-40 border-b border-[#eadfd7]/80 bg-white/95 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 lg:px-8">
         <Link href="/" className="flex items-center gap-3">
-          <img src="/beeroon-logo.png?v=2" alt="لوگوی بیرون" className="h-11 w-11 rounded-xl object-contain" />
+          <img src="/beeroon-logo-final.png?v=3" alt="لوگوی بیرون" className="h-11 w-11 rounded-xl object-contain" />
           <span className="text-xl font-black tracking-tight text-[#c91442]">بیرون</span>
         </Link>
         <nav className="hidden items-center gap-7 text-sm font-bold text-[#695b5a] md:flex">

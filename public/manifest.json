@@ -9,6 +9,6 @@
   "lang": "fa",
   "dir": "rtl",
   "icons": [
-    { "src": "/beeroon-logo.png?v=2", "sizes": "any", "type": "image/png" }
+    { "src": "/beeroon-logo-final.png?v=3", "sizes": "any", "type": "image/png" }
   ]
 }
