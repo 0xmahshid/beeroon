@@ -2043,6 +2043,7 @@ create index if not exists businesses_social_links_gin_idx
   on public.businesses using gin (social_links);
 
 -- Replace the old online-shop submission function with the social-links-aware version.
+-- Keep the four legacy columns populated while accepting the extensible social_links object.
 drop function if exists public.submit_online_shop(text, text, text, text, text, text, text, text[], text[], text);
 
 create or replace function public.submit_online_shop(
@@ -2064,6 +2065,7 @@ set search_path = public
 as $$
 declare
   v_business_id uuid;
+  v_social_links jsonb := coalesce(p_social_links, '{}'::jsonb);
 begin
   if coalesce(array_length(p_shipping_methods, 1), 0) = 0 then
     raise exception 'حداقل یک روش ارسال را انتخاب کنید';
@@ -2072,22 +2074,25 @@ begin
     raise exception 'حداقل یک روش پرداخت را انتخاب کنید';
   end if;
 
-  insert into businesses (name, city_id, phone, instagram, social_links, business_type, status)
+  insert into public.businesses (
+    name, city_id, phone, instagram, telegram, bale, whatsapp,
+    social_links, business_type, status
+  )
   values (
     nullif(trim(p_name), ''),
     coalesce(nullif(trim(p_city_id), ''), 'mashhad'),
     nullif(trim(p_phone), ''),
-    nullif(trim(p_instagram), ''),
-    jsonb_strip_nulls(
-      coalesce(p_social_links, '{}'::jsonb) ||
-      jsonb_build_object('instagram', nullif(trim(p_instagram), ''))
-    ),
+    nullif(trim(coalesce(v_social_links->>'instagram', p_instagram)), ''),
+    nullif(trim(v_social_links->>'telegram'), ''),
+    nullif(trim(v_social_links->>'bale'), ''),
+    nullif(trim(v_social_links->>'whatsapp'), ''),
+    jsonb_strip_nulls(v_social_links),
     'online_shop',
     'pending'
   )
   returning id into v_business_id;
 
-  insert into online_shop_details (
+  insert into public.online_shop_details (
     business_id, website_url, sales_type, shipping_area,
     shipping_methods, payment_methods, specialty_category
   ) values (
