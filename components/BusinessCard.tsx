@@ -12,8 +12,8 @@ function SocialLink({
   tone?: "neutral" | "red" | "gold" | "blue";
 }) {
   const tones = {
-    neutral: "border-[#e8ded8] text-[#655756] hover:border-[#c91442]/40 hover:text-[#c91442]",
-    red: "border-[#f0c6d1] bg-[#fff6f8] text-[#b6113d] hover:bg-[#f9e4e9]",
+    neutral: "border-[#e8ded8] text-[#655756] hover:border-[#ed0b55]/40 hover:text-[#ed0b55]",
+    red: "border-[#f0c6d1] bg-[#fff6f8] text-[#d4134e] hover:bg-[#f9e4e9]",
     gold: "border-[#ead9a9] bg-[#fffaf0] text-[#8f6d22] hover:bg-[#f8f0da]",
     blue: "border-[#cedeea] bg-[#f4f9fc] text-[#2c668f] hover:bg-[#e6f2fa]",
   };
@@ -43,14 +43,14 @@ export default function BusinessCard({ b }: { b: Business }) {
       : null;
 
   return (
-    <article className="card-hover rounded-3xl border border-[#eadfd7] bg-white p-5 shadow-[0_12px_35px_-30px_rgba(77,30,36,0.8)]">
+    <article className="card-hover relative overflow-hidden rounded-3xl border border-[#f0dfe0] bg-white p-5 shadow-[0_12px_35px_-30px_rgba(77,30,36,0.8)] before:absolute before:inset-x-0 before:top-0 before:h-1 before:bg-gradient-to-l before:from-[#ed0b55] before:to-[#ff9daf]">
       <div className="flex items-start justify-between gap-3">
         <div>
           <h3 className="font-black text-[#302324]">{b.name}</h3>
           {b.address && <p className="mt-1 text-sm text-[#877876]">{b.address}</p>}
         </div>
         {b.business_type === "online_shop" && (
-          <span className="rounded-full border border-[#cfe6df] bg-[#f1fbf7] px-2.5 py-1 text-[11px] font-bold text-[#287c68]">آنلاین‌شاپ</span>
+          <span className="rounded-full border border-[#c9eee4] bg-[#e8f8f2] px-2.5 py-1 text-[11px] font-bold text-[#38a18f]">آنلاین‌شاپ</span>
         )}
         {b.is_supporter && (
           <span className="rounded-full border border-[#ead9a9] bg-[#fffaf0] px-2.5 py-1 text-[11px] font-bold text-[#8f6d22]">
