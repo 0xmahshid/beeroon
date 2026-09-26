@@ -19,10 +19,23 @@ export type Subcategory = {
   slug: string;
 };
 
+export type OnlineShopDetails = {
+  business_id: string;
+  website_url: string | null;
+  sales_type: "retail" | "wholesale" | "both";
+  shipping_area: string;
+  shipping_methods: string[];
+  payment_methods: string[];
+  specialty_category: string;
+  created_at: string;
+  updated_at: string;
+};
+
 export type Business = {
   id: string;
   name: string;
   city_id: string;
+  business_type: "physical" | "online_shop";
   category_id: string;
   subcategory_id: string | null;
   address: string | null;
