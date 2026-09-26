@@ -59,7 +59,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
                 <div className="mx-auto grid h-16 w-16 place-items-center rounded-[1.4rem] bg-gradient-to-br from-[#ffe8ee] to-[#fff5df] text-2xl text-[#ef4056]">⌕</div>
                 <h3 className="mt-5 text-base font-black text-[#3d1833]">هنوز نتیجه‌ای برای این جست‌وجو نداریم.</h3>
                 <p className="mt-2 text-xs leading-7 text-[#87737b]">اسم دسته یا تخصص را کوتاه‌تر یا با عبارت دیگری امتحان کن.</p>
-                <Link href="/#directory" className="mt-5 inline-flex rounded-xl bg-[#ef4056] px-5 py-3 text-xs font-black text-white transition hover:bg-[#d9364b]">دیدن همه دسته‌ها</Link>
+                <Link href={"/?city=" + encodeURIComponent(city.slug) + "#directory"} className="mt-5 inline-flex rounded-xl bg-[#ef4056] px-5 py-3 text-xs font-black text-white transition hover:bg-[#d9364b]">دیدن همه دسته‌ها</Link>
               </div>
             )}
           </section>
