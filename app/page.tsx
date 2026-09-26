@@ -14,16 +14,16 @@ export default async function Home() {
     <div className="min-h-screen bg-[#f5f5f5]">
       <section className="border-b border-[#e4e4e7] bg-white">
         <div className="mx-auto grid max-w-7xl gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[1.1fr_.9fr] lg:items-center lg:px-8 lg:py-12">
-          <div className="order-2 lg:order-1">
+          <div className="order-1 lg:order-1">
             <span className="text-xs font-bold text-[#ef4056]">کشف کسب‌وکارهای خوب همین نزدیکی</span>
-            <h1 className="mt-4 text-3xl font-black leading-[1.45] text-[#27272a] sm:text-5xl">خوبِ نزدیکت را<br /><span className="text-[#ef4056]">پیدا کن و بیرون بزن.</span></h1>
+            <h1 className="mt-4 text-2xl font-black leading-[1.55] sm:text-5xl text-[#27272a] sm:text-5xl">خوبِ نزدیکت را<br /><span className="text-[#ef4056]">پیدا کن و بیرون بزن.</span></h1>
             <p className="mt-4 max-w-xl text-sm leading-7 text-[#71717a]">از یک کافه‌ی دنج تا یک متخصص قابل‌اعتماد؛ همه‌چیز را ساده، مرتب و نزدیک پیدا کن.</p>
             <Link href="#directory" className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#ef4056] px-6 py-3.5 text-sm font-bold text-white transition hover:bg-[#d9364b]">شروع جست‌وجو <span>←</span></Link>
           </div>
-          <div className="order-1 overflow-hidden rounded-2xl bg-[#fff0f2] lg:order-2">
-            <div className="flex min-h-[250px] items-center justify-center bg-gradient-to-br from-[#fff0f2] via-[#fff8f8] to-[#ffe4e8] p-8">
+          <div className="order-2 overflow-hidden rounded-2xl bg-[#fff0f2] lg:order-2">
+            <div className="flex min-h-[150px] sm:min-h-[190px] items-center justify-center bg-gradient-to-br from-[#fff0f2] via-[#fff8f8] to-[#ffe4e8] p-8">
               <div className="text-center">
-                <img src="/beeroon-mark.svg" alt="لوگوی بیرون" className="mx-auto h-40 w-40 object-contain" />
+                <img src="/beeroon-mark.svg" alt="لوگوی بیرون" className="mx-auto h-24 w-24 sm:h-32 sm:w-32 object-contain" />
                 <p className="mt-4 text-sm font-black text-[#d9364b]">هر چیزی، همین نزدیکی‌ها ✦</p>
               </div>
             </div>
