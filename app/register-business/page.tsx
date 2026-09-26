@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { DEFAULT_CITY_SLUG, seedCities } from "@/lib/cities";
 
 export default function RegisterBusiness() {
   const [form, setForm] = useState({
@@ -15,6 +16,7 @@ export default function RegisterBusiness() {
     whatsapp: "",
     neshan: "",
     hours: "",
+    city_id: DEFAULT_CITY_SLUG,
   });
   const [sent, setSent] = useState(false);
   const [err, setErr] = useState("");
@@ -38,7 +40,7 @@ export default function RegisterBusiness() {
       hours: form.hours || null,
       status: "pending",
       business_type: "physical",
-      city_id: "mashhad",
+       city_id: form.city_id,
     });
     if (error) setErr("مشکلی پیش اومد. دوباره تلاش کن.");
     else setSent(true);
@@ -71,6 +73,12 @@ export default function RegisterBusiness() {
           هر راه ارتباطی را که داری وارد کن تا مشتری‌ها راحت‌تر پیدایت کنند.
         </p>
         <div className="mt-7 grid gap-4 sm:grid-cols-2">
+           <label className="text-sm font-bold text-[#4b3b3c]">
+             شهر *
+             <select required value={form.city_id} onChange={(e) => set("city_id", e.target.value)} className="mt-2 w-full rounded-2xl border border-[#f0dfe0] bg-[#fffaf8] px-4 py-3 font-normal outline-none transition focus:border-[#ed0b55] focus:ring-4 focus:ring-[#ed0b55]/10">
+               {seedCities.map((city) => <option key={city.id} value={city.id}>{city.name}</option>)}
+             </select>
+           </label>
           {[
             ["name", "نام کسب‌وکار", true],
             ["address", "آدرس", true],
