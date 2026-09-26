@@ -47,7 +47,7 @@ export default function RegisterBusiness() {
   if (sent) {
     return (
       <div className="mx-auto max-w-md px-4 py-24 text-center">
-        <p className="text-lg font-black text-[#c91442]">ثبت شد!</p>
+        <p className="text-lg font-black text-[#ed0b55]">ثبت شد!</p>
         <p className="mt-2 text-[#6f6261]">
           تیم بیرون به‌زودی اطلاعات شما را بررسی و فعال می‌کند.
         </p>
@@ -60,12 +60,12 @@ export default function RegisterBusiness() {
       <div className="mx-auto max-w-xl px-4 pt-8">
       <div className="flex items-center justify-between gap-4 rounded-2xl border border-[#ead9a9] bg-[#fffaf0] px-4 py-3 text-sm">
         <span className="text-[#725c2a]">آنلاین‌شاپ داری؟ فرم جداگانه‌اش اینجاست.</span>
-        <Link href="/register-online-shop" className="shrink-0 font-black text-[#c91442] hover:underline">ثبت آنلاین‌شاپ</Link>
+        <Link href="/register-online-shop" className="shrink-0 font-black text-[#ed0b55] hover:underline">ثبت آنلاین‌شاپ</Link>
       </div>
       </div>
       <form onSubmit={submit} className="mx-auto max-w-xl px-4 py-10">
-      <div className="rounded-[2rem] border border-[#eadfd7] bg-white p-6 shadow-[0_20px_60px_-42px_rgba(77,30,36,0.55)] sm:p-9">
-        <p className="text-xs font-black tracking-[0.2em] text-[#c91442]">FOR LOCAL OWNERS</p>
+      <div className="rounded-[2rem] border border-[#f0dfe0] bg-white p-6 shadow-[0_20px_60px_-42px_rgba(77,30,36,0.55)] sm:p-9">
+        <p className="text-xs font-black tracking-[0.2em] text-[#ed0b55]">FOR LOCAL OWNERS</p>
         <h1 className="mt-2 text-2xl font-black text-[#241b1c]">ثبت رایگان کسب‌وکار</h1>
         <p className="mt-2 text-sm leading-7 text-[#80716f]">
           هر راه ارتباطی را که داری وارد کن تا مشتری‌ها راحت‌تر پیدایت کنند.
@@ -88,13 +88,13 @@ export default function RegisterBusiness() {
                 required={required as boolean}
                 value={form[key as keyof typeof form]}
                 onChange={(e) => set(key as string, e.target.value)}
-                className="mt-2 w-full rounded-2xl border border-[#eadfd7] bg-[#fffdf9] px-4 py-3 font-normal outline-none transition focus:border-[#c91442] focus:ring-4 focus:ring-[#c91442]/10"
+                className="mt-2 w-full rounded-2xl border border-[#f0dfe0] bg-[#fffaf8] px-4 py-3 font-normal outline-none transition focus:border-[#ed0b55] focus:ring-4 focus:ring-[#ed0b55]/10"
               />
             </label>
           ))}
         </div>
-        {err && <p className="mt-4 text-sm text-[#b6113d]">{err}</p>}
-        <button className="mt-7 w-full rounded-full bg-[#c91442] py-3.5 font-bold text-white transition hover:bg-[#a70f37]">
+        {err && <p className="mt-4 text-sm text-[#d4134e]">{err}</p>}
+        <button className="mt-7 w-full rounded-full bg-[#ed0b55] py-3.5 font-bold text-white transition hover:bg-[#c70d46]">
           ارسال برای بررسی
         </button>
       </div>
