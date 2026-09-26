@@ -26,6 +26,7 @@ create table businesses (
   id uuid primary key default uuid_generate_v4(),
   name text not null,
   city_id text references cities(id) default 'mashhad',
+  business_type text not null default 'physical' check (business_type in ('physical','online_shop')),
   category_id uuid references categories(id),
   subcategory_id uuid references subcategories(id),
   address text,
@@ -112,3 +113,110 @@ create policy "admin read all businesses" on businesses for select to authentica
 create policy "admin insert businesses" on businesses for insert to authenticated with check (true);
 create policy "admin update businesses" on businesses for update to authenticated using (true);
 create policy "admin delete businesses" on businesses for delete to authenticated using (true);
+
+-- Online-shop registrations stay separate from physical-business fields.
+alter table businesses add column if not exists business_type text;
+update businesses set business_type = 'physical' where business_type is null;
+alter table businesses alter column business_type set default 'physical';
+alter table businesses alter column business_type set not null;
+do $$
+begin
+  alter table businesses add constraint businesses_business_type_check check (business_type in ('physical','online_shop'));
+exception when duplicate_object then null;
+end $$;
+
+create table if not exists online_shop_details (
+  business_id uuid primary key references businesses(id) on delete cascade,
+  website_url text,
+  sales_type text not null check (sales_type in ('retail','wholesale','both')),
+  shipping_area text not null,
+  shipping_methods text[] not null default '{}',
+  payment_methods text[] not null default '{}',
+  specialty_category text not null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists businesses_business_type_idx on businesses(business_type);
+create index if not exists online_shop_details_sales_type_idx on online_shop_details(sales_type);
+
+alter table online_shop_details enable row level security;
+drop policy if exists "public read approved online shop details" on online_shop_details;
+create policy "public read approved online shop details" on online_shop_details
+  for select using (exists (
+    select 1 from businesses
+    where businesses.id = online_shop_details.business_id
+      and businesses.status = 'approved'
+  ));
+drop policy if exists "admin read online shop details" on online_shop_details;
+create policy "admin read online shop details" on online_shop_details
+  for select to authenticated using (true);
+drop policy if exists "admin insert online shop details" on online_shop_details;
+create policy "admin insert online shop details" on online_shop_details
+  for insert to authenticated with check (true);
+drop policy if exists "admin update online shop details" on online_shop_details;
+create policy "admin update online shop details" on online_shop_details
+  for update to authenticated using (true);
+drop policy if exists "admin delete online shop details" on online_shop_details;
+create policy "admin delete online shop details" on online_shop_details
+  for delete to authenticated using (true);
+
+drop policy if exists "public insert pending business" on businesses;
+create policy "public insert pending business" on businesses
+  for insert to public with check (status = 'pending' and business_type = 'physical');
+
+create or replace function public.submit_online_shop(
+  p_name text,
+  p_phone text,
+  p_instagram text,
+  p_city_id text,
+  p_website_url text,
+  p_sales_type text,
+  p_shipping_area text,
+  p_shipping_methods text[],
+  p_payment_methods text[],
+  p_specialty_category text
+) returns uuid
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_business_id uuid;
+begin
+  if coalesce(array_length(p_shipping_methods, 1), 0) = 0 then
+    raise exception 'حداقل یک روش ارسال را انتخاب کنید';
+  end if;
+  if coalesce(array_length(p_payment_methods, 1), 0) = 0 then
+    raise exception 'حداقل یک روش پرداخت را انتخاب کنید';
+  end if;
+
+  insert into businesses (name, city_id, phone, instagram, business_type, status)
+  values (
+    nullif(trim(p_name), ''),
+    coalesce(nullif(trim(p_city_id), ''), 'mashhad'),
+    nullif(trim(p_phone), ''),
+    nullif(trim(p_instagram), ''),
+    'online_shop',
+    'pending'
+  )
+  returning id into v_business_id;
+
+  insert into online_shop_details (
+    business_id, website_url, sales_type, shipping_area,
+    shipping_methods, payment_methods, specialty_category
+  ) values (
+    v_business_id,
+    nullif(trim(p_website_url), ''),
+    p_sales_type,
+    nullif(trim(p_shipping_area), ''),
+    p_shipping_methods,
+    p_payment_methods,
+    nullif(trim(p_specialty_category), '')
+  );
+
+  return v_business_id;
+end;
+$$;
+
+grant execute on function public.submit_online_shop(text, text, text, text, text, text, text, text[], text[], text) to anon, authenticated;
