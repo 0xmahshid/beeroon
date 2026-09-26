@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
 
@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   description:
     "هر کسب‌وکار محلی رو در کمتر از سه ثانیه پیدا کن — بدون الگوریتم، بدون تبلیغ پولی، دیده‌شدن عادلانه برای همه.",
   manifest: "/manifest.json",
+};
+
+export const viewport: Viewport = {
   themeColor: "#f2622e",
 };
 
