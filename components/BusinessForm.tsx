@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import type { Category, City } from "@/lib/types";
+import SocialFields from "@/components/SocialFields";
+import { mergeSocialLinks } from "@/lib/social";
 
 type Props = {
   categories: Category[];
@@ -17,9 +19,7 @@ export default function BusinessForm({ categories, cities, initial, businessId }
     name: initial?.name || "",
     address: initial?.address || "",
     phone: initial?.phone || "",
-    instagram: initial?.instagram || "",
-    telegram: initial?.telegram || "",
-    whatsapp: initial?.whatsapp || "",
+    social_links: mergeSocialLinks(initial?.social_links, initial),
     hours: initial?.hours || "",
     lat: initial?.lat || "",
     lng: initial?.lng || "",
@@ -43,6 +43,10 @@ export default function BusinessForm({ categories, cities, initial, businessId }
     setError("");
     const payload = {
       ...form,
+      instagram: form.social_links.instagram || null,
+      telegram: form.social_links.telegram || null,
+      bale: form.social_links.bale || null,
+      whatsapp: form.social_links.whatsapp || null,
       lat: form.lat ? Number(form.lat) : null,
       lng: form.lng ? Number(form.lng) : null,
       price_tier: Number(form.price_tier),
@@ -77,10 +81,8 @@ export default function BusinessForm({ categories, cities, initial, businessId }
         <input placeholder="طول جغرافیایی (lng)" value={form.lng} onChange={(e) => set("lng", e.target.value)} className="rounded-xl border border-black/10 bg-white px-3 py-2 dark:border-white/10 dark:bg-ink-900" dir="ltr" />
       </div>
       <input placeholder="تلفن" value={form.phone} onChange={(e) => set("phone", e.target.value)} className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 dark:border-white/10 dark:bg-ink-900" dir="ltr" />
-      <input placeholder="اینستاگرام (بدون @)" value={form.instagram} onChange={(e) => set("instagram", e.target.value)} className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 dark:border-white/10 dark:bg-ink-900" dir="ltr" />
-      <input placeholder="تلگرام" value={form.telegram} onChange={(e) => set("telegram", e.target.value)} className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 dark:border-white/10 dark:bg-ink-900" dir="ltr" />
-      <input placeholder="واتساپ" value={form.whatsapp} onChange={(e) => set("whatsapp", e.target.value)} className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 dark:border-white/10 dark:bg-ink-900" dir="ltr" />
       <input placeholder="ساعات کاری" value={form.hours} onChange={(e) => set("hours", e.target.value)} className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 dark:border-white/10 dark:bg-ink-900" />
+      <SocialFields value={form.social_links} onChange={(value) => set("social_links", value)} />
       <div className="flex items-center gap-3">
         <label className="text-sm">رده قیمتی</label>
         <select value={form.price_tier} onChange={(e) => set("price_tier", e.target.value)} className="rounded-xl border border-black/10 bg-white px-3 py-2 dark:border-white/10 dark:bg-ink-900"><option value={1}>$</option><option value={2}>$$</option><option value={3}>$$$</option></select>

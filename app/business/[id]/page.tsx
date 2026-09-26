@@ -2,13 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import CategoryIcon from "@/components/CategoryIcon";
 import { getBusinessById, getCityBySlug, getDirectory } from "@/lib/data";
+import { mergeSocialLinks, SOCIAL_NETWORKS, socialUrl } from "@/lib/social";
 
 const priceLabel = { 1: "اقتصادی", 2: "متوسط", 3: "ویژه" } as const;
-
-function externalUrl(value: string | null | undefined, base: string) {
-  if (!value) return null;
-  return value.startsWith("http") ? value : base + value.replace(/^@/, "");
-}
 
 export default async function BusinessPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -21,9 +17,7 @@ export default async function BusinessPage({ params }: { params: Promise<{ id: s
   const subcategory = directory.subcategories.find((item) => item.id === business.subcategory_id);
   const onlineShop = Array.isArray(business.online_shop_details) ? business.online_shop_details[0] : business.online_shop_details;
   const websiteUrl = onlineShop?.website_url || null;
-  const instagramUrl = externalUrl(business.instagram, "https://instagram.com/");
-  const telegramUrl = externalUrl(business.telegram, "https://t.me/");
-  const whatsappUrl = business.whatsapp ? "https://wa.me/" + business.whatsapp : null;
+  const socialLinks = mergeSocialLinks(business.social_links, business);
   const mapUrl = business.neshan
     ? (business.neshan.startsWith("http") ? business.neshan : "https://neshan.org/maps/search/" + encodeURIComponent(business.neshan))
     : business.lat && business.lng
@@ -71,9 +65,7 @@ export default async function BusinessPage({ params }: { params: Promise<{ id: s
             <div className="mt-5 grid gap-2 sm:grid-cols-2">
               {business.phone && <a href={"tel:" + business.phone} className="rounded-2xl border border-[#f0dfe3] bg-[#fff8f9] px-4 py-3 text-xs font-black text-[#d9364b] transition hover:border-[#ef4056]">تماس تلفنی <span className="mt-1 block text-[10px] font-normal text-[#87737b]">{business.phone}</span></a>}
               {websiteUrl && <a href={websiteUrl} target="_blank" rel="noreferrer" className="rounded-2xl border border-[#ead9a9] bg-[#fffaf0] px-4 py-3 text-xs font-black text-[#8f6d22] transition hover:border-[#c9aa5c]">وب‌سایت <span className="mt-1 block truncate text-[10px] font-normal text-[#87737b]">{websiteUrl}</span></a>}
-              {instagramUrl && <a href={instagramUrl} target="_blank" rel="noreferrer" className="rounded-2xl border border-[#f5c4cb] bg-[#fff5f6] px-4 py-3 text-xs font-black text-[#d9364b] transition hover:border-[#ef4056]">اینستاگرام <span className="mt-1 block text-[10px] font-normal text-[#87737b]">مشاهده صفحه</span></a>}
-              {telegramUrl && <a href={telegramUrl} target="_blank" rel="noreferrer" className="rounded-2xl border border-[#cedeea] bg-[#f4f9fc] px-4 py-3 text-xs font-black text-[#2c668f] transition hover:border-[#6ea6c8]">تلگرام <span className="mt-1 block text-[10px] font-normal text-[#87737b]">مشاهده کانال</span></a>}
-              {whatsappUrl && <a href={whatsappUrl} target="_blank" rel="noreferrer" className="rounded-2xl border border-[#cce9dc] bg-[#f2fcf6] px-4 py-3 text-xs font-black text-[#16805f] transition hover:border-[#68bd9a]">واتساپ <span className="mt-1 block text-[10px] font-normal text-[#87737b]">ارسال پیام</span></a>}
+              {SOCIAL_NETWORKS.filter((network) => socialLinks[network.key]).map((network) => <a key={network.key} href={socialUrl(network.key, socialLinks[network.key]!)} target="_blank" rel="noreferrer" className="rounded-2xl border border-[#f0dfe3] bg-[#fff8f9] px-4 py-3 text-xs font-black text-[#d9364b] transition hover:border-[#ef4056]">{network.label} <span className="mt-1 block text-[10px] font-normal text-[#87737b]">مشاهده صفحه</span></a>)}
             </div>
             {business.address && <div className="mt-5 rounded-2xl border border-[#f0dfe3] bg-[#fffdfd] p-4"><span className="text-[10px] font-black text-[#87737b]">آدرس</span><p className="mt-2 text-sm font-bold leading-7 text-[#3d1833]">{business.address}</p>{mapUrl && <a href={mapUrl} target="_blank" rel="noreferrer" className="mt-3 inline-flex rounded-xl border border-[#eadfe2] px-4 py-2.5 text-xs font-black text-[#6f5c64] transition hover:border-[#ef4056] hover:text-[#ef4056]">باز کردن مسیر ←</a>}</div>}
           </section>

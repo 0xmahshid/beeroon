@@ -4,20 +4,19 @@ import Link from "next/link";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { DEFAULT_CITY_SLUG, seedCities } from "@/lib/cities";
+import SocialFields from "@/components/SocialFields";
+import type { SocialLinks } from "@/lib/social";
 
 export default function RegisterBusiness() {
   const [form, setForm] = useState({
     name: "",
     address: "",
     phone: "",
-    instagram: "",
-    telegram: "",
-    bale: "",
-    whatsapp: "",
     neshan: "",
     hours: "",
     city_id: DEFAULT_CITY_SLUG,
   });
+  const [socialLinks, setSocialLinks] = useState<SocialLinks>({});
   const [sent, setSent] = useState(false);
   const [err, setErr] = useState("");
 
@@ -32,10 +31,11 @@ export default function RegisterBusiness() {
       name: form.name,
       address: form.address,
       phone: form.phone,
-      instagram: form.instagram || null,
-      telegram: form.telegram || null,
-      bale: form.bale || null,
-      whatsapp: form.whatsapp || null,
+      social_links: socialLinks,
+      instagram: socialLinks.instagram || null,
+      telegram: socialLinks.telegram || null,
+      bale: socialLinks.bale || null,
+      whatsapp: socialLinks.whatsapp || null,
       neshan: form.neshan || null,
       hours: form.hours || null,
       status: "pending",
@@ -84,10 +84,6 @@ export default function RegisterBusiness() {
             ["address", "آدرس", true],
             ["phone", "تلفن", true],
             ["hours", "ساعات کاری", false],
-            ["instagram", "آیدی اینستاگرام", false],
-            ["telegram", "آیدی تلگرام", false],
-            ["bale", "آیدی بله", false],
-            ["whatsapp", "شماره واتساپ", false],
             ["neshan", "لینک یا نام مکان در نشان", false],
           ].map(([key, label, required]) => (
             <label key={key as string} className="text-sm font-bold text-[#4b3b3c]">
@@ -101,6 +97,7 @@ export default function RegisterBusiness() {
             </label>
           ))}
         </div>
+        <SocialFields value={socialLinks} onChange={setSocialLinks} />
         {err && <p className="mt-4 text-sm text-[#d4134e]">{err}</p>}
         <button className="mt-7 w-full rounded-full bg-[#ed0b55] py-3.5 font-bold text-white transition hover:bg-[#c70d46]">
           ارسال برای بررسی

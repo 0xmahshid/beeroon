@@ -31,6 +31,8 @@ export type OnlineShopDetails = {
   updated_at: string;
 };
 
+import type { SocialLinks } from "./social";
+
 export type Business = {
   id: string;
   name: string;
@@ -42,6 +44,7 @@ export type Business = {
   lat: number | null;
   lng: number | null;
   phone: string | null;
+  social_links: SocialLinks | null;
   instagram: string | null;
   telegram: string | null;
   bale: string | null;

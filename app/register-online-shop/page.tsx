@@ -4,12 +4,13 @@ import Link from "next/link";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { DEFAULT_CITY_SLUG, seedCities } from "@/lib/cities";
+import SocialFields from "@/components/SocialFields";
+import type { SocialLinks } from "@/lib/social";
 
 type FormState = {
   name: string;
   city_id: string;
   phone: string;
-  instagram: string;
   website_url: string;
   specialty_category: string;
   sales_type: "retail" | "wholesale" | "both";
@@ -38,7 +39,6 @@ export default function RegisterOnlineShop() {
     name: "",
     city_id: DEFAULT_CITY_SLUG,
     phone: "",
-    instagram: "",
     website_url: "",
     specialty_category: "",
     sales_type: "retail",
@@ -46,6 +46,7 @@ export default function RegisterOnlineShop() {
     shipping_methods: [],
     payment_methods: [],
   });
+  const [socialLinks, setSocialLinks] = useState<SocialLinks>({});
   const [sent, setSent] = useState(false);
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState("");
@@ -66,8 +67,8 @@ export default function RegisterOnlineShop() {
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setErr("");
-    if (!form.website_url.trim() && !form.instagram.trim()) {
-      setErr("حداقل لینک سایت یا آیدی اینستاگرام را وارد کن.");
+    if (!form.website_url.trim() && Object.keys(socialLinks).length === 0) {
+      setErr("حداقل لینک سایت یا یکی از شبکه‌های اجتماعی را وارد کن.");
       return;
     }
     if (!form.shipping_methods.length || !form.payment_methods.length) {
@@ -78,7 +79,7 @@ export default function RegisterOnlineShop() {
     const { error } = await supabase.rpc("submit_online_shop", {
       p_name: form.name.trim(),
       p_phone: form.phone.trim(),
-      p_instagram: form.instagram.trim() || null,
+      p_instagram: socialLinks.instagram || null,
        p_city_id: form.city_id,
       p_website_url: form.website_url.trim() || null,
       p_sales_type: form.sales_type,
@@ -86,6 +87,7 @@ export default function RegisterOnlineShop() {
       p_shipping_methods: form.shipping_methods,
       p_payment_methods: form.payment_methods,
       p_specialty_category: form.specialty_category.trim(),
+      p_social_links: socialLinks,
     });
     setSaving(false);
     if (error) {
@@ -133,10 +135,11 @@ export default function RegisterOnlineShop() {
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="text-sm font-bold text-[#4b3b3c]">لینک سایت<span className="font-normal text-[#8a7b79]"> (اختیاری)</span><input type="url" value={form.website_url} onChange={(e) => setField("website_url", e.target.value)} placeholder="https://example.ir" dir="ltr" className="mt-2 w-full rounded-2xl border border-[#f0dfe0] bg-[#fffaf8] px-4 py-3 font-normal outline-none focus:border-[#38a18f] focus:ring-4 focus:ring-[#38a18f]/10" /></label>
-              <label className="text-sm font-bold text-[#4b3b3c]">اینستاگرام<span className="font-normal text-[#8a7b79]"> (اختیاری)</span><input value={form.instagram} onChange={(e) => setField("instagram", e.target.value)} placeholder="@yourshop" dir="ltr" className="mt-2 w-full rounded-2xl border border-[#f0dfe0] bg-[#fffaf8] px-4 py-3 font-normal outline-none focus:border-[#38a18f] focus:ring-4 focus:ring-[#38a18f]/10" /></label>
             </div>
-            <p className="text-xs text-[#8a7b79]">حداقل یکی از لینک سایت یا اینستاگرام لازم است.</p>
+            <p className="text-xs text-[#8a7b79]">حداقل یکی از لینک سایت یا شبکه‌های اجتماعی لازم است.</p>
           </section>
+
+          <SocialFields value={socialLinks} onChange={setSocialLinks} accent="green" />
 
           <section className="space-y-4 border-t border-[#f0e5de] pt-6">
             <h2 className="text-sm font-black text-[#4b3b3c]">نوع فروش و تخصص</h2>
