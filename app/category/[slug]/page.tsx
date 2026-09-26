@@ -1,46 +1,9 @@
 import Link from "next/link";
-import { getSubcategories, getBusinesses } from "@/lib/data";
+import { getCategories, getSubcategories, getBusinesses } from "@/lib/data";
 import BusinessCard from "@/components/BusinessCard";
-
-export default async function CategoryPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const subcategories = await getSubcategories(slug);
-  const businesses = await getBusinesses({ categorySlug: slug });
-
-  return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
-      <Link href="/" className="text-sm text-ink-900/50 hover:underline dark:text-ink-50/50">
-        ← بازگشت
-      </Link>
-
-      {subcategories.length > 0 && (
-        <div className="mt-4 flex flex-wrap gap-2">
-          {subcategories.map((s) => (
-            <Link
-              key={s.id}
-              href={`/category/${slug}/${s.slug}`}
-              className="chip border-brand-500/30 text-brand-600 hover:bg-brand-500/10 dark:text-brand-400"
-            >
-              {s.name}
-            </Link>
-          ))}
-        </div>
-      )}
-
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {businesses.map((b) => (
-          <BusinessCard key={b.id} b={b} />
-        ))}
-        {businesses.length === 0 && (
-          <p className="col-span-full py-16 text-center text-ink-900/50 dark:text-ink-50/50">
-            هنوز کسب‌وکاری در این دسته ثبت نشده — اولین نفر باش!
-          </p>
-        )}
-      </div>
-    </div>
-  );
+  const [categories, subcategories, businesses] = await Promise.all([getCategories(), getSubcategories(slug), getBusinesses({ categorySlug: slug })]);
+  const category = categories.find((item) => item.slug === slug);
+  return <div className="mx-auto max-w-7xl px-5 py-10 lg:px-8"><Link href="/" className="text-sm font-bold text-[#8a7b79] transition hover:text-[#c91442]">← بازگشت به کشف</Link><div className="mt-7 rounded-[2rem] border border-[#eadfd7] bg-gradient-to-br from-white to-[#fff7f2] p-6 sm:p-9"><p className="text-xs font-black tracking-[0.22em] text-[#c91442]">BROWSE CATEGORY</p><h1 className="mt-3 text-3xl font-black text-[#241b1c] sm:text-4xl">{category?.name || "دسته‌بندی"}</h1><p className="mt-3 max-w-2xl text-sm leading-7 text-[#80716f]">تخصص مورد نظرت را انتخاب کن تا کسب‌وکارهای مرتبط همین شهر را ببینی.</p><div className="mt-6 flex flex-wrap gap-2">{subcategories.map((item) => <Link key={item.id} href={'/category/' + slug + '/' + item.slug} className="rounded-xl border border-[#eadfd7] bg-white px-3 py-2 text-xs font-bold text-[#665655] transition hover:-translate-y-0.5 hover:border-[#c91442]/40 hover:text-[#c91442]">{item.name}</Link>)}</div></div><div className="mt-10 flex items-end justify-between"><div><p className="text-xs font-black text-[#c91442]">LOCAL BUSINESSES</p><h2 className="mt-2 text-2xl font-black text-[#332526]">کسب‌وکارهای این دسته</h2></div><span className="text-sm text-[#8a7b79]">{businesses.length} نتیجه</span></div><div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{businesses.map((b) => <BusinessCard key={b.id} b={b} />)}{businesses.length === 0 && <div className="col-span-full rounded-3xl border border-dashed border-[#d8c8c2] bg-[#fffaf7] py-16 text-center"><p className="font-black text-[#3b2d2e]">هنوز کسب‌وکاری در این دسته ثبت نشده.</p><Link href="/register-business" className="mt-4 inline-flex rounded-full bg-[#c91442] px-5 py-2.5 text-sm font-bold text-white">اولین کسب‌وکار را ثبت کن</Link></div>}</div></div>;
 }
