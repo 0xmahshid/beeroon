@@ -17,7 +17,7 @@ export default async function SubcategoryPage({ params }: { params: Promise<{ sl
           <span className="rounded-full bg-[#fff0f3] px-4 py-2 text-xs font-black text-[#c70d46]">{businesses.length} نتیجه</span>
         </section>
         <div className="mt-5 flex gap-2 overflow-x-auto pb-1">{subcategories.map((item) => <Link key={item.id} href={`/category/${slug}/${item.slug}`} className={`shrink-0 rounded-xl px-3 py-2 text-xs font-bold transition ${item.slug === sub ? "bg-[#ed0b55] text-white" : "border border-[#eadfe2] bg-white text-[#66565b] hover:border-[#ed0b55]/40 hover:text-[#ed0b55]"}`}>{item.name}</Link>)}</div>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{businesses.map((business) => <BusinessCard key={business.id} b={business} />)}{businesses.length === 0 && <div className="col-span-full rounded-[1.7rem] border border-dashed border-[#d8c8c2] bg-white py-16 text-center"><p className="font-black text-[#3b2d2e]">هنوز نتیجه‌ای برای این تخصص نداریم.</p><Link href="/register-business" className="mt-5 inline-flex rounded-xl bg-[#ed0b55] px-5 py-3 text-sm font-black text-white">ثبت کسب‌وکار</Link></div>}</div>
+        <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{businesses.map((business) => <BusinessCard key={business.id} b={business} />)}{businesses.length === 0 && <div className="col-span-full rounded-[1.7rem] border border-dashed border-[#d8c8c2] bg-white py-16 text-center"><p className="font-black text-[#3b2d2e]">هنوز نتیجه‌ای برای این تخصص نداریم.</p><Link href="/register-business" className="mt-5 inline-flex rounded-xl bg-[#ed0b55] px-5 py-3 text-sm font-black text-white">ثبت کسب‌وکار</Link></div>}</div>
       </div>
     </div>
   );
