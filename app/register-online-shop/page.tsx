@@ -101,7 +101,7 @@ export default function RegisterOnlineShop() {
         <div className="rounded-[2rem] border border-[#c9eee4] bg-[#e8f8f2] p-8">
           <p className="text-lg font-black text-[#38a18f]">اطلاعات آنلاین‌شاپ ثبت شد ✦</p>
           <p className="mt-3 leading-8 text-[#58736c]">
-            تیم بیرون اطلاعات را بررسی می‌کند و بعد از تایید، آنلاین‌شاپت در دایرکتوری نمایش داده می‌شود.
+            تیم بیرون اطلاعات را با دقت بیشتری احراز می‌کند؛ بنابراین تایید آنلاین‌شاپ ممکن است کمی بیشتر زمان ببرد. بعد از تایید، آنلاین‌شاپت در دایرکتوری نمایش داده می‌شود.
           </p>
           <Link href="/" className="mt-6 inline-flex rounded-full bg-[#ed0b55] px-6 py-3 font-bold text-white">بازگشت به بیرون</Link>
         </div>
@@ -116,6 +116,12 @@ export default function RegisterOnlineShop() {
         <p className="text-xs font-black tracking-[0.2em] text-[#38a18f]">FOR ONLINE SHOPS</p>
         <h1 className="mt-2 text-2xl font-black text-[#241b1c] sm:text-3xl">ثبت آنلاین‌شاپ</h1>
         <p className="mt-3 text-sm leading-7 text-[#80716f]">اطلاعات مخصوص فروش آنلاین را جدا ثبت کن تا مشتری بداند چه می‌فروشی و چطور سفارش می‌گیرد.</p>
+        <div className="mt-5 rounded-2xl border border-[#ead9a9] bg-[#fffaf0] px-4 py-3.5">
+          <p className="text-xs font-black text-[#725c2a]">نکته درباره زمان بررسی</p>
+          <p className="mt-1.5 text-xs leading-6 text-[#806d3d]">
+            بررسی و احراز آنلاین‌شاپ‌ها دقیق‌تر است و ممکن است کمی بیشتر از ثبت کسب‌وکارهای معمولی زمان ببرد. بعد از تایید، اطلاعات در دایرکتوری نمایش داده می‌شود.
+          </p>
+        </div>
 
         <form onSubmit={submit} className="mt-8 space-y-6">
           <section className="space-y-4">
