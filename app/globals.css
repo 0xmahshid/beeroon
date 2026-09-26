@@ -17,3 +17,5 @@ button:disabled { cursor: wait; }
 .beeroon-tile { box-shadow: 0 2px 7px rgba(0,0,0,.06); }
 .chip { @apply inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-medium transition-colors; }
 ::selection { background: #ffd7dd; color: #9f1239; }
+@keyframes beeroon-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+.beeroon-float { animation: beeroon-float 4s ease-in-out infinite; }
