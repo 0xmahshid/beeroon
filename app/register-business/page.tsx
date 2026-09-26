@@ -56,13 +56,14 @@ export default function RegisterBusiness() {
   }
 
   return (
-    <div className="mx-auto max-w-xl px-4 pt-8">
+    <>
+      <div className="mx-auto max-w-xl px-4 pt-8">
       <div className="flex items-center justify-between gap-4 rounded-2xl border border-[#ead9a9] bg-[#fffaf0] px-4 py-3 text-sm">
         <span className="text-[#725c2a]">آنلاین‌شاپ داری؟ فرم جداگانه‌اش اینجاست.</span>
         <Link href="/register-online-shop" className="shrink-0 font-black text-[#c91442] hover:underline">ثبت آنلاین‌شاپ</Link>
       </div>
-    </div>
-    <form onSubmit={submit} className="mx-auto max-w-xl px-4 py-10">
+      </div>
+      <form onSubmit={submit} className="mx-auto max-w-xl px-4 py-10">
       <div className="rounded-[2rem] border border-[#eadfd7] bg-white p-6 shadow-[0_20px_60px_-42px_rgba(77,30,36,0.55)] sm:p-9">
         <p className="text-xs font-black tracking-[0.2em] text-[#c91442]">FOR LOCAL OWNERS</p>
         <h1 className="mt-2 text-2xl font-black text-[#241b1c]">ثبت رایگان کسب‌وکار</h1>
@@ -97,6 +98,7 @@ export default function RegisterBusiness() {
           ارسال برای بررسی
         </button>
       </div>
-    </form>
+      </form>
+    </>
   );
 }
