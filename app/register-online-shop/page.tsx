@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { DEFAULT_CITY_SLUG, seedCities } from "@/lib/cities";
 
 type FormState = {
   name: string;
+  city_id: string;
   phone: string;
   instagram: string;
   website_url: string;
@@ -34,6 +36,7 @@ const paymentOptions = [
 export default function RegisterOnlineShop() {
   const [form, setForm] = useState<FormState>({
     name: "",
+    city_id: DEFAULT_CITY_SLUG,
     phone: "",
     instagram: "",
     website_url: "",
@@ -76,7 +79,7 @@ export default function RegisterOnlineShop() {
       p_name: form.name.trim(),
       p_phone: form.phone.trim(),
       p_instagram: form.instagram.trim() || null,
-      p_city_id: "mashhad",
+       p_city_id: form.city_id,
       p_website_url: form.website_url.trim() || null,
       p_sales_type: form.sales_type,
       p_shipping_area: form.shipping_area.trim(),
@@ -119,6 +122,7 @@ export default function RegisterOnlineShop() {
             <h2 className="text-sm font-black text-[#4b3b3c]">اطلاعات اصلی</h2>
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="text-sm font-bold text-[#4b3b3c]">نام آنلاین‌شاپ *<input required value={form.name} onChange={(e) => setField("name", e.target.value)} placeholder="مثلاً خانه رنگی" className="mt-2 w-full rounded-2xl border border-[#f0dfe0] bg-[#fffaf8] px-4 py-3 font-normal outline-none focus:border-[#38a18f] focus:ring-4 focus:ring-[#38a18f]/10" /></label>
+               <label className="text-sm font-bold text-[#4b3b3c]">شهر *<select required value={form.city_id} onChange={(e) => setField("city_id", e.target.value)} className="mt-2 w-full rounded-2xl border border-[#f0dfe0] bg-[#fffaf8] px-4 py-3 font-normal outline-none focus:border-[#38a18f] focus:ring-4 focus:ring-[#38a18f]/10">{seedCities.map((city) => <option key={city.id} value={city.id}>{city.name}</option>)}</select></label>
               <label className="text-sm font-bold text-[#4b3b3c]">شماره تماس *<input required value={form.phone} onChange={(e) => setField("phone", e.target.value)} placeholder="۰۹۱۲…" dir="ltr" className="mt-2 w-full rounded-2xl border border-[#f0dfe0] bg-[#fffaf8] px-4 py-3 font-normal outline-none focus:border-[#38a18f] focus:ring-4 focus:ring-[#38a18f]/10" /></label>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
