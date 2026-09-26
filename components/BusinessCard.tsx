@@ -31,6 +31,9 @@ function SocialLink({
 }
 
 export default function BusinessCard({ b }: { b: Business }) {
+  const onlineShop = Array.isArray(b.online_shop_details) ? b.online_shop_details[0] : b.online_shop_details;
+  const websiteUrl = onlineShop?.website_url;
+  const instagramUrl = b.instagram?.startsWith("http") ? b.instagram : b.instagram ? "https://instagram.com/" + b.instagram.replace(/^@/, "") : null;
   const mapUrl = b.neshan
     ? b.neshan.startsWith("http")
       ? b.neshan
@@ -46,6 +49,9 @@ export default function BusinessCard({ b }: { b: Business }) {
           <h3 className="font-black text-[#302324]">{b.name}</h3>
           {b.address && <p className="mt-1 text-sm text-[#877876]">{b.address}</p>}
         </div>
+        {b.business_type === "online_shop" && (
+          <span className="rounded-full border border-[#cfe6df] bg-[#f1fbf7] px-2.5 py-1 text-[11px] font-bold text-[#287c68]">آنلاین‌شاپ</span>
+        )}
         {b.is_supporter && (
           <span className="rounded-full border border-[#ead9a9] bg-[#fffaf0] px-2.5 py-1 text-[11px] font-bold text-[#8f6d22]">
             حامی
@@ -58,7 +64,8 @@ export default function BusinessCard({ b }: { b: Business }) {
       </div>
       <div className="mt-5 flex flex-wrap gap-2">
         {b.phone && <SocialLink href={`tel:${b.phone}`} label="تماس" tone="red" />}
-        {b.instagram && <SocialLink href={`https://instagram.com/${b.instagram}`} label="اینستاگرام" tone="red" />}
+        {instagramUrl && <SocialLink href={instagramUrl} label="اینستاگرام" tone="red" />}
+        {websiteUrl && <SocialLink href={websiteUrl} label="سایت" tone="gold" />}
         {b.telegram && <SocialLink href={`https://t.me/${b.telegram}`} label="تلگرام" tone="blue" />}
         {b.bale && <SocialLink href={b.bale.startsWith("http") ? b.bale : `https://ble.ir/${b.bale}`} label="بله" tone="blue" />}
         {b.whatsapp && <SocialLink href={`https://wa.me/${b.whatsapp}`} label="واتساپ" tone="gold" />}
