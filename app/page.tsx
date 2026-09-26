@@ -12,10 +12,10 @@ export default async function Home() {
   const quickCategories = categories.slice(0, 8);
   return (
     <div className="min-h-screen bg-[#f5f5f5]">
-      <section className="border-b border-[#e4e4e7] bg-white">
-        <div className="mx-auto grid max-w-7xl gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[1.1fr_.9fr] lg:items-center lg:px-8 lg:py-12">
+      <section className="relative overflow-hidden border-b border-[#f0d9de] bg-gradient-to-bl from-[#fff0f3] via-white to-[#fff7e6]">
+        <div className="relative mx-auto grid max-w-7xl gap-7 px-4 py-7 sm:px-6 lg:grid-cols-[1.05fr_.95fr] lg:items-center lg:px-8 lg:py-12">
           <div className="order-1 lg:order-1">
-            <span className="text-xs font-bold text-[#ef4056]">کشف کسب‌وکارهای خوب همین نزدیکی</span>
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#ef4056]/15 bg-white/65 px-3 py-1.5 text-xs font-bold text-[#d9364b]"><span className="h-2 w-2 rounded-full bg-[#ef4056]" /> کشف کسب‌وکارهای خوب همین نزدیکی</span>
             <h1 className="mt-4 text-2xl font-black leading-[1.55] sm:text-5xl text-[#27272a] sm:text-5xl">خوبِ نزدیکت را<br /><span className="text-[#ef4056]">پیدا کن و بیرون بزن.</span></h1>
             <p className="mt-4 max-w-xl text-sm leading-7 text-[#71717a]">از یک کافه‌ی دنج تا یک متخصص قابل‌اعتماد؛ همه‌چیز را ساده، مرتب و نزدیک پیدا کن.</p>
             <Link href="#directory" className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#ef4056] px-6 py-3.5 text-sm font-bold text-white transition hover:bg-[#d9364b]">شروع جست‌وجو <span>←</span></Link>
@@ -23,17 +23,17 @@ export default async function Home() {
           <div className="order-2 overflow-hidden rounded-2xl bg-[#fff0f2] lg:order-2">
             <div className="flex min-h-[150px] sm:min-h-[190px] items-center justify-center bg-gradient-to-br from-[#fff0f2] via-[#fff8f8] to-[#ffe4e8] p-8">
               <div className="text-center">
-                <img src="/beeroon-mark.svg" alt="لوگوی بیرون" className="mx-auto h-24 w-24 sm:h-32 sm:w-32 object-contain" />
-                <p className="mt-4 text-sm font-black text-[#d9364b]">هر چیزی، همین نزدیکی‌ها ✦</p>
+                <div className="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-white/55 blur-2xl" /><div className="absolute -bottom-16 -left-8 h-40 w-40 rounded-full bg-[#ef4056]/15 blur-2xl" /><div className="relative rounded-[2rem] border-8 border-white/70 bg-gradient-to-br from-[#ff5475] to-[#e92e55] p-4 shadow-[0_20px_35px_-18px_rgba(185,25,65,.65)]"><img src="/beeroon-mark.svg" alt="لوگوی بیرون" className="mx-auto h-24 w-24 object-contain sm:h-28 sm:w-28" /></div>
+                <p className="relative mt-4 text-sm font-black text-[#d9364b]">هر چیزی، همین نزدیکی‌ها ✦</p><div className="relative mt-3 flex justify-center gap-2 text-[10px] font-bold text-[#8f3b4c]"><span className="rounded-full bg-white/75 px-2.5 py-1">کشف کن</span><span className="rounded-full bg-white/75 px-2.5 py-1">انتخاب کن</span><span className="rounded-full bg-white/75 px-2.5 py-1">بیرون بزن</span></div>
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </section><div className="border-b border-[#f0d9de] bg-white"><div className="mx-auto grid max-w-7xl grid-cols-3 gap-2 px-4 py-3 sm:px-6 lg:px-8"><div className="rounded-xl bg-[#fff5f6] px-3 py-2 text-center"><span className="block text-xs font-black text-[#d9364b]">کسب‌وکار واقعی</span><span className="mt-1 block text-[10px] text-[#a06d76]">انتخاب مطمئن</span></div><div className="rounded-xl bg-[#f0fbf8] px-3 py-2 text-center"><span className="block text-xs font-black text-[#278b7b]">نزدیک به تو</span><span className="mt-1 block text-[10px] text-[#6f9e96]">پیدا کردن آسان</span></div><div className="rounded-xl bg-[#fff9ea] px-3 py-2 text-center"><span className="block text-xs font-black text-[#a67414]">رایگان برای شروع</span><span className="mt-1 block text-[10px] text-[#a99972]">همین امروز</span></div></div></div>
       <section className="border-b border-[#e4e4e7] bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 py-7 sm:px-6 lg:px-8">
           <div className="mb-5 flex items-center justify-between"><div><h2 className="text-lg font-black text-[#27272a]">دسته‌های محبوب</h2><p className="mt-1 text-xs text-[#71717a]">برای شروع یکی را انتخاب کن.</p></div><Link href="#directory" className="text-xs font-bold text-[#ef4056]">همه دسته‌ها ←</Link></div>
-          <div className="grid grid-cols-4 gap-3 sm:grid-cols-8">
+          <div className="grid grid-cols-4 gap-2 sm:grid-cols-8 sm:gap-3">
             {quickCategories.map((category) => { const visual = categoryVisuals[category.slug] || { glyph: category.icon || "✦", tone: "from-[#f5f5f5] to-white text-[#ef4056]" }; return <Link key={category.id} href={`/category/${category.slug}`} className="group flex min-w-0 flex-col items-center rounded-xl p-2 transition hover:bg-[#fff5f6]"><span className={`grid h-14 w-14 place-items-center rounded-full bg-gradient-to-br text-2xl ${visual.tone}`}>{visual.glyph}</span><span className="mt-2 w-full truncate text-center text-[11px] font-bold text-[#52525b] group-hover:text-[#ef4056]">{category.name}</span></Link>; })}
           </div>
         </div>
