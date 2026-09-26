@@ -1,6 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+const ADMIN_ROLE = "admin";
+
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -23,11 +25,22 @@ export async function middleware(request: NextRequest) {
   });
 
   const { data: { user } } = await supabase.auth.getUser();
-  if (user) return response;
+  const isAdmin = user?.app_metadata?.role === ADMIN_ROLE;
+  if (isAdmin) return response;
 
   const loginUrl = request.nextUrl.clone();
   loginUrl.pathname = "/admin";
-  loginUrl.searchParams.set("next", request.nextUrl.pathname);
+  loginUrl.search = "";
+
+  if (user) {
+    loginUrl.searchParams.set("error", "not-authorized");
+  } else {
+    loginUrl.searchParams.set(
+      "next",
+      request.nextUrl.pathname + request.nextUrl.search,
+    );
+  }
+
   const redirectResponse = NextResponse.redirect(loginUrl);
   response.cookies.getAll().forEach((cookie) => redirectResponse.cookies.set(cookie));
   return redirectResponse;
