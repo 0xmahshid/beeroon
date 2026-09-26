@@ -3,19 +3,31 @@
 @tailwind components;
 @tailwind utilities;
 
-:root { --beeroon-pink: #ef4056; --beeroon-pink-dark: #d9364b; --beeroon-ink: #3f3f46; --beeroon-muted: #71717a; --beeroon-bg: #f5f5f5; }
-* { scrollbar-width: thin; scrollbar-color: #d4d4d8 #f4f4f5; }
+:root { --beeroon-pink: #ef4056; --beeroon-pink-dark: #d9364b; --beeroon-ink: #3d1833; --beeroon-muted: #87737b; --beeroon-bg: #fcf7f8; }
+* { scrollbar-width: thin; scrollbar-color: #ddcdd2 #fbf3f5; }
 html { scroll-behavior: smooth; }
 body { background: var(--beeroon-bg); color: var(--beeroon-ink); font-family: "Vazirmatn", sans-serif; }
 a, button, input, textarea, select { -webkit-tap-highlight-color: transparent; }
 input:focus, textarea:focus, select:focus { border-color: var(--beeroon-pink) !important; box-shadow: 0 0 0 3px rgba(239,64,86,.12); }
 button:disabled { cursor: wait; }
-.soft-card { box-shadow: 0 2px 8px rgba(0,0,0,.04); }
-.soft-card:hover { box-shadow: 0 6px 18px rgba(0,0,0,.08); }
+.soft-card { box-shadow: 0 2px 8px rgba(70,20,38,.04); }
+.soft-card:hover { box-shadow: 0 8px 22px rgba(70,20,38,.08); }
 .card-hover { transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
-.card-hover:hover { transform: translateY(-2px); border-color: #f2a4ae; box-shadow: 0 8px 22px rgba(0,0,0,.08); }
-.beeroon-tile { box-shadow: 0 2px 7px rgba(0,0,0,.06); }
+.card-hover:hover { transform: translateY(-3px); border-color: #f2a4ae; box-shadow: 0 12px 28px rgba(70,20,38,.1); }
+.beeroon-tile { box-shadow: 0 2px 7px rgba(70,20,38,.06); }
 .chip { @apply inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-medium transition-colors; }
 ::selection { background: #ffd7dd; color: #9f1239; }
+
+.hero-shell { background: linear-gradient(135deg, #35152e 0%, #5d1c3b 48%, #ed4059 100%); }
+.hero-grid { background-image: linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px); background-size: 30px 30px; mask-image: linear-gradient(to bottom, black, transparent 92%); }
+.hero-orb-one { background: rgba(255, 211, 110, .24); filter: blur(46px); }
+.hero-orb-two { background: rgba(255, 255, 255, .12); filter: blur(60px); }
+.hero-window { background: linear-gradient(145deg, rgba(255,255,255,.2), rgba(255,255,255,.06)); backdrop-filter: blur(10px); }
+
 @keyframes beeroon-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
 .beeroon-float { animation: beeroon-float 4s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
