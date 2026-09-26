@@ -1991,3 +1991,30 @@ insert into subcategories (category_id, name, slug)
 select c.id, 'مارکت‌پلیس و فروشنده آنلاین', 'marketplace-seller' from categories c
 where c.slug = 'online-shops'
   and not exists (select 1 from subcategories s where s.category_id = c.id and s.slug = 'marketplace-seller');
+
+
+-- Add the final popular subcategories that were introduced after the full taxonomy migration.
+insert into subcategories (category_id, name, slug)
+select c.id, 'نانوایی', 'bakery-shop' from public.categories c
+where c.slug = 'food'
+  and not exists (select 1 from public.subcategories s where s.category_id = c.id and s.slug = 'bakery-shop');
+
+insert into subcategories (category_id, name, slug)
+select c.id, 'هایپرمارکت', 'hypermarket' from public.categories c
+where c.slug = 'shopping'
+  and not exists (select 1 from public.subcategories s where s.category_id = c.id and s.slug = 'hypermarket');
+
+insert into subcategories (category_id, name, slug)
+select c.id, 'مال و مرکز خرید', 'shopping-mall' from public.categories c
+where c.slug = 'shopping'
+  and not exists (select 1 from public.subcategories s where s.category_id = c.id and s.slug = 'shopping-mall');
+
+insert into subcategories (category_id, name, slug)
+select c.id, 'پاساژ', 'passage' from public.categories c
+where c.slug = 'shopping'
+  and not exists (select 1 from public.subcategories s where s.category_id = c.id and s.slug = 'passage');
+
+insert into subcategories (category_id, name, slug)
+select c.id, 'دامپزشکی', 'veterinary' from public.categories c
+where c.slug = 'pets'
+  and not exists (select 1 from public.subcategories s where s.category_id = c.id and s.slug = 'veterinary');
