@@ -57,23 +57,25 @@ export default function CategoryExplorer({ categories, subcategories }: Props) {
         {popular.map(([label, category, sub]) => <Link key={sub} href={`/category/${category}/${sub}`} className="rounded-full border border-[#eadfe2] bg-white px-3 py-2 text-[11px] font-bold text-[#6f6064] transition hover:-translate-y-0.5 hover:border-[#ed0b55]/35 hover:text-[#ed0b55]">{label}</Link>)}
       </div>
 
-      <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+      <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7">
         {visible.map(({ category, children }) => {
           const visual = visuals[category.slug] || { glyph: category.icon || "✦", tone: "from-[#f9e4e9] to-white text-[#ed0b55]", accent: category.name };
           const shownChildren = normalized ? children.filter((item) => item.name.toLocaleLowerCase("fa").includes(normalized)) : children;
           return (
-            <article key={category.id} className="group soft-card rounded-[1.35rem] border border-[#eee3e4] bg-white p-3.5 transition duration-200 hover:-translate-y-1.5">
-              <Link href={`/category/${category.slug}`} className="block">
-                <div className={`beeroon-tile grid h-16 w-16 place-items-center rounded-[1.25rem] bg-gradient-to-br text-3xl ${visual.tone}`}>{visual.glyph}</div>
-                <div className="mt-4 flex items-center justify-between gap-2">
-                  <span className="truncate text-sm font-black text-[#3c3035] group-hover:text-[#ed0b55]">{category.name || visual.accent}</span>
-                  <span className="text-lg text-[#ed0b55] transition group-hover:-translate-x-1">←</span>
+                        <article key={category.id} className="group soft-card rounded-[1.15rem] border border-[#eee3e4] bg-white p-3 transition duration-200 hover:-translate-y-1">
+              <Link href={"/category/" + category.slug} className="flex items-center gap-3">
+                <div className={"beeroon-tile grid h-12 w-12 shrink-0 place-items-center rounded-[1rem] bg-gradient-to-br text-2xl " + visual.tone}>{visual.glyph}</div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="truncate text-sm font-black text-[#3c3035] group-hover:text-[#ed0b55]">{category.name || visual.accent}</span>
+                    <span className="shrink-0 text-sm text-[#ed0b55] transition group-hover:-translate-x-1">←</span>
+                  </div>
+                  <span className="mt-1 block text-[10px] text-[#a08e92]">{children.length} تخصص</span>
                 </div>
-                <span className="mt-1 block text-[10px] text-[#a08e92]">{children.length} تخصص</span>
               </Link>
-              <div className="mt-3 flex flex-wrap gap-1.5">
-                {(shownChildren.length ? shownChildren : children).slice(0, 2).map((item) => <Link key={item.id} href={`/category/${category.slug}/${item.slug}`} className="rounded-lg bg-[#fff8f7] px-2 py-1.5 text-[10px] font-bold text-[#796a6d] transition hover:bg-[#fff0f3] hover:text-[#d4134e]">{item.name}</Link>)}
-                {children.length > 2 && <Link href={`/category/${category.slug}`} className="rounded-lg bg-[#f7f2f0] px-2 py-1.5 text-[10px] font-black text-[#ed0b55]">+{children.length - 2}</Link>}
+              <div className="mt-3 flex min-w-0 gap-1.5 overflow-hidden">
+                {(shownChildren.length ? shownChildren : children).slice(0, 2).map((item) => <Link key={item.id} href={"/category/" + category.slug + "/" + item.slug} className="max-w-[48%] shrink-0 truncate rounded-lg bg-[#fff8f7] px-2 py-1 text-[10px] font-bold text-[#796a6d] transition hover:bg-[#fff0f3] hover:text-[#d4134e]">{item.name}</Link>)}
+                {children.length > 2 && <Link href={"/category/" + category.slug} className="shrink-0 rounded-lg bg-[#f7f2f0] px-2 py-1 text-[10px] font-black text-[#ed0b55]">+{children.length - 2}</Link>}
               </div>
             </article>
           );
