@@ -33,7 +33,7 @@ export default function CategoryExplorer({ categories, subcategories }: Props) {
   const visible = normalized || showAll ? groups : groups.slice(0, 12);
 
   return (
-    <section id="directory" className="border-y border-[#e4e4e7] bg-white">
+    <section id="directory" className="border-y border-[#eadfe2] bg-gradient-to-b from-white to-[#fff9fa]">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-5 border-b border-[#f0f0f1] pb-6 lg:flex-row lg:items-end lg:justify-between">
           <div><span className="text-[11px] font-bold tracking-[0.16em] text-[#ef4056]">دسته‌بندی‌ها</span><h2 className="mt-2 text-2xl font-black text-[#27272a]">چی می‌خوای پیدا کنی؟</h2><p className="mt-1 text-sm text-[#71717a]">دسته را انتخاب کن و بهترین گزینه‌های اطرافت را ببین.</p></div>
@@ -49,8 +49,8 @@ export default function CategoryExplorer({ categories, subcategories }: Props) {
         <div className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
           {visible.map(({ category, children }) => {
             const visual = visuals[category.slug] || { glyph: category.icon || "✦", tone: "from-[#f5f5f5] to-white text-[#ef4056]" };
-            return <Link key={category.id} href={`/category/${category.slug}`} className="group flex min-h-[132px] flex-col items-center justify-center rounded-2xl border border-[#e4e4e7] bg-white px-2 py-4 transition hover:-translate-y-0.5 hover:border-[#ef4056]/50 hover:shadow-[0_6px_18px_rgba(0,0,0,.07)]">
-              <span className={`beeroon-tile grid h-14 w-14 place-items-center rounded-full bg-gradient-to-br text-2xl ${visual.tone}`}>{visual.glyph}</span>
+            return <Link key={category.id} href={`/category/${category.slug}`} className="group relative flex min-h-[142px] flex-col items-center justify-center overflow-hidden rounded-[1.35rem] border border-[#eee1e4] bg-white px-2 py-4 shadow-[0_8px_22px_-20px_rgba(111,35,50,.5)] transition hover:-translate-y-0.5 hover:border-[#ef4056]/50 hover:shadow-[0_6px_18px_rgba(0,0,0,.07)]">
+              <span className={`beeroon-tile grid h-16 w-16 place-items-center rounded-[1.35rem] bg-gradient-to-br text-2xl ${visual.tone}`}>{visual.glyph}</span>
               <span className="mt-3 truncate text-center text-xs font-black text-[#3f3f46] group-hover:text-[#ef4056]">{category.name}</span>
               <span className="mt-1 text-[10px] text-[#a1a1aa]">{children.length} تخصص</span>
             </Link>;
