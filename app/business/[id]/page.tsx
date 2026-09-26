@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import CategoryIcon from "@/components/CategoryIcon";
-import { getBusinessById, getDirectory } from "@/lib/data";
+import { getBusinessById, getCityBySlug, getDirectory } from "@/lib/data";
 
 const priceLabel = { 1: "اقتصادی", 2: "متوسط", 3: "ویژه" } as const;
 
@@ -15,6 +15,8 @@ export default async function BusinessPage({ params }: { params: Promise<{ id: s
   const [business, directory] = await Promise.all([getBusinessById(id), getDirectory()]);
   if (!business) notFound();
 
+  const city = await getCityBySlug(business.city_id);
+  const cityQuery = "?city=" + encodeURIComponent(city.slug);
   const category = directory.categories.find((item) => item.id === business.category_id);
   const subcategory = directory.subcategories.find((item) => item.id === business.subcategory_id);
   const onlineShop = Array.isArray(business.online_shop_details) ? business.online_shop_details[0] : business.online_shop_details;
@@ -27,8 +29,9 @@ export default async function BusinessPage({ params }: { params: Promise<{ id: s
     : business.lat && business.lng
       ? "https://neshan.org/maps/@" + business.lat + "," + business.lng + ",16z"
       : null;
-  const categoryHref = category ? "/category/" + category.slug : "/";
-  const subcategoryHref = category && subcategory ? categoryHref + "/" + subcategory.slug : categoryHref;
+  const categoryPath = category ? "/category/" + category.slug : "/";
+  const categoryHref = categoryPath + cityQuery;
+  const subcategoryHref = category && subcategory ? categoryPath + "/" + subcategory.slug + cityQuery : categoryHref;
 
   return (
     <div className="min-h-screen bg-[#fcf7f8]">
