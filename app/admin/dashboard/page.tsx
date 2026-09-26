@@ -12,6 +12,11 @@ const statusLabel: Record<string, string> = {
   rejected: "رد شده",
 };
 
+const businessTypeLabel: Record<string, string> = {
+  physical: "فیزیکی",
+  online_shop: "آنلاین‌شاپ",
+};
+
 export default function Dashboard() {
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [loading, setLoading] = useState(true);
@@ -82,7 +87,7 @@ export default function Dashboard() {
             <div>
               <p className="font-semibold">{b.name}</p>
               <p className="text-xs text-ink-900/50 dark:text-ink-50/50">
-                {statusLabel[b.status]} · {b.address}
+                {statusLabel[b.status]} · {businessTypeLabel[b.business_type] || "کسب‌وکار"} · {b.address}
               </p>
             </div>
             <div className="flex flex-wrap gap-2 text-sm">
