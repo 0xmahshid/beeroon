@@ -1,27 +1,53 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+
+const DEFAULT_NEXT = "/admin/dashboard";
+
+function isSafeNextPath(value: string | null): value is string {
+  return Boolean(value && value.startsWith("/") && !value.startsWith("//"));
+}
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
+  const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
+  const [nextPath, setNextPath] = useState(DEFAULT_NEXT);
   const router = useRouter();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const next = params.get("next");
+    if (isSafeNextPath(next)) setNextPath(next);
+    if (params.get("error") === "not-authorized") {
+      setNotice("این حساب دسترسی پنل مدیریت بیرون را ندارد.");
+    }
+  }, []);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setErr("");
+    setNotice("");
     setBusy(true);
-    const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
-    setBusy(false);
-    if (error) {
-      setErr("ایمیل یا رمز عبور اشتباهه.");
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password,
+    });
+
+    if (error || data.user?.app_metadata?.role !== "admin") {
+      if (!error) await supabase.auth.signOut();
+      setBusy(false);
+      setErr(error ? "ایمیل یا رمز عبور اشتباهه." : "این حساب دسترسی مدیریت ندارد.");
       return;
     }
-    router.replace("/admin/dashboard");
+
+    setBusy(false);
+    router.replace(nextPath);
     router.refresh();
   }
 
@@ -33,6 +59,7 @@ export default function AdminLogin() {
         <input type="email" required autoComplete="email" placeholder="ایمیل" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 outline-none focus:border-brand-500 dark:border-white/10 dark:bg-ink-900" dir="ltr" />
         <input type="password" required autoComplete="current-password" placeholder="رمز عبور" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 outline-none focus:border-brand-500 dark:border-white/10 dark:bg-ink-900" dir="ltr" />
       </div>
+      {notice && <p className="mt-3 text-sm text-amber-600">{notice}</p>}
       {err && <p className="mt-3 text-sm text-red-500">{err}</p>}
       <button disabled={busy} className="mt-6 w-full rounded-full bg-brand-500 py-2.5 font-medium text-white hover:bg-brand-600 disabled:opacity-50">
         {busy ? "در حال ورود…" : "ورود"}
