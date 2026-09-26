@@ -34,7 +34,7 @@ export async function getSubcategories(categorySlug: string): Promise<Subcategor
 }
 export async function getBusinesses(params: { categorySlug?: string; subcategorySlug?: string; citySlug?: string }): Promise<Business[]> {
   if (!configured) { let list = seedBusinesses.filter((business) => business.status === "approved"); if (params.categorySlug) { const category = seedCategories.find((item) => item.slug === params.categorySlug); list = list.filter((business) => business.category_id === category?.id); } if (params.subcategorySlug) { const category = seedCategories.find((item) => item.slug === params.categorySlug); const subcategory = seedSubcategories.find((item) => item.category_id === category?.id && item.slug === params.subcategorySlug); list = list.filter((business) => business.subcategory_id === subcategory?.id); } if (params.citySlug) list = list.filter((business) => business.city_id === params.citySlug); return list.sort(() => Math.random() - 0.5); }
-  let query = supabase.from("businesses").select("*").eq("status", "approved");
+  let query = supabase.from("businesses").select("*, online_shop_details(*)").eq("status", "approved");
   if (params.categorySlug) { const { data: category } = await supabase.from("categories").select("id").eq("slug", params.categorySlug).single(); if (category) query = query.eq("category_id", category.id); }
   if (params.subcategorySlug) { const { data: subcategory } = await supabase.from("subcategories").select("id").eq("slug", params.subcategorySlug).single(); if (subcategory) query = query.eq("subcategory_id", subcategory.id); }
   if (params.citySlug) query = query.eq("city_id", params.citySlug);
