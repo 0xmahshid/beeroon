@@ -139,8 +139,8 @@ alter table businesses enable row level security;
 create policy "public read cities" on cities for select using (true);
 create policy "public read categories" on categories for select using (true);
 create policy "public read subcategories" on subcategories for select using (true);
-create policy "public read approved businesses" on businesses for select using (status = 'approved');
-create policy "public insert pending business" on businesses for insert to public with check (status = 'pending');
+create policy "public read approved businesses" on businesses for select to anon using (status = 'approved');
+create policy "public insert pending business" on businesses for insert to anon with check (status = 'pending' and business_type = 'physical');
 create policy "admin read all businesses" on businesses for select to authenticated using (true);
 create policy "admin insert businesses" on businesses for insert to authenticated with check (true);
 create policy "admin update businesses" on businesses for update to authenticated using (true);
@@ -174,12 +174,13 @@ create index if not exists online_shop_details_sales_type_idx on online_shop_det
 
 alter table online_shop_details enable row level security;
 drop policy if exists "public read approved online shop details" on online_shop_details;
-create policy "public read approved online shop details" on online_shop_details
-  for select using (exists (
+create policy "public read approved online shop details" on online_shop_details for select to anon using (
+  exists (
     select 1 from businesses
     where businesses.id = online_shop_details.business_id
       and businesses.status = 'approved'
-  ));
+  )
+);
 drop policy if exists "admin read online shop details" on online_shop_details;
 create policy "admin read online shop details" on online_shop_details
   for select to authenticated using (true);
@@ -2040,10 +2041,13 @@ where instagram is not null
    or whatsapp is not null;
 
 create index if not exists businesses_social_links_gin_idx
-  on public.businesses using gin (social_links);
+  o-- Replace the old online-shop submission function with the social-links-aware version.
+-- Security hardening keeps public reads/writes on anon and limits the RPC to anon.
+create index if not exists businesses_category_id_idx on public.businesses (category_id);
+create index if not exists businesses_city_id_idx on public.businesses (city_id);
+create index if not exists businesses_subcategory_id_idx on public.businesses (subcategory_id);
+create index if not exists subcategories_category_id_idx on public.subcategories (category_id);
 
--- Replace the old online-shop submission function with the social-links-aware version.
--- Keep the four legacy columns populated while accepting the extensible social_links object.
 drop function if exists public.submit_online_shop(text, text, text, text, text, text, text, text[], text[], text);
 
 create or replace function public.submit_online_shop(
@@ -2065,8 +2069,24 @@ set search_path = public
 as $$
 declare
   v_business_id uuid;
-  v_social_links jsonb := coalesce(p_social_links, '{}'::jsonb);
+  v_social_links jsonb;
 begin
+  v_social_links := jsonb_strip_nulls(jsonb_build_object(
+    'instagram', nullif(trim(coalesce(p_social_links->>'instagram', p_instagram, '')), ''),
+    'telegram', nullif(trim(coalesce(p_social_links->>'telegram', '')), ''),
+    'whatsapp', nullif(trim(coalesce(p_social_links->>'whatsapp', '')), ''),
+    'bale', nullif(trim(coalesce(p_social_links->>'bale', '')), ''),
+    'eitaa', nullif(trim(coalesce(p_social_links->>'eitaa', '')), ''),
+    'rubika', nullif(trim(coalesce(p_social_links->>'rubika', '')), ''),
+    'soroush', nullif(trim(coalesce(p_social_links->>'soroush', '')), ''),
+    'tiktok', nullif(trim(coalesce(p_social_links->>'tiktok', '')), ''),
+    'youtube', nullif(trim(coalesce(p_social_links->>'youtube', '')), ''),
+    'linkedin', nullif(trim(coalesce(p_social_links->>'linkedin', '')), ''),
+    'facebook', nullif(trim(coalesce(p_social_links->>'facebook', '')), ''),
+    'x', nullif(trim(coalesce(p_social_links->>'x', '')), ''),
+    'aparat', nullif(trim(coalesce(p_social_links->>'aparat', '')), '')
+  ));
+
   if coalesce(array_length(p_shipping_methods, 1), 0) = 0 then
     raise exception 'حداقل یک روش ارسال را انتخاب کنید';
   end if;
@@ -2077,20 +2097,18 @@ begin
   insert into public.businesses (
     name, city_id, phone, instagram, telegram, bale, whatsapp,
     social_links, business_type, status
-  )
-  values (
+  ) values (
     nullif(trim(p_name), ''),
     coalesce(nullif(trim(p_city_id), ''), 'mashhad'),
     nullif(trim(p_phone), ''),
-    nullif(trim(coalesce(v_social_links->>'instagram', p_instagram)), ''),
-    nullif(trim(v_social_links->>'telegram'), ''),
-    nullif(trim(v_social_links->>'bale'), ''),
-    nullif(trim(v_social_links->>'whatsapp'), ''),
-    jsonb_strip_nulls(v_social_links),
+    v_social_links->>'instagram',
+    v_social_links->>'telegram',
+    v_social_links->>'bale',
+    v_social_links->>'whatsapp',
+    v_social_links,
     'online_shop',
     'pending'
-  )
-  returning id into v_business_id;
+  ) returning id into v_business_id;
 
   insert into public.online_shop_details (
     business_id, website_url, sales_type, shipping_area,
@@ -2109,5 +2127,7 @@ begin
 end;
 $$;
 
+revoke execute on function public.submit_online_shop(text, text, text, text, text, text, text, text[], text[], text, jsonb)
+  from public, authenticated;
 grant execute on function public.submit_online_shop(text, text, text, text, text, text, text, text[], text[], text, jsonb)
-  to anon, authenticated;
+  to anon;
