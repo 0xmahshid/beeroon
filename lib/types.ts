@@ -31,7 +31,9 @@ export type Business = {
   phone: string | null;
   instagram: string | null;
   telegram: string | null;
+  bale: string | null;
   whatsapp: string | null;
+  neshan: string | null;
   hours: string | null;
   price_tier: 1 | 2 | 3 | null;
   is_supporter: boolean;

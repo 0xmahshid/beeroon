@@ -10,27 +10,33 @@ export async function getCategories(): Promise<Category[]> {
   if (!configured) return seedCategories;
   const { data, error } = await supabase.from("categories").select("*").order("name");
   if (error || !data?.length) return seedCategories;
-  return data as Category[];
+  const remote = data as Category[];
+  const remoteSlugs = new Set(remote.map((category) => category.slug));
+  return [...remote, ...seedCategories.filter((category) => !remoteSlugs.has(category.slug))];
 }
 
 export async function getSubcategories(categorySlug: string): Promise<Subcategory[]> {
-  if (!configured) {
-    const cat = seedCategories.find((c) => c.slug === categorySlug);
-    return seedSubcategories.filter((s) => s.category_id === cat?.id);
-  }
-  const { data: cat } = await supabase
+  const seedCategory = seedCategories.find((category) => category.slug === categorySlug);
+  const seedRows = seedSubcategories.filter((subcategory) => subcategory.category_id === seedCategory?.id);
+  if (!configured) return seedRows;
+
+  const { data: category } = await supabase
     .from("categories")
     .select("id")
     .eq("slug", categorySlug)
     .single();
-  if (!cat) return [];
+  if (!category) return seedRows;
+
   const { data, error } = await supabase
     .from("subcategories")
     .select("*")
-    .eq("category_id", cat.id)
+    .eq("category_id", category.id)
     .order("name");
-  if (error) return [];
-  return data as Subcategory[];
+  if (error) return seedRows;
+
+  const remote = data as Subcategory[];
+  const remoteSlugs = new Set(remote.map((subcategory) => subcategory.slug));
+  return [...remote, ...seedRows.filter((subcategory) => !remoteSlugs.has(subcategory.slug))];
 }
 
 export async function getBusinesses(params: {
@@ -39,32 +45,32 @@ export async function getBusinesses(params: {
   citySlug?: string;
 }): Promise<Business[]> {
   if (!configured) {
-    let list = seedBusinesses.filter((b) => b.status === "approved");
+    let list = seedBusinesses.filter((business) => business.status === "approved");
     if (params.categorySlug) {
-      const cat = seedCategories.find((c) => c.slug === params.categorySlug);
-      list = list.filter((b) => b.category_id === cat?.id);
+      const category = seedCategories.find((item) => item.slug === params.categorySlug);
+      list = list.filter((business) => business.category_id === category?.id);
     }
     return list;
   }
+
   let query = supabase.from("businesses").select("*").eq("status", "approved");
   if (params.categorySlug) {
-    const { data: cat } = await supabase
+    const { data: category } = await supabase
       .from("categories")
       .select("id")
       .eq("slug", params.categorySlug)
       .single();
-    if (cat) query = query.eq("category_id", cat.id);
+    if (category) query = query.eq("category_id", category.id);
   }
   if (params.subcategorySlug) {
-    const { data: sub } = await supabase
+    const { data: subcategory } = await supabase
       .from("subcategories")
       .select("id")
       .eq("slug", params.subcategorySlug)
       .single();
-    if (sub) query = query.eq("subcategory_id", sub.id);
+    if (subcategory) query = query.eq("subcategory_id", subcategory.id);
   }
   const { data, error } = await query;
   if (error) return [];
-  // Fair ranking: supporters are only ever mixed in randomly, never boosted to the top.
   return (data as Business[]).sort(() => Math.random() - 0.5);
 }

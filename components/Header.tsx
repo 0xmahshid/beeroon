@@ -1,44 +1,26 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 export default function Header() {
-  const [dark, setDark] = useState(false);
-
-  useEffect(() => {
-    setDark(document.documentElement.classList.contains("dark"));
-  }, []);
-
-  function toggle() {
-    const next = !dark;
-    setDark(next);
-    document.documentElement.classList.toggle("dark", next);
-    localStorage.setItem("beeroon-theme", next ? "dark" : "light");
-  }
-
   return (
-    <header className="sticky top-0 z-40 border-b border-black/5 bg-ink-50/80 backdrop-blur-md dark:border-white/5 dark:bg-ink-950/80">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        <Link href="/" className="flex items-center gap-2 text-xl font-extrabold">
-          <span className="grid h-9 w-9 place-items-center rounded-xl2 bg-brand-500 text-white">ب</span>
-          بیرون
+    <header className="sticky top-0 z-40 border-b border-[#eadfd7]/80 bg-white/95 backdrop-blur-md">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 lg:px-8">
+        <Link href="/" className="flex items-center gap-3">
+          <img src="/beeroon-logo.svg" alt="لوگوی بیرون" className="h-11 w-11 rounded-xl object-contain" />
+          <span className="text-xl font-black tracking-tight text-[#c91442]">بیرون</span>
         </Link>
-        <div className="flex items-center gap-2">
-          <Link
-            href="/register-business"
-            className="hidden rounded-full border border-brand-500/30 px-4 py-1.5 text-sm font-medium text-brand-600 hover:bg-brand-500/10 dark:text-brand-400 sm:block"
-          >
-            ثبت کسب‌وکار
-          </Link>
-          <button
-            onClick={toggle}
-            aria-label="تغییر حالت شب/روز"
-            className="grid h-9 w-9 place-items-center rounded-full border border-black/10 text-sm dark:border-white/10"
-          >
-            {dark ? "☀️" : "🌙"}
-          </button>
-        </div>
+        <nav className="hidden items-center gap-7 text-sm font-bold text-[#695b5a] md:flex">
+          <Link href="/" className="transition hover:text-[#c91442]">کشف کن</Link>
+          <Link href="/category/food" className="transition hover:text-[#c91442]">دسته‌بندی‌ها</Link>
+          <Link href="/register-business" className="transition hover:text-[#c91442]">ثبت کسب‌وکار</Link>
+        </nav>
+        <Link
+          href="/register-business"
+          className="rounded-full border border-[#c91442]/25 px-4 py-2 text-xs font-bold text-[#c91442] transition hover:bg-[#c91442] hover:text-white"
+        >
+          ورود کسب‌وکار
+        </Link>
       </div>
     </header>
   );

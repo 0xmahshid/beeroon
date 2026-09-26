@@ -10,14 +10,16 @@ export default function RegisterBusiness() {
     phone: "",
     instagram: "",
     telegram: "",
+    bale: "",
     whatsapp: "",
+    neshan: "",
     hours: "",
   });
   const [sent, setSent] = useState(false);
   const [err, setErr] = useState("");
 
-  function set(k: string, v: string) {
-    setForm((f) => ({ ...f, [k]: v }));
+  function set(key: string, value: string) {
+    setForm((current) => ({ ...current, [key]: value }));
   }
 
   async function submit(e: React.FormEvent) {
@@ -29,7 +31,9 @@ export default function RegisterBusiness() {
       phone: form.phone,
       instagram: form.instagram || null,
       telegram: form.telegram || null,
+      bale: form.bale || null,
       whatsapp: form.whatsapp || null,
+      neshan: form.neshan || null,
       hours: form.hours || null,
       status: "pending",
       city_id: "mashhad",
@@ -41,45 +45,50 @@ export default function RegisterBusiness() {
   if (sent) {
     return (
       <div className="mx-auto max-w-md px-4 py-24 text-center">
-        <p className="text-lg font-bold">ثبت شد! 🎉</p>
-        <p className="mt-2 text-ink-900/60 dark:text-ink-50/60">
-          تیم بیرون به‌زودی اطلاعات شما رو بررسی و فعال می‌کنه.
+        <p className="text-lg font-black text-[#c91442]">ثبت شد!</p>
+        <p className="mt-2 text-[#6f6261]">
+          تیم بیرون به‌زودی اطلاعات شما را بررسی و فعال می‌کند.
         </p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={submit} className="mx-auto max-w-md px-4 py-14">
-      <h1 className="text-xl font-bold">ثبت رایگان کسب‌وکار</h1>
-      <p className="mt-1 text-sm text-ink-900/60 dark:text-ink-50/60">
-        سه ماه اول رایگان — فقط پروفایل رو کامل کن.
-      </p>
-      <div className="mt-6 space-y-3">
-        {[
-          ["name", "نام کسب‌وکار"],
-          ["address", "آدرس"],
-          ["phone", "تلفن"],
-          ["instagram", "آیدی اینستاگرام (بدون @)"],
-          ["telegram", "آیدی تلگرام (اختیاری)"],
-          ["whatsapp", "شماره واتساپ (اختیاری)"],
-          ["hours", "ساعات کاری"],
-        ].map(([key, label]) => (
-          <div key={key}>
-            <label className="mb-1 block text-sm font-medium">{label}</label>
-            <input
-              required={["name", "address", "phone"].includes(key)}
-              value={(form as any)[key]}
-              onChange={(e) => set(key, e.target.value)}
-              className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 outline-none focus:border-brand-500 dark:border-white/10 dark:bg-ink-900"
-            />
-          </div>
-        ))}
+    <form onSubmit={submit} className="mx-auto max-w-xl px-4 py-14">
+      <div className="rounded-[2rem] border border-[#eadfd7] bg-white p-6 shadow-[0_20px_60px_-42px_rgba(77,30,36,0.55)] sm:p-9">
+        <p className="text-xs font-black tracking-[0.2em] text-[#c91442]">FOR LOCAL OWNERS</p>
+        <h1 className="mt-2 text-2xl font-black text-[#241b1c]">ثبت رایگان کسب‌وکار</h1>
+        <p className="mt-2 text-sm leading-7 text-[#80716f]">
+          هر راه ارتباطی را که داری وارد کن تا مشتری‌ها راحت‌تر پیدایت کنند.
+        </p>
+        <div className="mt-7 grid gap-4 sm:grid-cols-2">
+          {[
+            ["name", "نام کسب‌وکار", true],
+            ["address", "آدرس", true],
+            ["phone", "تلفن", true],
+            ["hours", "ساعات کاری", false],
+            ["instagram", "آیدی اینستاگرام", false],
+            ["telegram", "آیدی تلگرام", false],
+            ["bale", "آیدی بله", false],
+            ["whatsapp", "شماره واتساپ", false],
+            ["neshan", "لینک یا نام مکان در نشان", false],
+          ].map(([key, label, required]) => (
+            <label key={key as string} className="text-sm font-bold text-[#4b3b3c]">
+              {label as string}
+              <input
+                required={required as boolean}
+                value={form[key as keyof typeof form]}
+                onChange={(e) => set(key as string, e.target.value)}
+                className="mt-2 w-full rounded-2xl border border-[#eadfd7] bg-[#fffdf9] px-4 py-3 font-normal outline-none transition focus:border-[#c91442] focus:ring-4 focus:ring-[#c91442]/10"
+              />
+            </label>
+          ))}
+        </div>
+        {err && <p className="mt-4 text-sm text-[#b6113d]">{err}</p>}
+        <button className="mt-7 w-full rounded-full bg-[#c91442] py-3.5 font-bold text-white transition hover:bg-[#a70f37]">
+          ارسال برای بررسی
+        </button>
       </div>
-      {err && <p className="mt-3 text-sm text-red-500">{err}</p>}
-      <button className="mt-6 w-full rounded-full bg-brand-500 py-2.5 font-medium text-white hover:bg-brand-600">
-        ثبت کسب‌وکار
-      </button>
     </form>
   );
 }
