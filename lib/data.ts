@@ -1,7 +1,22 @@
 import { supabase } from "./supabase";
 import { seedBusinesses, seedCategories, seedSubcategories } from "./seed";
-import { Business, Category, Subcategory } from "./types";
+import { seedCities, DEFAULT_CITY_SLUG } from "./cities";
+import { Business, Category, City, Subcategory } from "./types";
 const configured = !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+export async function getCities(): Promise<City[]> {
+  if (!configured) return seedCities.filter((city) => city.active);
+  const { data, error } = await supabase.from("cities").select("*").eq("active", true).order("name");
+  if (error || !data?.length) return seedCities.filter((city) => city.active);
+  const remote = data as City[];
+  const remoteSlugs = new Set(remote.map((city) => city.slug));
+  return [...remote, ...seedCities.filter((city) => city.active && !remoteSlugs.has(city.slug))];
+}
+
+export async function getCityBySlug(slug?: string): Promise<City> {
+  const cities = await getCities();
+  return cities.find((city) => city.slug === slug) || cities.find((city) => city.slug === DEFAULT_CITY_SLUG) || seedCities[0];
+}
 
 export async function getCategories(): Promise<Category[]> {
   if (!configured) return seedCategories;
@@ -37,7 +52,10 @@ export async function getBusinesses(params: { categorySlug?: string; subcategory
   let query = supabase.from("businesses").select("*, online_shop_details(*)").eq("status", "approved");
   if (params.categorySlug) { const { data: category } = await supabase.from("categories").select("id").eq("slug", params.categorySlug).single(); if (category) query = query.eq("category_id", category.id); }
   if (params.subcategorySlug) { const { data: subcategory } = await supabase.from("subcategories").select("id").eq("slug", params.subcategorySlug).single(); if (subcategory) query = query.eq("subcategory_id", subcategory.id); }
-  if (params.citySlug) query = query.eq("city_id", params.citySlug);
+  if (params.citySlug) {
+    const city = await getCityBySlug(params.citySlug);
+    query = query.eq("city_id", city.id);
+  }
   const { data, error } = await query; if (error) return []; return (data as Business[]).sort(() => Math.random() - 0.5);
 }
 
