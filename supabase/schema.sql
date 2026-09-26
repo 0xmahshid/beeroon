@@ -77,7 +77,7 @@ create policy "public read approved businesses" on businesses
 
 -- Anonymous visitors can only submit a business as 'pending' (real moderation happens in admin panel).
 create policy "public insert pending business" on businesses
-  for insert to anon with check (status = 'pending');
+  for insert to public with check (status = 'pending');
 
 -- Only a logged-in admin (any authenticated user — create one admin login in
 -- Supabase Auth → Users) can read every business, insert with any status, update, or delete.
