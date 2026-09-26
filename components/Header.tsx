@@ -33,7 +33,7 @@ export default function Header() {
           <button type="button" className="grid h-10 w-10 place-items-center rounded-xl border border-[#e4e4e7] text-lg text-[#52525b]" aria-label="حساب کاربری">♙</button>
         </div>
       </div>
-      <div className="border-t border-[#f0f0f1] bg-white">
+      <div className="hidden border-t border-[#f0f0f1] bg-white md:block">
         <nav className="mx-auto flex max-w-7xl items-center gap-7 overflow-x-auto px-4 py-3 text-xs font-bold text-[#52525b] sm:px-6 lg:px-8">
           <Link href="/" className="shrink-0 text-[#ef4056]">خانه</Link>
           {navItems.map(([label, href]) => <Link key={href} href={href} className="shrink-0 transition hover:text-[#ef4056]">{label}</Link>)}
