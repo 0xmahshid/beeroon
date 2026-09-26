@@ -49,9 +49,41 @@ create table businesses (
 alter table businesses add column if not exists bale text;
 alter table businesses add column if not exists neshan text;
 
-insert into cities (id, name, slug, active)
-values ('mashhad', 'مشهد', 'mashhad', true)
-on conflict (id) do nothing;
+insert into cities (id, name, slug, active) values
+  ('mashhad', 'مشهد', 'mashhad', true),
+  ('tehran', 'تهران', 'tehran', true),
+  ('karaj', 'کرج', 'karaj', true),
+  ('isfahan', 'اصفهان', 'isfahan', true),
+  ('shiraz', 'شیراز', 'shiraz', true),
+  ('tabriz', 'تبریز', 'tabriz', true),
+  ('ahvaz', 'اهواز', 'ahvaz', true),
+  ('qom', 'قم', 'qom', true),
+  ('kermanshah', 'کرمانشاه', 'kermanshah', true),
+  ('urmia', 'ارومیه', 'urmia', true),
+  ('rasht', 'رشت', 'rasht', true),
+  ('zahedan', 'زاهدان', 'zahedan', true),
+  ('kerman', 'کرمان', 'kerman', true),
+  ('yazd', 'یزد', 'yazd', true),
+  ('ardabil', 'اردبیل', 'ardabil', true),
+  ('bandar-abbas', 'بندرعباس', 'bandar-abbas', true),
+  ('arak', 'اراک', 'arak', true),
+  ('zanjan', 'زنجان', 'zanjan', true),
+  ('sanandaj', 'سنندج', 'sanandaj', true),
+  ('khorramabad', 'خرم‌آباد', 'khorramabad', true),
+  ('sari', 'ساری', 'sari', true),
+  ('gorgan', 'گرگان', 'gorgan', true),
+  ('qazvin', 'قزوین', 'qazvin', true),
+  ('bojnurd', 'بجنورد', 'bojnurd', true),
+  ('birjand', 'بیرجند', 'birjand', true),
+  ('ilam', 'ایلام', 'ilam', true),
+  ('bushehr', 'بوشهر', 'bushehr', true),
+  ('yasuj', 'یاسوج', 'yasuj', true),
+  ('shahrekord', 'شهرکرد', 'shahrekord', true),
+  ('semnan', 'سمنان', 'semnan', true)
+on conflict (id) do update set
+  name = excluded.name,
+  slug = excluded.slug,
+  active = excluded.active;
 
 insert into categories (name, slug, icon) values
   ('غذا و نوشیدنی', 'food', '🍽️'),
