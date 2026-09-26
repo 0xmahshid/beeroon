@@ -6,26 +6,20 @@ import { Category, Subcategory } from "@/lib/types";
 
 type Props = { categories: Category[]; subcategories: Subcategory[] };
 
-const visuals: Record<string, { glyph: string; tone: string; accent: string }> = {
-  food: { glyph: "☕", tone: "from-[#ffe5d1] to-[#fff8ef] text-[#b85b2d]", accent: "کافه و غذا" },
-  shopping: { glyph: "🛍️", tone: "from-[#ffdce7] to-[#fff3f6] text-[#c72d5b]", accent: "خرید" },
-  fashion: { glyph: "✦", tone: "from-[#eadcff] to-[#faf5ff] text-[#8754bd]", accent: "مد و پوشاک" },
-  beauty: { glyph: "✿", tone: "from-[#ffe0ec] to-[#fff5f8] text-[#d64975]", accent: "زیبایی" },
-  health: { glyph: "＋", tone: "from-[#d8f3ee] to-[#f3fffc] text-[#2b9584]", accent: "سلامت" },
-  education: { glyph: "✎", tone: "from-[#dce8ff] to-[#f4f7ff] text-[#4c6fc7]", accent: "آموزش" },
-  home: { glyph: "⌂", tone: "from-[#fff0c7] to-[#fffaf0] text-[#a87818]", accent: "خانه" },
-  automotive: { glyph: "▰", tone: "from-[#dfe9ef] to-[#f7fbfd] text-[#55717e]", accent: "خودرو" },
-  business: { glyph: "↗", tone: "from-[#ffe0e6] to-[#fff3f4] text-[#c70d46]", accent: "خدمات کسب‌وکار" },
-  technology: { glyph: "⌘", tone: "from-[#dfe3ff] to-[#f7f8ff] text-[#5968c5]", accent: "فناوری" },
+const visuals: Record<string, { glyph: string; tone: string }> = {
+  food: { glyph: "☕", tone: "from-[#fff1e8] to-[#fffaf7] text-[#c26b36]" },
+  shopping: { glyph: "🛍️", tone: "from-[#fff0f3] to-[#fffafb] text-[#d33c5a]" },
+  fashion: { glyph: "✦", tone: "from-[#f3ecff] to-[#fbf9ff] text-[#8553bd]" },
+  beauty: { glyph: "✿", tone: "from-[#fff0f6] to-[#fffafd] text-[#d64975]" },
+  health: { glyph: "＋", tone: "from-[#e9faf6] to-[#f8fffd] text-[#319a88]" },
+  education: { glyph: "✎", tone: "from-[#eef3ff] to-[#fafbff] text-[#4c6fc7]" },
+  home: { glyph: "⌂", tone: "from-[#fff8df] to-[#fffdf4] text-[#ad801f]" },
+  automotive: { glyph: "▰", tone: "from-[#eff7fa] to-[#fbfdfe] text-[#55717e]" },
+  business: { glyph: "↗", tone: "from-[#fff0f2] to-[#fffafb] text-[#c70d46]" },
+  technology: { glyph: "⌘", tone: "from-[#eff1ff] to-[#fbfbff] text-[#5968c5]" },
 };
 
-const popular = [
-  ["فروشگاه اینستاگرامی", "online-shops", "instagram-shop"],
-  ["مشاوره مهاجرت", "immigration", "immigration-consulting"],
-  ["میکاپ آرتیست", "beauty", "makeup-artist"],
-  ["طلافروشی", "shopping", "gold-jewelry"],
-  ["داروخانه", "health", "pharmacy"],
-];
+const popular = [["فروشگاه اینستاگرامی", "online-shops", "instagram-shop"], ["میکاپ آرتیست", "beauty", "makeup-artist"], ["طلافروشی", "shopping", "gold-jewelry"], ["داروخانه", "health", "pharmacy"]];
 
 export default function CategoryExplorer({ categories, subcategories }: Props) {
   const [query, setQuery] = useState("");
@@ -39,51 +33,32 @@ export default function CategoryExplorer({ categories, subcategories }: Props) {
   const visible = normalized || showAll ? groups : groups.slice(0, 12);
 
   return (
-    <section id="directory" className="mx-auto max-w-7xl px-5 py-12 lg:px-8 lg:py-16">
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <span className="text-[11px] font-black tracking-[0.18em] text-[#ed0b55]">EXPLORE YOUR CITY</span>
-          <h2 className="mt-2 text-2xl font-black text-[#30252a] sm:text-3xl">از کجا شروع کنیم؟</h2>
-          <p className="mt-2 text-sm leading-7 text-[#837276]">دسته‌ای که می‌خواهی را انتخاب کن؛ تخصص دقیقش را بعد پیدا می‌کنیم.</p>
+    <section id="directory" className="border-y border-[#e4e4e7] bg-white">
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        <div className="flex flex-col gap-5 border-b border-[#f0f0f1] pb-6 lg:flex-row lg:items-end lg:justify-between">
+          <div><span className="text-[11px] font-bold tracking-[0.16em] text-[#ef4056]">دسته‌بندی‌ها</span><h2 className="mt-2 text-2xl font-black text-[#27272a]">چی می‌خوای پیدا کنی؟</h2><p className="mt-1 text-sm text-[#71717a]">دسته را انتخاب کن و بهترین گزینه‌های اطرافت را ببین.</p></div>
+          <div className="relative w-full lg:w-[360px]">
+            <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xl text-[#71717a]">⌕</span>
+            <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="جست‌وجو در دسته‌ها" className="h-12 w-full rounded-xl border border-[#d4d4d8] bg-white pr-11 pl-4 text-sm text-[#27272a] outline-none" />
+          </div>
         </div>
-        <div className="relative w-full lg:w-[28rem]">
-          <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-2xl text-[#ed0b55]">⌕</span>
-          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="جست‌وجو در دسته‌ها و خدمات..." className="h-14 w-full rounded-2xl border border-[#eadfe2] bg-white pr-12 pl-4 text-sm text-[#30252a] outline-none shadow-[0_14px_28px_-24px_rgba(77,30,36,.7)]" />
+        <div className="mt-5 flex items-center gap-2 overflow-x-auto pb-1">
+          <span className="shrink-0 text-xs font-bold text-[#71717a]">پیشنهاد ما:</span>
+          {popular.map(([label, category, sub]) => <Link key={sub} href={`/category/${category}/${sub}`} className="shrink-0 rounded-lg bg-[#fafafa] px-3 py-2 text-[11px] font-bold text-[#52525b] transition hover:bg-[#fff0f2] hover:text-[#ef4056]">{label}</Link>)}
         </div>
+        <div className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
+          {visible.map(({ category, children }) => {
+            const visual = visuals[category.slug] || { glyph: category.icon || "✦", tone: "from-[#f5f5f5] to-white text-[#ef4056]" };
+            return <Link key={category.id} href={`/category/${category.slug}`} className="group flex min-h-[132px] flex-col items-center justify-center rounded-2xl border border-[#e4e4e7] bg-white px-2 py-4 transition hover:-translate-y-0.5 hover:border-[#ef4056]/50 hover:shadow-[0_6px_18px_rgba(0,0,0,.07)]">
+              <span className={`beeroon-tile grid h-14 w-14 place-items-center rounded-full bg-gradient-to-br text-2xl ${visual.tone}`}>{visual.glyph}</span>
+              <span className="mt-3 truncate text-center text-xs font-black text-[#3f3f46] group-hover:text-[#ef4056]">{category.name}</span>
+              <span className="mt-1 text-[10px] text-[#a1a1aa]">{children.length} تخصص</span>
+            </Link>;
+          })}
+        </div>
+        {visible.length === 0 && <div className="mt-7 rounded-xl border border-dashed border-[#d4d4d8] py-12 text-center text-sm text-[#71717a]">نتیجه‌ای برای این جست‌وجو پیدا نشد.</div>}
+        {groups.length > 12 && !normalized && <button onClick={() => setShowAll((value) => !value)} className="mx-auto mt-7 block rounded-xl border border-[#d4d4d8] bg-white px-5 py-2.5 text-xs font-bold text-[#52525b] transition hover:border-[#ef4056] hover:text-[#ef4056]">{showAll ? "نمایش کمتر" : `نمایش همه دسته‌ها (${groups.length})`}</button>}
       </div>
-
-      <div className="mt-5 flex flex-wrap items-center gap-2">
-        <span className="ml-1 text-xs font-bold text-[#a08e92]">پرتکرارها:</span>
-        {popular.map(([label, category, sub]) => <Link key={sub} href={`/category/${category}/${sub}`} className="rounded-full border border-[#eadfe2] bg-white px-3 py-2 text-[11px] font-bold text-[#6f6064] transition hover:-translate-y-0.5 hover:border-[#ed0b55]/35 hover:text-[#ed0b55]">{label}</Link>)}
-      </div>
-
-      <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7">
-        {visible.map(({ category, children }) => {
-          const visual = visuals[category.slug] || { glyph: category.icon || "✦", tone: "from-[#f9e4e9] to-white text-[#ed0b55]", accent: category.name };
-          const shownChildren = normalized ? children.filter((item) => item.name.toLocaleLowerCase("fa").includes(normalized)) : children;
-          return (
-                        <article key={category.id} className="group soft-card rounded-[1.15rem] border border-[#eee3e4] bg-white p-3 transition duration-200 hover:-translate-y-1">
-              <Link href={"/category/" + category.slug} className="flex items-center gap-3">
-                <div className={"beeroon-tile grid h-12 w-12 shrink-0 place-items-center rounded-[1rem] bg-gradient-to-br text-2xl " + visual.tone}>{visual.glyph}</div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="truncate text-sm font-black text-[#3c3035] group-hover:text-[#ed0b55]">{category.name || visual.accent}</span>
-                    <span className="shrink-0 text-sm text-[#ed0b55] transition group-hover:-translate-x-1">←</span>
-                  </div>
-                  <span className="mt-1 block text-[10px] text-[#a08e92]">{children.length} تخصص</span>
-                </div>
-              </Link>
-              <div className="mt-3 flex min-w-0 gap-1.5 overflow-hidden">
-                {(shownChildren.length ? shownChildren : children).slice(0, 2).map((item) => <Link key={item.id} href={"/category/" + category.slug + "/" + item.slug} className="max-w-[48%] shrink-0 truncate rounded-lg bg-[#fff8f7] px-2 py-1 text-[10px] font-bold text-[#796a6d] transition hover:bg-[#fff0f3] hover:text-[#d4134e]">{item.name}</Link>)}
-                {children.length > 2 && <Link href={"/category/" + category.slug} className="shrink-0 rounded-lg bg-[#f7f2f0] px-2 py-1 text-[10px] font-black text-[#ed0b55]">+{children.length - 2}</Link>}
-              </div>
-            </article>
-          );
-        })}
-      </div>
-
-      {visible.length === 0 && <div className="rounded-3xl border border-dashed border-[#d8c8c2] bg-[#fffaf7] py-14 text-center"><p className="font-black text-[#3b2d2e]">چیزی با این عبارت پیدا نشد.</p><p className="mt-2 text-sm text-[#8a7b79]">نام دسته یا تخصص را کوتاه‌تر بنویس.</p></div>}
-      {groups.length > 12 && !normalized && <button onClick={() => setShowAll((value) => !value)} className="mx-auto mt-8 flex items-center gap-2 rounded-full border border-[#ed0b55]/25 bg-white px-5 py-3 text-sm font-black text-[#ed0b55] transition hover:bg-[#fff6f8]">{showAll ? "نمایش کمتر" : `نمایش همه دسته‌ها (${groups.length})`}<span>{showAll ? "↑" : "↓"}</span></button>}
     </section>
   );
 }
