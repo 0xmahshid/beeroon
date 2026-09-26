@@ -202,17 +202,30 @@ export default function CategoryResults({ slug, sub, category, selected, subcate
         </section>
 
         <section className="mt-4 rounded-[1.5rem] border border-[#f0dfe3] bg-white p-3 shadow-[0_12px_28px_-26px_rgba(111,35,50,.55)] sm:mt-5 sm:p-4">
-          <div className="flex items-center justify-between px-1">
+          <div className="flex flex-col gap-3 px-1 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <span className="text-[10px] font-black tracking-[0.12em] text-[#ef4056]">انتخاب تخصص</span>
-              <h2 className="mt-1 text-sm font-black text-[#3d1833]">از اینجا دقیق‌تر انتخاب کن</h2>
+              <h2 className="mt-1 text-sm font-black text-[#3d1833]">دقیق‌تر انتخاب کن</h2>
+              <p className="mt-1 text-[11px] text-[#a18e95]">فهرست زیر را باز کن و گزینه‌ی مناسب را سریع پیدا کن.</p>
             </div>
-            <span className="rounded-full bg-[#fff1f4] px-2.5 py-1 text-[10px] font-bold text-[#d9364b]">{subcategories.length} مورد</span>
+            <details className="group relative w-full sm:w-auto">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-5 rounded-xl border border-[#eadfe2] bg-[#fffafa] px-3.5 py-3 text-xs font-black text-[#3d1833] transition hover:border-[#ef4056] hover:bg-[#fff4f6] sm:min-w-[13rem]">
+                <span>{selected?.name || "همه‌ی کسب‌وکارها"}</span>
+                <span className="flex items-center gap-2 text-[#ef4056]"><span className="rounded-full bg-[#fff0f3] px-2 py-1 text-[10px] font-bold">{subcategories.length} تخصص</span><span className="text-base leading-none transition group-open:rotate-180">⌄</span></span>
+              </summary>
+              <div className="mt-2 rounded-2xl border border-[#f0dfe3] bg-white p-2 shadow-[0_18px_35px_-22px_rgba(70,20,38,.38)] sm:absolute sm:right-0 sm:top-full sm:z-30 sm:w-[min(34rem,calc(100vw-2rem))]">
+                <div className="flex items-center justify-between border-b border-[#f5ebed] px-2 pb-2 text-[10px] font-bold text-[#a18e95]">
+                  <span>یک گزینه را انتخاب کن</span>
+                  <span>حرکت برای دیدن همه</span>
+                </div>
+                <div className="mt-2 grid max-h-64 grid-cols-2 gap-2 overflow-y-auto pr-1 sm:grid-cols-3" role="list">
+                  <Link href={withCity("/category/" + slug)} className={"rounded-xl px-3 py-2.5 text-center text-xs font-black transition " + (activeSlug === "__all__" ? "bg-[#ef4056] text-white" : "border border-[#eadfe2] bg-[#fffafa] text-[#6f5c64] hover:border-[#ef4056] hover:text-[#ef4056]")}>همه</Link>
+                  {subcategories.map((item) => <Link key={item.id} href={withCity("/category/" + slug + "/" + item.slug)} className={"rounded-xl px-3 py-2.5 text-center text-xs font-bold transition " + (activeSlug === item.slug ? "bg-[#ef4056] text-white" : "border border-[#eadfe2] bg-[#fffafa] text-[#6f5c64] hover:border-[#ef4056] hover:text-[#ef4056]")}>{item.name}</Link>)}
+                </div>
+              </div>
+            </details>
           </div>
-          <div className="mt-3 flex snap-x snap-mandatory gap-2 overflow-x-auto pb-1 [scrollbar-width:none]">
-             <Link href={withCity("/category/" + slug)} className={"shrink-0 snap-start rounded-xl px-4 py-2.5 text-xs font-black transition " + (activeSlug === "__all__" ? "bg-[#ef4056] text-white shadow-[0_8px_16px_-12px_rgba(239,64,86,.8)]" : "border border-[#eadfe2] bg-white text-[#6f5c64] hover:border-[#ef4056] hover:text-[#ef4056]")}>همه</Link>
-             {subcategories.map((item) => <Link key={item.id} href={withCity("/category/" + slug + "/" + item.slug)} className={"shrink-0 snap-start rounded-xl px-4 py-2.5 text-xs font-bold transition " + (activeSlug === item.slug ? "bg-[#ef4056] text-white shadow-[0_8px_16px_-12px_rgba(239,64,86,.8)]" : "border border-[#eadfe2] bg-white text-[#6f5c64] hover:border-[#ef4056] hover:text-[#ef4056]")}>{item.name}</Link>)}
-          </div>
+          {isSubcategory && <div className="mt-3 flex items-center gap-2 rounded-xl bg-[#fff4f6] px-3 py-2 text-[11px] font-bold text-[#a92e49]"><span className="grid h-5 w-5 place-items-center rounded-full bg-white text-[#ef4056]">✓</span> تخصص انتخاب‌شده: {selected?.name}</div>}
         </section>
 
         <details className="mt-4 rounded-[1.35rem] border border-[#f0dfe3] bg-white p-4 shadow-[0_12px_28px_-26px_rgba(111,35,50,.45)] lg:hidden">
