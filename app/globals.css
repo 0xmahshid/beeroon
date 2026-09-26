@@ -19,7 +19,6 @@ button:disabled { cursor: wait; }
 ::selection { background: #ffd7dd; color: #9f1239; }
 
 .hero-shell { background: linear-gradient(135deg, #35152e 0%, #5d1c3b 48%, #ed4059 100%); }
-.hero-grid { background-image: linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px); background-size: 30px 30px; mask-image: linear-gradient(to bottom, black, transparent 92%); }
 .hero-orb-one { background: rgba(255, 211, 110, .24); filter: blur(46px); }
 .hero-orb-two { background: rgba(255, 255, 255, .12); filter: blur(60px); }
 .hero-window { background: linear-gradient(145deg, rgba(255,255,255,.2), rgba(255,255,255,.06)); backdrop-filter: blur(10px); }
