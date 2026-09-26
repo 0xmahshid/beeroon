@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
 import "./globals.css";
 import Header from "@/components/Header";
+import { getCities } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "بیرون | قبل از راه افتادن، پیداش کن",
@@ -12,11 +14,12 @@ export const viewport: Viewport = {
   themeColor: "#ed0b55",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const cities = await getCities();
   return (
     <html lang="fa" dir="rtl">
       <body className="min-h-screen bg-[#fffafa] text-[#2d2028] antialiased">
-        <Header />
+        <Suspense fallback={<div className="h-[68px] border-b border-[#eadfe2] bg-white" />}><Header cities={cities} /></Suspense>
         <main>{children}</main>
         <footer className="mt-16 border-t border-[#eadfe2] bg-white">
           <div className="mx-auto flex max-w-7xl flex-col gap-5 px-5 py-9 sm:flex-row sm:items-center sm:justify-between lg:px-8">
