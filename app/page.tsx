@@ -24,7 +24,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
       <section className="border-b border-[#e8eaee] bg-white">
         <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 md:py-12 lg:grid-cols-[1fr_340px] lg:items-center lg:px-8">
           <div className="max-w-3xl">
-            <span className="inline-flex rounded-full bg-[#fff0f3] px-3 py-1.5 text-[10px] font-black text-[#d51f4f]">راهنمای خرید و خدمات محلی</span>
+            <span className="inline-flex rounded-full bg-[#fff0f3] px-3 py-1.5 text-[10px] font-black text-[#d51f4f]">قبل از بیرون زدن، بیرون رو چک کن.</span>
             <h1 className="mt-4 text-3xl font-black leading-[1.55] tracking-tight text-[#25252a] sm:text-5xl">هر چیزی لازم داری،<br /><span className="text-[#d51f4f]">از بیرون پیدا کن.</span></h1>
             <p className="mt-4 max-w-xl text-sm leading-7 text-[#69707b] sm:text-base">کسب‌وکارهای واقعی {city.name} را پیدا کن، مقایسه کن و با خیال راحت انتخاب کن.</p>
             <form action="/search" method="get" role="search" className="mt-6 flex max-w-2xl items-center gap-2 rounded-2xl border border-[#dfe2e7] bg-white p-1.5 shadow-[0_12px_28px_rgba(32,35,42,.08)] focus-within:border-[#e0a0af]">

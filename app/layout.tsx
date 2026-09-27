@@ -4,7 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import { getCities } from "@/lib/data";
 
-export const metadata: Metadata = { title: "بیرون | کشف کن، مقایسه کن، بیرون بزن", description: "دایرکتوری کسب‌وکارها و خدمات محلی." };
+export const metadata: Metadata = { title: "بیرون | قبل از بیرون زدن، بیرون رو چک کن", description: "کسب‌وکارها و خدمات محلی را قبل از بیرون زدن پیدا کن، مقایسه کن و با خیال راحت انتخاب کن." };
 export const viewport: Viewport = { themeColor: "#d51f4f" };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
