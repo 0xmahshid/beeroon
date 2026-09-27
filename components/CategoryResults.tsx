@@ -30,6 +30,11 @@ export default function CategoryResults({ slug, sub, category, selected, subcate
   const title = selected?.name || category?.name || "دسته‌بندی";
   const categoryName = category?.name || "دسته‌بندی";
   const cityQuery = "?city=" + encodeURIComponent(city.slug);
+  const priceOptions: { value: Price; label: string }[] = [
+    { value: 1, label: "اقتصادی" },
+    { value: 2, label: "متوسط" },
+    { value: 3, label: "ویژه" },
+  ];
 
   const filtered = useMemo(() => {
     const result = businesses.filter((business) => {
@@ -80,7 +85,7 @@ export default function CategoryResults({ slug, sub, category, selected, subcate
         <div className="flex flex-wrap gap-2">
           <button onClick={() => toggleType("physical")} className={"sample-chip " + (types.includes("physical") ? "active" : "")}>حضوری</button>
           <button onClick={() => toggleType("online_shop")} className={"sample-chip " + (types.includes("online_shop") ? "active" : "")}>آنلاین‌شاپ</button>
-          <button onClick={() => togglePrice(1)} className={"sample-chip " + (prices.includes(1) ? "active" : "")}>اقتصادی</button>
+          {priceOptions.map((option) => <button key={option.value} onClick={() => togglePrice(option.value)} className={"sample-chip " + (prices.includes(option.value) ? "active" : "")}>{option.label}</button>)}
           {((types.length > 0) || (prices.length > 0)) && <button onClick={clear} className="sample-chip text-[#c91442]">پاک کردن</button>}
         </div>
         <label className="flex items-center gap-2 text-[10px] font-bold text-[#8f8283]">مرتب‌سازی
@@ -89,8 +94,16 @@ export default function CategoryResults({ slug, sub, category, selected, subcate
           </select>
         </label>
       </div>
-      <div className="mt-2 flex items-center justify-between"><h2 className="text-sm font-extrabold">نتیجه‌ها</h2><span className="text-[11px] text-[#8f8283]">{filtered.length} نتیجه</span></div>
-      {filtered.length > 0 ? <div className="sample-grid-md mt-1">{filtered.map((business) => <BusinessCard key={business.id} b={business} />)}</div> : <div className="py-16 text-center text-xs text-[#8f8283]">با این فیلتر چیزی پیدا نشد.</div>}
+      <div className="mt-2 flex items-center justify-between"><h2 className="text-sm font-extrabold">نتیجه‌ها</h2><span className="text-[11px] text-[#8f8283]">{filtered.length.toLocaleString("fa-IR")} نتیجه</span></div>
+      {filtered.length > 0 ? <div className="sample-grid-md mt-1">{filtered.map((business) => <BusinessCard key={business.id} b={business} categoryName={category?.name} />)}</div> : <div className="my-5 rounded-2xl border border-dashed border-[#e5cbd2] bg-[#fffafb] px-5 py-12 text-center">
+        <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-[#fff0f3] text-2xl text-[#d51f4f]">⌕</div>
+        <h3 className="mt-4 text-sm font-black text-[#32162d]">{businesses.length === 0 ? "هنوز کسب‌وکاری در " + city.name + " ثبت نشده" : "با این فیلتر چیزی پیدا نشد"}</h3>
+        <p className="mx-auto mt-2 max-w-sm text-xs leading-6 text-[#8f8283]">{businesses.length === 0 ? "اگر صاحب این کسب‌وکاری، جای خودت را به آدم‌های درست نشان بده." : "فیلترها را تغییر بده یا از جست‌وجوی آزاد کمک بگیر."}</p>
+        <div className="mt-5 flex flex-wrap justify-center gap-2">
+          {(types.length > 0 || prices.length > 0) && <button onClick={clear} className="rounded-xl border border-[#eadfe3] bg-white px-4 py-2.5 text-xs font-black text-[#6d5c65]">حذف فیلترها</button>}
+          <Link href={"/register-business" + cityQuery} className="rounded-xl bg-[#d51f4f] px-4 py-2.5 text-xs font-black text-white">ثبت کسب‌وکار</Link>
+        </div>
+      </div>}
     </div>
   );
 }

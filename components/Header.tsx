@@ -13,7 +13,12 @@ function SearchIcon() {
 export default function Header({ cities }: { cities: City[] }) {
   const searchParams = useSearchParams();
   const selectedCity = searchParams.get("city");
-  const withCity = (href: string) => selectedCity ? href + (href.includes("?") ? "&" : "?") + "city=" + encodeURIComponent(selectedCity) : href;
+  const withCity = (href: string) => {
+    if (!selectedCity) return href;
+    const [path, hash] = href.split("#");
+    const separator = path.includes("?") ? "&" : "?";
+    return path + separator + "city=" + encodeURIComponent(selectedCity) + (hash ? "#" + hash : "");
+  };
 
   return (
     <header className="beeroon-header sticky top-0 z-50 bg-white/95 backdrop-blur-md">
