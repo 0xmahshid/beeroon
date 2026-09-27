@@ -23,13 +23,13 @@ export default function Header({ cities }: { cities: City[] }) {
   return (
     <header className="beeroon-header sticky top-0 z-50 bg-white/95 backdrop-blur-md">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex min-h-[72px] items-center gap-3">
+        <div className="flex min-h-[64px] items-center gap-3">
           <Link href={withCity("/")} className="flex shrink-0 items-center gap-2.5" aria-label="صفحه اصلی بیرون">
-            <span className="grid h-11 w-11 place-items-center rounded-[15px] bg-[#fff0f3] p-1.5"><img src="/beeroon-mark.svg" alt="" className="h-full w-full object-contain" /></span>
+            <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#fff0f3] p-1.5"><img src="/beeroon-mark.svg" alt="" className="h-full w-full object-contain" /></span>
             <span className="hidden sm:block"><strong className="block text-lg font-black text-[#32162d]">بیرون</strong><span className="block text-[9px] font-bold text-[#a18d96]">کشف کن، مقایسه کن، بیرون بزن</span></span>
           </Link>
           <div className="hidden shrink-0 sm:block"><Suspense fallback={<span className="h-9 w-24 rounded-lg bg-[#fcf8f7]" />}><CityPicker cities={cities} /></Suspense></div>
-          <form action="/search" method="get" role="search" className="beeroon-search flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-[#eadfe3] bg-[#fcf8f7] px-4 py-2">
+          <form action="/search" method="get" role="search" className="beeroon-search flex min-w-0 flex-1 items-center gap-3 rounded-xl border border-[#e1e4e9] bg-[#fcf8f7] px-4 py-2">
             <SearchIcon /><input type="hidden" name="city" value={selectedCity || "mashhad"} /><input name="q" aria-label="جست‌وجو" placeholder="کجا می‌خوای بری؟ کافه، فروشگاه، متخصص..." className="min-w-0 flex-1 bg-transparent py-2 text-xs outline-none placeholder:text-[#9a8990]" /><button className="hidden rounded-xl bg-[#d51f4f] px-4 py-2.5 text-[10px] font-black text-white transition hover:bg-[#b91640] sm:block">جست‌وجو</button>
           </form>
           <div className="hidden shrink-0 items-center gap-2 md:flex">

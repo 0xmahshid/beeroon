@@ -25,7 +25,7 @@ input:focus, textarea:focus, select:focus { border-color: var(--beeroon-red) !im
 .beeroon-shell { background: var(--beeroon-canvas); }
 .beeroon-hero { background: radial-gradient(circle at 12% 5%, rgba(243, 150, 117, .26), transparent 28%), linear-gradient(122deg, #30152e 0%, #4b183a 46%, #bc244e 100%); }
 .beeroon-hero-grid { background-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px); background-size: 34px 34px; mask-image: linear-gradient(to bottom, black, transparent); }
-.beeroon-header { border-top: 3px solid var(--beeroon-red); box-shadow: 0 8px 25px rgba(55, 20, 35, .06); }
+.beeroon-header { border-bottom: 1px solid var(--beeroon-line); box-shadow: 0 6px 20px rgba(35, 38, 45, .05); }
 .beeroon-search { transition: border-color .18s ease, box-shadow .18s ease, background .18s ease; }
 .beeroon-search:focus-within { border-color: #e28599; background: #fff; box-shadow: 0 12px 30px rgba(57, 19, 42, .09); }
 
