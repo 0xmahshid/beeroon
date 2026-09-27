@@ -2,52 +2,38 @@
 
 import Link from "next/link";
 import { Suspense } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import CityPicker from "@/components/CityPicker";
 import type { City } from "@/lib/types";
 
-function Icon({ name }: { name: "search" | "bell" | "home" | "grid" | "user" }) {
-  const paths = {
-    search: <><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></>,
-    bell: <><path d="M6 8a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6" /><path d="M10 21a2 2 0 0 0 4 0" /></>,
-    home: <><path d="M3 11l9-8 9 8" /><path d="M5 10v10h14V10" /></>,
-    grid: <><rect x="3" y="3" width="7" height="7" rx="2" /><rect x="14" y="3" width="7" height="7" rx="2" /><rect x="3" y="14" width="7" height="7" rx="2" /><rect x="14" y="14" width="7" height="7" rx="2" /></>,
-    user: <><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 4-6 8-6s8 2 8 6" /></>,
-  };
-  return <svg className="h-[19px] w-[19px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]}</svg>;
+function SearchIcon() {
+  return <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.5" /><path d="m16 16 4.5 4.5" /></svg>;
 }
 
 export default function Header({ cities }: { cities: City[] }) {
-  const pathname = usePathname();
   const searchParams = useSearchParams();
   const selectedCity = searchParams.get("city");
   const withCity = (href: string) => selectedCity ? href + (href.includes("?") ? "&" : "?") + "city=" + encodeURIComponent(selectedCity) : href;
 
   return (
-    <>
-      <header className="mx-auto max-w-[1080px] px-[18px] pb-1 pt-4 sm:px-[26px] sm:pt-5">
-        <div className="mb-4 flex items-center justify-between">
-          <Link href={withCity("/")} className="flex items-center gap-2 font-extrabold text-base sm:text-lg" aria-label="صفحه اصلی بیرون">
-            <span className="grid h-[30px] w-[30px] place-items-center rounded-[9px] bg-[#c91442] sm:h-8 sm:w-8"><img src="/beeroon-mark.svg" alt="" className="h-[17px] w-[17px] brightness-0 invert" /></span>
-            بیرون
+    <header className="beeroon-header sticky top-0 z-50 bg-white/95 backdrop-blur-md">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex min-h-[72px] items-center gap-3">
+          <Link href={withCity("/")} className="flex shrink-0 items-center gap-2.5" aria-label="صفحه اصلی بیرون">
+            <span className="grid h-11 w-11 place-items-center rounded-[15px] bg-[#fff0f3] p-1.5"><img src="/beeroon-mark.svg" alt="" className="h-full w-full object-contain" /></span>
+            <span className="hidden sm:block"><strong className="block text-lg font-black text-[#32162d]">بیرون</strong><span className="block text-[9px] font-bold text-[#a18d96]">کشف کن، مقایسه کن، بیرون بزن</span></span>
           </Link>
-          <div className="flex items-center gap-3.5 text-[#8f8283]">
-            <Icon name="bell" />
-            <Suspense fallback={<span className="h-5 w-20 rounded bg-[#fdfaf9]" />}><CityPicker cities={cities} /></Suspense>
+          <div className="hidden shrink-0 sm:block"><Suspense fallback={<span className="h-9 w-24 rounded-lg bg-[#fcf8f7]" />}><CityPicker cities={cities} /></Suspense></div>
+          <form action="/search" method="get" role="search" className="beeroon-search flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-[#eadfe3] bg-[#fcf8f7] px-4 py-2">
+            <SearchIcon /><input type="hidden" name="city" value={selectedCity || "mashhad"} /><input name="q" aria-label="جست‌وجو" placeholder="کجا می‌خوای بری؟ کافه، فروشگاه، متخصص..." className="min-w-0 flex-1 bg-transparent py-2 text-xs outline-none placeholder:text-[#9a8990]" /><button className="hidden rounded-xl bg-[#d51f4f] px-4 py-2.5 text-[10px] font-black text-white transition hover:bg-[#b91640] sm:block">جست‌وجو</button>
+          </form>
+          <div className="hidden shrink-0 items-center gap-2 md:flex">
+            <Link href={withCity("/#directory")} className="rounded-xl px-3 py-2.5 text-xs font-bold text-[#6b5962] transition hover:bg-[#fff0f3] hover:text-[#d51f4f]">دسته‌ها</Link>
+            <Link href={withCity("/register-business")} className="rounded-xl bg-[#32162d] px-4 py-2.5 text-xs font-black text-white transition hover:bg-[#4c2042]">ثبت کسب‌وکار</Link>
           </div>
+          <div className="sm:hidden"><Suspense fallback={null}><CityPicker cities={cities} /></Suspense></div>
         </div>
-        <form action="/search" method="get" className="my-3 flex items-center gap-2.5 rounded-[13px] border-[1.4px] border-[#f0e9ea] px-[15px] py-3 text-xs text-[#8f8283]">
-          <Icon name="search" />
-          {selectedCity && <input type="hidden" name="city" value={selectedCity} />}
-          <input name="q" aria-label="جست‌وجو" placeholder="دنبال چی می‌گردی؟" className="min-w-0 flex-1 bg-transparent outline-none placeholder:text-[#8f8283]" />
-        </form>
-      </header>
-      <nav className="sample-bottomnav">
-        <Link href={withCity("/")} className={pathname === "/" ? "active" : ""}><Icon name="home" />خانه</Link>
-        <Link href={withCity("/#directory")} className={pathname.startsWith("/category") ? "active" : ""}><Icon name="grid" />دسته‌ها</Link>
-        <Link href={withCity("/search")} className={pathname === "/search" ? "active" : ""}><Icon name="search" />جست‌وجو</Link>
-        <Link href={withCity("/register-business")} className={pathname.startsWith("/register") ? "active" : ""}><Icon name="user" />پروفایل</Link>
-      </nav>
-    </>
+      </div>
+    </header>
   );
 }
