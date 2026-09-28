@@ -1,6 +1,8 @@
 export const SOCIAL_NETWORKS = [
   { key: "instagram", label: "اینستاگرام", placeholder: "@yourbusiness", base: "https://instagram.com/", tone: "red" },
   { key: "telegram", label: "تلگرام", placeholder: "@yourchannel", base: "https://t.me/", tone: "blue" },
+  { key: "telegram_group", label: "گروه تلگرام", placeholder: "@yourgroup", base: "https://t.me/", tone: "blue" },
+  { key: "telegram_channel", label: "کانال تلگرام", placeholder: "@yourchannel", base: "https://t.me/", tone: "blue" },
   { key: "whatsapp", label: "واتساپ", placeholder: "98912...", base: "https://wa.me/", tone: "green" },
   { key: "bale", label: "بله", placeholder: "@yourchannel", base: "https://ble.ir/", tone: "blue" },
   { key: "eitaa", label: "ایتا", placeholder: "@yourchannel", base: "https://eitaa.com/", tone: "blue" },
