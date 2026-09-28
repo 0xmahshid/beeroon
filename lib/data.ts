@@ -5,6 +5,15 @@ import { Business, Category, City, Subcategory } from "./types";
 
 const configured = !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
+function normalizeSeedBusiness(business: Business | undefined, categories: Category[], subcategories: Subcategory[]): Business | null {
+  if (!business) return null;
+  const seedCategory = seedCategories.find((category) => category.id === business.category_id);
+  const category = categories.find((item) => item.slug === seedCategory?.slug);
+  const seedSubcategory = seedSubcategories.find((subcategory) => subcategory.id === business.subcategory_id);
+  const subcategory = subcategories.find((item) => item.category_id === category?.id && item.slug === seedSubcategory?.slug);
+  return { ...business, category_id: category?.id || business.category_id, subcategory_id: subcategory?.id || business.subcategory_id };
+}
+
 export async function getCities(): Promise<City[]> {
   if (!configured) return seedCities.filter((city) => city.active);
   const { data, error } = await supabase.from("cities").select("*").eq("active", true).order("name");
@@ -93,12 +102,21 @@ export async function getBusinesses(params: { categorySlug?: string; subcategory
   }
   const { data, error } = await query;
   if (error) return [];
-  return (data as Business[]).sort(() => Math.random() - 0.5);
+  const remote = data as Business[];
+  const directory = await getDirectory();
+  const demo = normalizeSeedBusiness(seedBusinesses.find((business) => business.id === "go2china" && business.status === "approved"), directory.categories, directory.subcategories);
+  const demoCategory = demo && directory.categories.find((category) => category.id === demo.category_id);
+  const demoSubcategory = demo && directory.subcategories.find((subcategory) => subcategory.id === demo.subcategory_id);
+  const demoMatches = demo && (!params.citySlug || demo.city_id === params.citySlug) && (!params.categorySlug || demoCategory?.slug === params.categorySlug) && (!params.subcategorySlug || demoSubcategory?.slug === params.subcategorySlug) ? [demo] : [];
+  const remoteIds = new Set(remote.map((business) => business.id));
+  return [...demoMatches.filter((business) => !remoteIds.has(business.id)), ...remote];
 }
 
 export async function getBusinessById(id: string): Promise<Business | null> {
-  const fallback = seedBusinesses.find((business) => business.id === id && business.status === "approved") || null;
-  if (!configured) return fallback;
+  const seedFallback = seedBusinesses.find((business) => business.id === id && business.status === "approved") || null;
+  if (!configured) return normalizeSeedBusiness(seedFallback, seedCategories, seedSubcategories);
+  const directory = await getDirectory();
+  const fallback = normalizeSeedBusiness(seedFallback, directory.categories, directory.subcategories);
   const { data, error } = await supabase.from("businesses").select("*, online_shop_details(*)").eq("id", id).eq("status", "approved").maybeSingle();
   if (error || !data) return fallback;
   return data as Business;
