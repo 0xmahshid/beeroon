@@ -115,7 +115,7 @@ export default function RegisterOnlineShop() {
     <div className="mx-auto max-w-2xl px-4 py-10 sm:py-14">
       <Link href="/register-business" className="text-sm font-bold text-[#8a7b79] hover:text-[#ed0b55]">← فرم ثبت کسب‌وکار فیزیکی</Link>
       <div className="mt-5 rounded-[2rem] border border-[#c9eee4] bg-white p-6 shadow-[0_20px_60px_-42px_rgba(40,124,104,0.55)] sm:p-9">
-        <p className="text-xs font-black tracking-[0.2em] text-[#38a18f]">FOR ONLINE SHOPS</p>
+        <div className="mb-5 flex items-center gap-3"><img src="/beeroon-logo.png" alt="نشان بیرون" className="h-14 w-14 rounded-2xl object-cover shadow-sm" /><div><p className="text-xs font-black text-[#38a18f]">بیرون</p><p className="mt-1 text-[11px] text-[#8a7b79]">دایرکتوری کسب‌وکارهای واقعی</p></div></div><p className="text-xs font-black tracking-[0.2em] text-[#38a18f]">FOR ONLINE SHOPS</p>
         <h1 className="mt-2 text-2xl font-black text-[#241b1c] sm:text-3xl">ثبت آنلاین‌شاپ</h1>
         <p className="mt-3 text-sm leading-7 text-[#80716f]">اطلاعات مخصوص فروش آنلاین را جدا ثبت کن تا مشتری بداند چه می‌فروشی و چطور سفارش می‌گیرد.</p>
         <div className="mt-5 rounded-2xl border border-[#ead9a9] bg-[#fffaf0] px-4 py-3.5">
