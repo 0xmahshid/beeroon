@@ -83,9 +83,9 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
 
       <section className="border-t border-[#e8eaee] bg-white">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="flex flex-col gap-5 rounded-3xl bg-[#32162d] px-6 py-7 text-white sm:flex-row sm:items-center sm:justify-between sm:px-8">
-            <div><span className="text-[10px] font-black tracking-wide text-[#ffb5c4]">برای صاحبان کسب‌وکار</span><h2 className="mt-2 text-xl font-black">کسب‌وکارت را در جای درست معرفی کن.</h2><p className="mt-2 max-w-xl text-xs leading-6 text-white/65">یک پروفایل مرتب بساز تا مشتری‌ها آدرس، تماس و خدماتت را راحت پیدا کنند.</p></div>
-            <Link href={"/register-business" + cityQuery} className="shrink-0 rounded-xl bg-white px-5 py-3 text-center text-xs font-black text-[#32162d] transition hover:bg-[#fff0f3]">ثبت کسب‌وکار رایگان</Link>
+          <div className="flex flex-col gap-5 rounded-3xl bg-[#d51f4f] px-6 py-7 text-white sm:flex-row sm:items-center sm:justify-between sm:px-8">
+            <div><span className="text-[10px] font-black tracking-wide text-[#ffd5df]">برای صاحبان کسب‌وکار</span><h2 className="mt-2 text-xl font-black">کسب‌وکارت را در جای درست معرفی کن.</h2><p className="mt-2 max-w-xl text-xs leading-6 text-white/65">یک پروفایل مرتب بساز تا مشتری‌ها آدرس، تماس و خدماتت را راحت پیدا کنند.</p></div>
+            <Link href={"/register-business" + cityQuery} className="shrink-0 rounded-xl bg-white px-5 py-3 text-center text-xs font-black text-[#d51f4f] transition hover:bg-[#fff0f3]">ثبت کسب‌وکار رایگان</Link>
           </div>
         </div>
       </section>
