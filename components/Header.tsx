@@ -25,7 +25,7 @@ export default function Header({ cities }: { cities: City[] }) {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex min-h-[64px] items-center gap-3">
           <Link href={withCity("/")} className="flex shrink-0 items-center gap-2.5" aria-label="صفحه اصلی بیرون">
-            <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#fff0f3] p-1.5"><img src="/beeroon-mark.svg" alt="" className="h-full w-full object-contain" /></span>
+            <span className="grid h-10 w-10 place-items-center overflow-hidden rounded-[14px] shadow-sm"><img src="/beeroon-logo.png" alt="نشان بیرون" className="h-full w-full object-cover" /></span>
             <span className="hidden sm:block"><strong className="block text-lg font-black text-[#32162d]">بیرون</strong><span className="block text-[9px] font-bold text-[#a18d96]">قبل از بیرون زدن، بیرون رو چک کن.</span></span>
           </Link>
           <div className="hidden shrink-0 sm:block"><Suspense fallback={<span className="h-9 w-24 rounded-lg bg-[#fcf8f7]" />}><CityPicker cities={cities} /></Suspense></div>
