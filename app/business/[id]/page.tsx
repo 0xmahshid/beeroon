@@ -33,7 +33,7 @@ export default async function BusinessPage({ params }: { params: Promise<{ id: s
         <div className="mt-3 flex flex-wrap gap-1.5">
           {business.phone && <a className="sample-contact" href={"tel:" + business.phone} aria-label="تماس">☎</a>}
           {websiteUrl && <a className="sample-contact text-xs" href={websiteUrl} target="_blank" rel="noreferrer" aria-label="سایت">↗</a>}
-          {SOCIAL_NETWORKS.filter((network) => socialLinks[network.key]).map((network) => <a key={network.key} className="sample-contact text-[10px]" href={socialUrl(network.key, socialLinks[network.key]!)} target="_blank" rel="noreferrer" aria-label={network.label} title={network.label}><SocialIcon network={network.key} className="h-4 w-4" /></a>)}
+          {SOCIAL_NETWORKS.filter((network) => socialLinks[network.key]).map((network) => <a key={network.key} className="sample-contact flex h-auto min-w-[45px] flex-col items-center gap-1 px-2 py-1" href={socialUrl(network.key, socialLinks[network.key]!)} target="_blank" rel="noreferrer" aria-label={network.label} title={network.label}><SocialIcon network={network.key} className="h-4 w-4" style={{ color: network.color }} /><span className="text-[8px] leading-3 text-[#8f8283]">{network.label}</span></a>)}
           {mapUrl && <a className="sample-contact text-xs" href={mapUrl} target="_blank" rel="noreferrer">⌖</a>}
         </div>
       </section>
