@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { Business } from "@/lib/types";
+import { mergeSocialLinks, SOCIAL_NETWORKS, socialUrl } from "@/lib/social";
+import SocialIcon from "@/components/SocialIcon";
 
 const priceLabel = { 1: "اقتصادی", 2: "متوسط", 3: "ویژه" } as const;
 
@@ -14,6 +16,7 @@ function PhoneIcon() {
 export default function BusinessCard({ b, categoryName }: { b: Business; categoryName?: string }) {
   const mapUrl = b.neshan ? (b.neshan.startsWith("http") ? b.neshan : "https://neshan.org/maps/search/" + encodeURIComponent(b.neshan)) : b.lat && b.lng ? "https://neshan.org/maps/@" + b.lat + "," + b.lng + ",16z" : null;
   const initials = b.name.trim().slice(0, 1) || "ب";
+  const socialLinks = mergeSocialLinks(b.social_links, b);
   return (
     <article className="business-card overflow-hidden rounded-[1.45rem] border border-[#eadfe3] bg-white shadow-[0_8px_25px_-23px_rgba(58,20,45,.6)]">
       <div className="business-card-cover relative h-[86px] overflow-hidden border-b border-[#f1dfe3]">
@@ -29,6 +32,7 @@ export default function BusinessCard({ b, categoryName }: { b: Business; categor
           {b.address && <p className="flex items-center gap-1.5 truncate"><PinIcon />{b.address}</p>}
           {b.hours && <p className="truncate text-[#a3939a]">ساعت کاری: {b.hours}</p>}
         </div>
+        {SOCIAL_NETWORKS.some((network) => socialLinks[network.key]) && <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-[#f3e8eb] pt-3">{SOCIAL_NETWORKS.filter((network) => socialLinks[network.key]).map((network) => <a key={network.key} href={socialUrl(network.key, socialLinks[network.key]!)} target="_blank" rel="noreferrer" title={network.label} aria-label={network.label} className="grid h-8 w-8 place-items-center rounded-full bg-[#fff5f7] text-[#d51f4f] transition hover:bg-[#ffe1e8]"><SocialIcon network={network.key} className="h-4 w-4" /></a>)}</div>}
         <div className="mt-4 flex items-center gap-2">
           {b.phone ? <a href={"tel:" + b.phone} className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#fff0f3] py-2.5 text-[10px] font-black text-[#d51f4f] transition hover:bg-[#ffe0e7]"><PhoneIcon />تماس</a> : <span className="flex-1" />}
           {mapUrl && <a href={mapUrl} target="_blank" rel="noreferrer" className="rounded-xl border border-[#eadfe3] px-3 py-2.5 text-[10px] font-bold text-[#6d5c65] transition hover:border-[#d51f4f] hover:text-[#d51f4f]">مسیریابی</a>}
