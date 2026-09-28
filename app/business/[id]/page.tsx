@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import CategoryIcon from "@/components/CategoryIcon";
 import { getBusinessById, getCityBySlug, getDirectory } from "@/lib/data";
 import { mergeSocialLinks, SOCIAL_NETWORKS, socialUrl } from "@/lib/social";
+import SocialIcon from "@/components/SocialIcon";
 
 function InfoIcon({ type }: { type: "pin" | "phone" | "clock" }) {
   const content = type === "pin" ? <><path d="M12 21s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12Z" /><circle cx="12" cy="9" r="2.4" /></> : type === "phone" ? <path d="M4 4h4l2 5-2.5 1.5a12 12 0 0 0 6 6L15 14l5 2v4a2 2 0 0 1-2 2C9.5 22 2 14.5 2 6a2 2 0 0 1 2-2Z" /> : <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 3" /></>;
@@ -32,7 +33,7 @@ export default async function BusinessPage({ params }: { params: Promise<{ id: s
         <div className="mt-3 flex flex-wrap gap-1.5">
           {business.phone && <a className="sample-contact" href={"tel:" + business.phone} aria-label="تماس">☎</a>}
           {websiteUrl && <a className="sample-contact text-xs" href={websiteUrl} target="_blank" rel="noreferrer" aria-label="سایت">↗</a>}
-          {SOCIAL_NETWORKS.filter((network) => socialLinks[network.key]).map((network) => <a key={network.key} className="sample-contact text-[10px]" href={socialUrl(network.key, socialLinks[network.key]!)} target="_blank" rel="noreferrer">{network.label.slice(0, 2)}</a>)}
+          {SOCIAL_NETWORKS.filter((network) => socialLinks[network.key]).map((network) => <a key={network.key} className="sample-contact text-[10px]" href={socialUrl(network.key, socialLinks[network.key]!)} target="_blank" rel="noreferrer" aria-label={network.label} title={network.label}><SocialIcon network={network.key} className="h-4 w-4" /></a>)}
           {mapUrl && <a className="sample-contact text-xs" href={mapUrl} target="_blank" rel="noreferrer">⌖</a>}
         </div>
       </section>
