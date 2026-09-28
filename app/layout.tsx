@@ -4,7 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import { getCities } from "@/lib/data";
 
-export const metadata: Metadata = { title: "بیرون | قبل از بیرون زدن، بیرون رو چک کن", description: "کسب‌وکارها و خدمات محلی را قبل از بیرون زدن پیدا کن، مقایسه کن و با خیال راحت انتخاب کن.", icons: { icon: "/beeroon-logo.png", apple: "/beeroon-logo.png" } };
+export const metadata: Metadata = { title: "بیرون | قبل از بیرون زدن، بیرون رو چک کن", description: "کسب‌وکارها و خدمات محلی را قبل از بیرون زدن پیدا کن، مقایسه کن و با خیال راحت انتخاب کن.", icons: { icon: "/beeroon-logo.png", apple: "/beeroon-logo.png" }, openGraph: { title: "بیرون | قبل از بیرون زدن، بیرون رو چک کن", description: "کسب‌وکارها و خدمات محلی ایران را پیدا کن، مقایسه کن و با خیال راحت انتخاب کن.", type: "website", locale: "fa_IR", images: [{ url: "/beeroon-og.png", width: 1200, height: 630, alt: "لوگوی بیرون" }] }, twitter: { card: "summary_large_image", images: ["/beeroon-og.png"] } };
 export const viewport: Viewport = { themeColor: "#d51f4f" };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
