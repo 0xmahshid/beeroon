@@ -45,6 +45,7 @@ export type Business = {
   lng: number | null;
   phone: string | null;
   social_links: SocialLinks | null;
+  image_url?: string | null;
   instagram: string | null;
   telegram: string | null;
   bale: string | null;

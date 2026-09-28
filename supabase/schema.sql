@@ -38,6 +38,8 @@ create table businesses (
   bale text,
   whatsapp text,
   neshan text,
+  social_links jsonb not null default '{}'::jsonb,
+  image_url text,
   hours text,
   price_tier int check (price_tier in (1,2,3)),
   is_supporter boolean not null default false,

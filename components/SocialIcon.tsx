@@ -1,9 +1,9 @@
 import type { SocialNetworkKey } from "@/lib/social";
 
-type Props = { network: SocialNetworkKey; className?: string };
+type Props = { network: SocialNetworkKey; className?: string; style?: import("react").CSSProperties };
 
-export default function SocialIcon({ network, className = "h-4 w-4" }: Props) {
-  const common = { className, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true };
+export default function SocialIcon({ network, className = "h-4 w-4", style }: Props) {
+  const common = { className, style, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true };
   switch (network) {
     case "instagram":
       return <svg {...common}><rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.4" cy="6.7" r=".8" fill="currentColor" stroke="none" /></svg>;

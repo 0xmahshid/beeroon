@@ -88,6 +88,7 @@ export const seedBusinesses: Business[] = [
     price_tier: null,
     is_supporter: false,
     status: "approved",
+    image_url: "/go2china-sample.jpeg",
     created_at: new Date().toISOString(),
   },
 ];
