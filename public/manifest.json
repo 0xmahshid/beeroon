@@ -5,10 +5,10 @@
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#ffffff",
+  "theme_color": "#d51f4f",
   "lang": "fa",
   "dir": "rtl",
   "icons": [
-    { "src": "/beeroon-logo-final.png?v=3", "sizes": "any", "type": "image/png" }
+    { "src": "/beeroon-logo.png", "sizes": "any", "type": "image/png", "purpose": "any maskable" }
   ]
 }
