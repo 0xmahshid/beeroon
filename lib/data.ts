@@ -5,7 +5,7 @@ import { Business, Category, City, Subcategory } from "./types";
 
 const configured = !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-function normalizeSeedBusiness(business: Business | undefined, categories: Category[], subcategories: Subcategory[]): Business | null {
+function normalizeSeedBusiness(business: Business | null | undefined, categories: Category[], subcategories: Subcategory[]): Business | null {
   if (!business) return null;
   const seedCategory = seedCategories.find((category) => category.id === business.category_id);
   const category = categories.find((item) => item.slug === seedCategory?.slug);
