@@ -23,7 +23,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
     <div className="beeroon-shell min-h-screen bg-[#f7f8fa]">
       <section className="border-b border-[#e8eaee] bg-white">
         <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 md:py-12 lg:grid-cols-[1fr_340px] lg:items-center lg:px-8">
-          <div className="max-w-3xl">
+          <div className="max-w-3xl"><img src="/beeroon-logo.png" alt="نشان بیرون" className="mb-5 h-16 w-16 rounded-2xl object-cover shadow-[0_10px_24px_rgba(213,31,79,.18)]" />
             <span className="inline-flex rounded-full bg-[#fff0f3] px-3 py-1.5 text-[10px] font-black text-[#d51f4f]">قبل از بیرون زدن، بیرون رو چک کن.</span>
             <h1 className="mt-4 text-3xl font-black leading-[1.55] tracking-tight text-[#25252a] sm:text-5xl">هر چیزی لازم داری،<br /><span className="text-[#d51f4f]">از بیرون پیدا کن.</span></h1>
             <p className="mt-4 max-w-xl text-sm leading-7 text-[#69707b] sm:text-base">کسب‌وکارهای واقعی {city.name} را پیدا کن، مقایسه کن و با خیال راحت انتخاب کن.</p>
