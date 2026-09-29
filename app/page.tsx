@@ -3,14 +3,17 @@ import CategoryIcon from "@/components/CategoryIcon";
 import BusinessCard from "@/components/BusinessCard";
 import { getBusinesses, getCityBySlug, getDirectory } from "@/lib/data";
 import { DEFAULT_CITY_SLUG } from "@/lib/cities";
+import { getNeighborhoodBySlug } from "@/lib/neighborhoods";
 
 const popularSlugs = ["food", "shopping", "fashion", "beauty", "health", "education", "home", "technical"];
 
-export default async function Home({ searchParams }: { searchParams: Promise<{ city?: string | string[] }> }) {
+export default async function Home({ searchParams }: { searchParams: Promise<{ city?: string | string[]; neighborhood?: string | string[] }> }) {
   const query = await searchParams;
   const citySlug = typeof query.city === "string" ? query.city : DEFAULT_CITY_SLUG;
-  const [{ categories, subcategories }, businesses, city] = await Promise.all([getDirectory(), getBusinesses({ citySlug }), getCityBySlug(citySlug)]);
-  const cityQuery = "?city=" + encodeURIComponent(city.slug);
+  const neighborhoodSlug = typeof query.neighborhood === "string" ? query.neighborhood : undefined;
+  const [{ categories, subcategories }, businesses, city] = await Promise.all([getDirectory(), getBusinesses({ citySlug, neighborhoodSlug }), getCityBySlug(citySlug)]);
+  const neighborhood = getNeighborhoodBySlug(city.slug, neighborhoodSlug);
+  const cityQuery = "?city=" + encodeURIComponent(city.slug) + (neighborhood ? "&neighborhood=" + encodeURIComponent(neighborhood.slug) : "");
   const categoryMap = new Map(categories.map((category) => [category.slug, category]));
   const popularCategories = popularSlugs.flatMap((slug) => {
     const category = categoryMap.get(slug);
@@ -26,10 +29,10 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
           <div className="max-w-3xl"><img src="/beeroon-logo.png" alt="نشان بیرون" className="mb-5 h-16 w-16 rounded-2xl object-cover shadow-[0_10px_24px_rgba(213,31,79,.18)]" />
             <span className="inline-flex rounded-full bg-[#fff0f3] px-3 py-1.5 text-[10px] font-black text-[#d51f4f]">قبل از بیرون زدن، بیرون رو چک کن.</span>
             <h1 className="mt-4 text-3xl font-black leading-[1.55] tracking-tight text-[#25252a] sm:text-5xl">هر چیزی لازم داری،<br /><span className="text-[#d51f4f]">از بیرون پیدا کن.</span></h1>
-            <p className="mt-4 max-w-xl text-sm leading-7 text-[#69707b] sm:text-base">کسب‌وکارهای واقعی {city.name} را پیدا کن، مقایسه کن و با خیال راحت انتخاب کن.</p>
+            <p className="mt-4 max-w-xl text-sm leading-7 text-[#69707b] sm:text-base">کسب‌وکارهای واقعی {neighborhood ? neighborhood.name + "، " : ""}{city.name} را پیدا کن، مقایسه کن و با خیال راحت انتخاب کن.</p>
             <form action="/search" method="get" role="search" className="mt-6 flex max-w-2xl items-center gap-2 rounded-2xl border border-[#dfe2e7] bg-white p-1.5 shadow-[0_12px_28px_rgba(32,35,42,.08)] focus-within:border-[#e0a0af]">
               <span className="px-2 text-2xl leading-none text-[#9097a3]">⌕</span>
-              <input type="hidden" name="city" value={city.slug} />
+              <input type="hidden" name="city" value={city.slug} />{neighborhood && <input type="hidden" name="neighborhood" value={neighborhood.slug} />}
               <input name="q" placeholder="دنبال چه چیزی می‌گردی؟" className="min-w-0 flex-1 bg-transparent py-3 text-xs text-[#25252a] outline-none placeholder:text-[#9ba1aa] sm:text-sm" />
               <button className="shrink-0 rounded-xl bg-[#d51f4f] px-4 py-3 text-xs font-black text-white transition hover:bg-[#b91640] sm:px-7">جست‌وجو</button>
             </form>
@@ -40,7 +43,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
           </div>
           <aside className="hidden rounded-3xl border border-[#e8eaee] bg-[#fbfbfc] p-5 lg:block">
             <div className="flex items-center justify-between border-b border-[#e8eaee] pb-4">
-              <div><p className="text-[10px] font-bold text-[#9097a3]">امروز در</p><h2 className="mt-1 text-lg font-black text-[#25252a]">{city.name}</h2></div>
+              <div><p className="text-[10px] font-bold text-[#9097a3]">امروز در</p><h2 className="mt-1 text-lg font-black text-[#25252a]">{neighborhood ? neighborhood.name : city.name}</h2></div>
               <span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#fff0f3] text-xl text-[#d51f4f]">⌖</span>
             </div>
             <div className="grid grid-cols-3 divide-x divide-x-reverse divide-[#e8eaee] pt-5 text-center">

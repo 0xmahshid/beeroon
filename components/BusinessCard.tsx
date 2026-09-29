@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Business } from "@/lib/types";
 import { getBusinessImageUrl } from "@/lib/business-images";
@@ -15,7 +17,10 @@ function PhoneIcon() {
 }
 
 export default function BusinessCard({ b, categoryName }: { b: Business; categoryName?: string }) {
-  const mapUrl = b.neshan ? (b.neshan.startsWith("http") ? b.neshan : "https://neshan.org/maps/search/" + encodeURIComponent(b.neshan)) : b.lat && b.lng ? "https://neshan.org/maps/@" + b.lat + "," + b.lng + ",16z" : null;
+  function track(eventName: string) {
+    void fetch("/api/events", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ eventName, businessId: b.id }) }).catch(() => undefined);
+  }
+  const mapUrl = b.neshan ? (b.neshan.startsWith("http") ? b.neshan : "https://neshan.org/maps/search/" + encodeURIComponent(b.neshan)) : b.lat != null && b.lng != null ? "https://neshan.org/maps/@" + b.lat + "," + b.lng + ",16z" : null;
   const initials = b.name.trim().slice(0, 1) || "ب";
   const imageUrl = getBusinessImageUrl(b.image_url, b.social_links);
   const socialLinks = mergeSocialLinks(b.social_links, b);
@@ -29,18 +34,18 @@ export default function BusinessCard({ b, categoryName }: { b: Business; categor
       </div>
       <div className="p-4 pt-7">
         <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0"><h3 className="truncate text-sm font-black text-[#32162d]"><Link href={"/business/" + b.id} className="hover:text-[#d51f4f]">{b.name}</Link></h3><p className="mt-1 truncate text-[10px] text-[#93828a]">{categoryName || "کسب‌وکار محلی"}{b.is_supporter ? " · حامی بیرون" : ""}</p></div>
+          <div className="min-w-0"><h3 className="truncate text-sm font-black text-[#32162d]"><Link href={"/business/" + b.id} className="hover:text-[#d51f4f]">{b.name}</Link></h3><p className="mt-1 truncate text-[10px] text-[#93828a]">{categoryName || "کسب‌وکار محلی"}{b.is_supporter ? " · حامی بیرون" : ""}{b.is_verified ? " · تأییدشده" : ""}</p></div>
           {b.price_tier && <span className="beeroon-pill shrink-0 bg-[#fff5d9] text-[#9c761e]" title={priceLabel[b.price_tier]}><span>{priceLabel[b.price_tier]}</span></span>}
         </div>
         <div className="mt-4 space-y-2 border-t border-[#f3e8eb] pt-3 text-[10px] text-[#81717a]">
-          {b.address && <p className="flex items-center gap-1.5 truncate"><PinIcon />{b.address}</p>}
+          {b.address && <p className="flex items-center gap-1.5 truncate"><PinIcon />{b.address}</p>}{b.distanceKm != null && <p className="truncate text-[#d51f4f]">حدود {b.distanceKm.toLocaleString("fa-IR")} کیلومتر از محله تو</p>}
           {b.hours && <p className="truncate text-[#a3939a]">ساعت کاری: {b.hours}</p>}
         </div>
         {SOCIAL_NETWORKS.some((network) => socialLinks[network.key]) && <div className="mt-3 flex flex-wrap items-start gap-x-2 gap-y-2 border-t border-[#f3e8eb] pt-3">{SOCIAL_NETWORKS.filter((network) => socialLinks[network.key]).map((network) => <a key={network.key} href={socialUrl(network.key, socialLinks[network.key]!)} target="_blank" rel="noreferrer" title={network.label} aria-label={network.label} className="flex w-[46px] flex-col items-center gap-1 rounded-xl py-1 transition hover:bg-[#fff5f7]"><SocialIcon network={network.key} className="h-5 w-5" style={{ color: network.color }} /><span className="w-full text-center text-[8px] leading-3 text-[#8d7d84]">{network.label}</span></a>)}</div>}
         <div className="mt-4 flex items-center gap-2">
-          {b.phone ? <a href={"tel:" + b.phone} className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#fff0f3] py-2.5 text-[10px] font-black text-[#d51f4f] transition hover:bg-[#ffe0e7]"><PhoneIcon />تماس</a> : <span className="flex-1" />}
-          {mapUrl && <a href={mapUrl} target="_blank" rel="noreferrer" className="rounded-xl border border-[#eadfe3] px-3 py-2.5 text-[10px] font-bold text-[#6d5c65] transition hover:border-[#d51f4f] hover:text-[#d51f4f]">مسیریابی</a>}
-          <Link href={"/business/" + b.id} className="rounded-xl bg-[#32162d] px-3 py-2.5 text-[10px] font-black text-white transition hover:bg-[#4c2042]">جزئیات</Link>
+          {b.phone ? <a onClick={() => track("call")} href={"tel:" + b.phone} className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#fff0f3] py-2.5 text-[10px] font-black text-[#d51f4f] transition hover:bg-[#ffe0e7]"><PhoneIcon />تماس</a> : <span className="flex-1" />}
+          {mapUrl && <a onClick={() => track("directions")} href={mapUrl} target="_blank" rel="noreferrer" className="rounded-xl border border-[#eadfe3] px-3 py-2.5 text-[10px] font-bold text-[#6d5c65] transition hover:border-[#d51f4f] hover:text-[#d51f4f]">مسیریابی</a>}
+          <Link onClick={() => track("profile_view")} href={"/business/" + b.id} className="rounded-xl bg-[#32162d] px-3 py-2.5 text-[10px] font-black text-white transition hover:bg-[#4c2042]">جزئیات</Link>
         </div>
       </div>
     </article>

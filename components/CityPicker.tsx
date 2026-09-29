@@ -13,6 +13,7 @@ export default function CityPicker({ cities }: { cities: City[] }) {
   function changeCity(value: string) {
     const params = new URLSearchParams(searchParams.toString());
     params.set("city", value);
+    params.delete("neighborhood");
     router.replace(pathname + "?" + params.toString(), { scroll: false });
   }
 

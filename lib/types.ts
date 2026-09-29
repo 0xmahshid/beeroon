@@ -5,6 +5,15 @@ export type City = {
   active: boolean;
 };
 
+export type Neighborhood = {
+  id: string;
+  citySlug: string;
+  name: string;
+  slug: string;
+  centerLat: number;
+  centerLng: number;
+};
+
 export type Category = {
   id: string;
   name: string;
@@ -57,4 +66,8 @@ export type Business = {
   status: "pending" | "approved" | "rejected";
   created_at: string;
   online_shop_details?: OnlineShopDetails | OnlineShopDetails[] | null;
+  search_terms?: string[] | null;
+  neighborhood_slug?: string | null;
+  is_verified?: boolean;
+  distanceKm?: number;
 };

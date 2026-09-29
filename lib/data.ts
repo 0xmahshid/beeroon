@@ -1,9 +1,26 @@
 import { supabase } from "./supabase";
 import { seedBusinesses, seedCategories, seedSubcategories } from "./seed";
 import { seedCities, DEFAULT_CITY_SLUG } from "./cities";
+import { getNeighborhoodBySlug } from "./neighborhoods";
 import { Business, Category, City, Subcategory } from "./types";
 
 const configured = !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+const categoryAliases: Record<string, string[]> = {
+  "sports-store": ["ورزش", "ورزشی", "سوارکاری", "اسب", "فوتبال", "بدنسازی"],
+  "kids-clothing": ["کودک", "بچه", "بچگانه", "نوجوان"],
+  "mobile-repair": ["موبایل", "گوشی", "تلفن", "آیفون", "اندروید"],
+  "womens-clothing": ["زنانه", "دخترانه", "مانتو", "پوشاک"],
+  "mens-clothing": ["مردانه", "پسرانه", "پوشاک"],
+  "beauty": ["آرایش", "زیبایی", "سالن", "مو"],
+  "food": ["غذا", "رستوران", "کافه", "فست فود"],
+  "home": ["خانه", "منزل", "لوازم خانگی"],
+  "technical": ["تعمیر", "فنی", "خدمات"],
+};
+
+function normalizePersian(value: string): string {
+  return value.toLocaleLowerCase("fa-IR").replace(/[يى]/g, "ی").replace(/ك/g, "ک").replace(/[\u200c\u200d]/g, " ").replace(/\s+/g, " ").trim();
+}
 
 function normalizeSeedBusiness(business: Business | null | undefined, categories: Category[], subcategories: Subcategory[]): Business | null {
   if (!business) return null;
@@ -12,6 +29,44 @@ function normalizeSeedBusiness(business: Business | null | undefined, categories
   const seedSubcategory = seedSubcategories.find((subcategory) => subcategory.id === business.subcategory_id);
   const subcategory = subcategories.find((item) => item.category_id === category?.id && item.slug === seedSubcategory?.slug);
   return { ...business, category_id: category?.id || business.category_id, subcategory_id: subcategory?.id || business.subcategory_id };
+}
+
+function distanceKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
+  const earthRadius = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng / 2) ** 2;
+  return earthRadius * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function relevance(business: Business, query: string | undefined, categories: Category[], subcategories: Subcategory[]): number {
+  if (!query) return 0;
+  const normalizedQuery = normalizePersian(query);
+  const tokens = normalizedQuery.split(" ").filter((token) => token.length > 1);
+  if (!tokens.length) return 0;
+  const category = categories.find((item) => item.id === business.category_id);
+  const subcategory = subcategories.find((item) => item.id === business.subcategory_id);
+  const aliases = [...(categoryAliases[category?.slug || ""] || []), ...(categoryAliases[subcategory?.slug || ""] || [])];
+  const text = normalizePersian([business.name, business.address || "", category?.name || "", subcategory?.name || "", ...(business.search_terms || []), ...aliases].join(" "));
+  const matches = tokens.filter((token) => text.includes(token)).length;
+  return Math.min(1, matches / tokens.length);
+}
+
+function rankBusinesses(list: Business[], params: { citySlug?: string; neighborhoodSlug?: string; query?: string }, categories: Category[], subcategories: Subcategory[]): Business[] {
+  const neighborhood = getNeighborhoodBySlug(params.citySlug, params.neighborhoodSlug);
+  const prepared = list.map((business) => ({
+    ...business,
+    distanceKm: neighborhood && business.lat != null && business.lng != null ? Number(distanceKm(neighborhood.centerLat, neighborhood.centerLng, business.lat, business.lng).toFixed(1)) : undefined,
+    _relevance: relevance(business, params.query, categories, subcategories),
+  }));
+  const filtered = params.query && normalizePersian(params.query).length > 1 ? prepared.filter((business) => business._relevance > 0) : prepared;
+  return filtered.sort((a, b) => {
+    if (params.query && b._relevance !== a._relevance) return b._relevance - a._relevance;
+    if (neighborhood && a.distanceKm != null && b.distanceKm != null && a.distanceKm !== b.distanceKm) return a.distanceKm - b.distanceKm;
+    if (neighborhood && a.distanceKm != null) return -1;
+    if (neighborhood && b.distanceKm != null) return 1;
+    return a.name.localeCompare(b.name, "fa");
+  }).map(({ _relevance, ...business }) => business);
 }
 
 export async function getCities(): Promise<City[]> {
@@ -67,49 +122,48 @@ export async function getSubcategories(categorySlug: string): Promise<Subcategor
   return [...remote, ...seedRows.filter((subcategory) => !remoteSlugs.has(subcategory.slug))];
 }
 
-export async function getBusinesses(params: { categorySlug?: string; subcategorySlug?: string; citySlug?: string }): Promise<Business[]> {
+export async function getBusinesses(params: { categorySlug?: string; subcategorySlug?: string; citySlug?: string; neighborhoodSlug?: string; query?: string }): Promise<Business[]> {
+  const directory = await getDirectory();
+  let list: Business[];
   if (!configured) {
-    let list = seedBusinesses.filter((business) => business.status === "approved");
+    list = seedBusinesses.filter((business) => business.status === "approved");
+  } else {
+    let query = supabase.from("businesses").select("*, online_shop_details(*)").eq("status", "approved");
     if (params.categorySlug) {
-      const category = seedCategories.find((item) => item.slug === params.categorySlug);
-      if (!category) return [];
-      list = list.filter((business) => business.category_id === category.id);
+      const category = await supabase.from("categories").select("id").eq("slug", params.categorySlug).maybeSingle();
+      if (category.error || !category.data) return [];
+      query = query.eq("category_id", category.data.id);
     }
     if (params.subcategorySlug) {
-      const category = seedCategories.find((item) => item.slug === params.categorySlug);
-      const subcategory = seedSubcategories.find((item) => item.category_id === category?.id && item.slug === params.subcategorySlug);
-      if (!subcategory) return [];
-      list = list.filter((business) => business.subcategory_id === subcategory.id);
+      const subcategory = await supabase.from("subcategories").select("id").eq("slug", params.subcategorySlug).maybeSingle();
+      if (subcategory.error || !subcategory.data) return [];
+      query = query.eq("subcategory_id", subcategory.data.id);
     }
-    if (params.citySlug) list = list.filter((business) => business.city_id === params.citySlug);
-    return list.sort(() => Math.random() - 0.5);
+    if (params.citySlug) {
+      const city = await getCityBySlug(params.citySlug);
+      query = query.eq("city_id", city.id);
+    }
+    const result = await query;
+    if (result.error) return [];
+    list = result.data as Business[];
+    const demo = normalizeSeedBusiness(seedBusinesses.find((business) => business.id === "go2china" && business.status === "approved"), directory.categories, directory.subcategories);
+    const demoCategory = demo && directory.categories.find((category) => category.id === demo.category_id);
+    const demoSubcategory = demo && directory.subcategories.find((subcategory) => subcategory.id === demo.subcategory_id);
+    const demoMatches = demo && (!params.citySlug || demo.city_id === params.citySlug) && (!params.categorySlug || demoCategory?.slug === params.categorySlug) && (!params.subcategorySlug || demoSubcategory?.slug === params.subcategorySlug) ? [demo] : [];
+    const remoteIds = new Set(list.map((business) => business.id));
+    list = [...demoMatches.filter((business) => !remoteIds.has(business.id)), ...list];
   }
-
-  let query = supabase.from("businesses").select("*, online_shop_details(*)").eq("status", "approved");
   if (params.categorySlug) {
-    const { data: category, error } = await supabase.from("categories").select("id").eq("slug", params.categorySlug).maybeSingle();
-    if (error || !category) return [];
-    query = query.eq("category_id", category.id);
+    const category = directory.categories.find((item) => item.slug === params.categorySlug);
+    list = list.filter((business) => business.category_id === category?.id);
   }
   if (params.subcategorySlug) {
-    const { data: subcategory, error } = await supabase.from("subcategories").select("id").eq("slug", params.subcategorySlug).maybeSingle();
-    if (error || !subcategory) return [];
-    query = query.eq("subcategory_id", subcategory.id);
+    const category = directory.categories.find((item) => item.slug === params.categorySlug);
+    const subcategory = directory.subcategories.find((item) => item.category_id === category?.id && item.slug === params.subcategorySlug);
+    list = list.filter((business) => business.subcategory_id === subcategory?.id);
   }
-  if (params.citySlug) {
-    const city = await getCityBySlug(params.citySlug);
-    query = query.eq("city_id", city.id);
-  }
-  const { data, error } = await query;
-  if (error) return [];
-  const remote = data as Business[];
-  const directory = await getDirectory();
-  const demo = normalizeSeedBusiness(seedBusinesses.find((business) => business.id === "go2china" && business.status === "approved"), directory.categories, directory.subcategories);
-  const demoCategory = demo && directory.categories.find((category) => category.id === demo.category_id);
-  const demoSubcategory = demo && directory.subcategories.find((subcategory) => subcategory.id === demo.subcategory_id);
-  const demoMatches = demo && (!params.citySlug || demo.city_id === params.citySlug) && (!params.categorySlug || demoCategory?.slug === params.categorySlug) && (!params.subcategorySlug || demoSubcategory?.slug === params.subcategorySlug) ? [demo] : [];
-  const remoteIds = new Set(remote.map((business) => business.id));
-  return [...demoMatches.filter((business) => !remoteIds.has(business.id)), ...remote];
+  if (params.citySlug && !configured) list = list.filter((business) => business.city_id === params.citySlug);
+  return rankBusinesses(list, params, directory.categories, directory.subcategories);
 }
 
 export async function getBusinessById(id: string): Promise<Business | null> {
