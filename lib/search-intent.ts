@@ -7,9 +7,9 @@ export type SearchIntent = {
 
 // The query can mention an item, but the result is always a local-business domain.
 export const SEARCH_INTENTS: SearchIntent[] = [
-  { name: "لوازم سوارکاری", keywords: ["اسب سواری", "اسب‌سواری", "سوارکاری", "لوازم اسب", "زین", "یراق اسب", "شلوار اسب"], categorySlugs: ["shopping"], subcategorySlugs: ["sports-store"] },
+  { name: "لوازم سوارکاری", keywords: ["اسب سواری", "اسب‌سواری", "سوارکاری", "لوازم اسب", "تجهیزات اسب", "تجهیزات سوارکاری", "زین", "یراق اسب", "شلوار اسب", "شلوار اسب سواری", "شلوار اسب‌سواری", "شلوار سوارکاری", "پوشاک سوارکاری"], categorySlugs: ["shopping", "sport"], subcategorySlugs: ["sports-store", "equestrian"] },
   { name: "تعمیرات موبایل", keywords: ["تعمیر موبایل", "تعمیرات موبایل", "تعمیر گوشی", "تعویض صفحه", "آیفون"], subcategorySlugs: ["mobile-repair"] },
-  { name: "پوشاک کودک", keywords: ["لباس کودک", "لباس بچه", "لباس بچگانه", "پوشاک کودک", "سیسمونی"], subcategorySlugs: ["kids-clothing"] },
+  { name: "پوشاک کودک", keywords: ["لباس کودک", "لباس بچه", "لباس بچگانه", "پوشاک کودک", "پوشاک بچگانه", "بچگانه", "کودک", "سیسمونی"], subcategorySlugs: ["kids-clothing", "baby-store"] },
   { name: "خدمات زیبایی", keywords: ["آرایشگاه", "سالن زیبایی", "رنگ مو", "کوتاهی مو", "میکاپ"], categorySlugs: ["beauty"] },
   { name: "غذا و کافه", keywords: ["رستوران", "کافه", "غذا", "فست فود", "صبحانه"], categorySlugs: ["food"] },
   { name: "خدمات خودرو", keywords: ["تعمیر خودرو", "مکانیکی", "پنچرگیری", "لاستیک", "باتری خودرو"], categorySlugs: ["automotive", "technical"] },
