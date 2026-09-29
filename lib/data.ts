@@ -2,6 +2,7 @@ import { supabase } from "./supabase";
 import { seedBusinesses, seedCategories, seedSubcategories } from "./seed";
 import { seedCities, DEFAULT_CITY_SLUG } from "./cities";
 import { getNeighborhoodBySlug } from "./neighborhoods";
+import { classifySearchIntent } from "./search-intent";
 import { Business, Category, City, Subcategory } from "./types";
 
 const configured = !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -46,9 +47,12 @@ function relevance(business: Business, query: string | undefined, categories: Ca
   if (!tokens.length) return 0;
   const category = categories.find((item) => item.id === business.category_id);
   const subcategory = subcategories.find((item) => item.id === business.subcategory_id);
-  const aliases = [...(categoryAliases[category?.slug || ""] || []), ...(categoryAliases[subcategory?.slug || ""] || [])];
+  const intents = classifySearchIntent(query);
+  const intentMatch = intents.some((intent) => intent.categorySlugs?.includes(category?.slug || "") || intent.subcategorySlugs?.includes(subcategory?.slug || ""));
+  const aliases = [...(categoryAliases[category?.slug || ""] || []), ...(categoryAliases[subcategory?.slug || ""] || []), ...intents.flatMap((intent) => intent.keywords)];
   const text = normalizePersian([business.name, business.address || "", category?.name || "", subcategory?.name || "", ...(business.search_terms || []), ...aliases].join(" "));
   const matches = tokens.filter((token) => text.includes(token)).length;
+  if (intentMatch) return 0.95;
   return Math.min(1, matches / tokens.length);
 }
 
