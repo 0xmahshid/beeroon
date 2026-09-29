@@ -66,6 +66,7 @@ function rankBusinesses(list: Business[], params: { citySlug?: string; neighborh
   const filtered = params.query && normalizePersian(params.query).length > 1 ? prepared.filter((business) => business._relevance > 0) : prepared;
   return filtered.sort((a, b) => {
     if (params.query && b._relevance !== a._relevance) return b._relevance - a._relevance;
+    if (b.is_verified !== a.is_verified) return Number(b.is_verified) - Number(a.is_verified);
     if (neighborhood && a.distanceKm != null && b.distanceKm != null && a.distanceKm !== b.distanceKm) return a.distanceKm - b.distanceKm;
     if (neighborhood && a.distanceKm != null) return -1;
     if (neighborhood && b.distanceKm != null) return 1;
