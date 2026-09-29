@@ -74,3 +74,6 @@ details > summary { list-style: none; }
   .sample-container { padding: 0 26px; }
   .sample-grid-md { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
+.social-contact { display: flex; width: 48px; min-width: 48px; height: 52px; flex-direction: column; align-items: center; justify-content: center; gap: 3px; overflow: hidden; border: 1px solid var(--beeroon-line); border-radius: 11px; background: #fff; }
+.social-contact svg { width: 16px; height: 16px; flex: 0 0 auto; }
+.social-contact-label { display: -webkit-box; width: 100%; overflow: hidden; color: #8f8283; font-size: 8px; line-height: 10px; text-align: center; word-break: break-word; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
