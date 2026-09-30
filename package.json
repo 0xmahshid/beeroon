@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",
@@ -16,12 +18,13 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@types/node": "^20.16.10",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.0",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.13",
     "typescript": "^5.6.3",
-    "@types/node": "^20.16.10",
-    "@types/react": "^18.3.11",
-    "@types/react-dom": "^18.3.0"
+    "vitest": "^1.6.1"
   }
 }

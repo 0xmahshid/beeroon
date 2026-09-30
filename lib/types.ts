@@ -65,9 +65,16 @@ export type Business = {
   is_supporter: boolean;
   status: "pending" | "approved" | "rejected";
   created_at: string;
+  updated_at?: string | null;
+  verified_at?: string | null;
+  short_description?: string | null;
+  description?: string | null;
+  website_url?: string | null;
   online_shop_details?: OnlineShopDetails | OnlineShopDetails[] | null;
   search_terms?: string[] | null;
   neighborhood_slug?: string | null;
   is_verified?: boolean;
   distanceKm?: number;
+  score?: number;
+  matchReason?: string;
 };

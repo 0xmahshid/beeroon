@@ -1,7 +1,11 @@
 "use client";
 
+import { useEffect } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { City } from "@/lib/types";
+
+const LS_CITY = "beeroon:lastCity";
+const LS_NEIGHBORHOOD = "beeroon:lastNeighborhood";
 
 export default function CityPicker({ cities }: { cities: City[] }) {
   const router = useRouter();
@@ -10,10 +14,24 @@ export default function CityPicker({ cities }: { cities: City[] }) {
   const selectedSlug = searchParams.get("city") || "mashhad";
   const selected = cities.find((city) => city.slug === selectedSlug) || cities[0];
 
+  useEffect(() => {
+    try {
+      if (selectedSlug) localStorage.setItem(LS_CITY, selectedSlug);
+    } catch {
+      /* storage not available */
+    }
+  }, [selectedSlug]);
+
   function changeCity(value: string) {
     const params = new URLSearchParams(searchParams.toString());
     params.set("city", value);
     params.delete("neighborhood");
+    try {
+      localStorage.setItem(LS_CITY, value);
+      localStorage.removeItem(LS_NEIGHBORHOOD);
+    } catch {
+      /* storage not available */
+    }
     router.replace(pathname + "?" + params.toString(), { scroll: false });
   }
 

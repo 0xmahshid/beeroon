@@ -1,8 +1,7 @@
+import { supabase } from "./supabase";
 import type { Neighborhood } from "@/lib/types";
 
-// Curated starting points keep the first local-discovery release useful before
-// every city has a complete neighborhood dataset in Supabase.
-export const neighborhoods: Neighborhood[] = [
+export const seedNeighborhoods: Neighborhood[] = [
   { id: "mashhad-ahmadabad", citySlug: "mashhad", name: "احمدآباد", slug: "ahmadabad", centerLat: 36.2975, centerLng: 59.6042 },
   { id: "mashhad-sajjad", citySlug: "mashhad", name: "سجاد", slug: "sajjad", centerLat: 36.3167, centerLng: 59.5668 },
   { id: "mashhad-ferdowsi", citySlug: "mashhad", name: "فردوسی", slug: "ferdowsi", centerLat: 36.3377, centerLng: 59.5395 },
@@ -22,11 +21,57 @@ export const neighborhoods: Neighborhood[] = [
   { id: "karaj-central", citySlug: "karaj", name: "مرکز شهر", slug: "central", centerLat: 35.8400, centerLng: 50.9391 },
 ];
 
-export function getNeighborhoods(citySlug?: string): Neighborhood[] {
-  return neighborhoods.filter((item) => item.citySlug === citySlug);
+const configured = !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+function remoteToNeighborhood(row: Record<string, unknown>): Neighborhood | null {
+  const citySlug = typeof row.city_slug === "string" ? row.city_slug : typeof row.citySlug === "string" ? row.citySlug : undefined;
+  const slug = typeof row.slug === "string" ? row.slug : undefined;
+  const name = typeof row.name === "string" ? row.name : undefined;
+  const id = typeof row.id === "string" ? row.id : (citySlug && slug ? `${citySlug}-${slug}` : undefined);
+  if (!id || !citySlug || !slug || !name) return null;
+  const lat = typeof row.center_lat === "number" ? row.center_lat : typeof row.centerLat === "number" ? row.centerLat : 0;
+  const lng = typeof row.center_lng === "number" ? row.center_lng : typeof row.centerLng === "number" ? row.centerLng : 0;
+  return { id, citySlug, name, slug, centerLat: lat, centerLng: lng };
 }
 
-export function getNeighborhoodBySlug(citySlug?: string, slug?: string): Neighborhood | null {
+export async function getNeighborhoods(citySlug?: string): Promise<Neighborhood[]> {
+  if (!configured) {
+    return citySlug ? seedNeighborhoods.filter((item) => item.citySlug === citySlug) : [...seedNeighborhoods];
+  }
+  try {
+    let q = supabase.from("neighborhoods").select("*");
+    if (typeof (q as any).eq === "function") {
+      // active filter if column exists
+    }
+    const { data, error } = await (citySlug
+      ? supabase.from("neighborhoods").select("*").eq("city_slug", citySlug).order("name")
+      : supabase.from("neighborhoods").select("*").order("city_slug").order("name"));
+    const remote: Neighborhood[] = [];
+    if (!error && Array.isArray(data)) {
+      for (const row of data) {
+        const n = remoteToNeighborhood(row as Record<string, unknown>);
+        if (n) remote.push(n);
+      }
+    }
+    const seedFallback = citySlug ? seedNeighborhoods.filter((item) => item.citySlug === citySlug) : [...seedNeighborhoods];
+    const remoteKeys = new Set(remote.map((n) => `${n.citySlug}:${n.slug}`));
+    return [...remote, ...seedFallback.filter((n) => !remoteKeys.has(`${n.citySlug}:${n.slug}`))];
+  } catch {
+    return citySlug ? seedNeighborhoods.filter((item) => item.citySlug === citySlug) : [...seedNeighborhoods];
+  }
+}
+
+export async function getNeighborhoodBySlug(citySlug?: string, slug?: string): Promise<Neighborhood | null> {
   if (!citySlug || !slug) return null;
-  return neighborhoods.find((item) => item.citySlug === citySlug && item.slug === slug) || null;
+  const list = await getNeighborhoods(citySlug);
+  return list.find((item) => item.citySlug === citySlug && item.slug === slug) || null;
+}
+
+export function getNeighborhoodsSync(citySlug?: string): Neighborhood[] {
+  return citySlug ? seedNeighborhoods.filter((item) => item.citySlug === citySlug) : [...seedNeighborhoods];
+}
+
+export function getNeighborhoodBySlugSync(citySlug?: string, slug?: string): Neighborhood | null {
+  if (!citySlug || !slug) return null;
+  return seedNeighborhoods.find((item) => item.citySlug === citySlug && item.slug === slug) || null;
 }
