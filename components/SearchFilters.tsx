@@ -50,7 +50,7 @@ export default function SearchFilters({ totalResults }: Props) {
 
   const chipFilters: { key: keyof Filters; label: string; icon: string }[] = [
     { key: "openNow", label: "باز است", icon: "🟢" },
-    { key: "verifiedOnly", label: "تأییدشده", icon: "✓" },
+    { key: "verifiedOnly", label: "تأیید شده", icon: "✓" },
     { key: "hasPhone", label: "شماره تماس", icon: "📞" },
     { key: "hasDirections", label: "مسیریابی", icon: "🧭" },
     { key: "inPersonOnly", label: "خرید حضوری", icon: "🏪" },
@@ -63,11 +63,11 @@ export default function SearchFilters({ totalResults }: Props) {
         <div className="flex items-center gap-2">
           <span className="inline-flex items-center gap-1 rounded-full bg-[#fff0f3] px-3 py-1 text-[11px] font-black text-[#d51f4f]">
             <span className="text-sm">🏪</span>
-            <span>{totalResults.toLocaleString("fa-IR")} گزینه</span>
+            <span>{totalResults.toLocaleString("fa-IR")} کسب‌وکار</span>
           </span>
         </div>
         <div className="flex items-center gap-1.5 text-[10px] text-[#858c96]">
-          <span className="font-bold">مرتب‌سازی:</span>
+          <span className="font-bold">مرتب‌سازی با</span>
           <div className="flex gap-1 rounded-xl bg-[#f3f4f7] p-1">
             {sortButtons.map((s) => (
               <button
@@ -117,7 +117,7 @@ export default function SearchFilters({ totalResults }: Props) {
             style={{ minHeight: "40px" }}
           >
             <span>✕</span>
-            <span>پاک‌کردن ({activeFilterCount.toLocaleString("fa-IR")})</span>
+            <span>حذف فیلترها ({activeFilterCount.toLocaleString("fa-IR")})</span>
           </button>
         )}
       </div>

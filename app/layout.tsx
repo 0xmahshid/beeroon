@@ -10,14 +10,14 @@ export const metadata: Metadata = {
   metadataBase: process.env.NEXT_PUBLIC_SITE_URL
     ? new URL(process.env.NEXT_PUBLIC_SITE_URL)
     : undefined,
-  title: "بیرون | قبل از بیرون زدن، بیرون رو چک کن",
+  title: "بیرون | قبل از بیرون زدن، بیرون رو چک کن.",
   description:
-    "کسب‌وکارها و خدمات محلی را قبل از بیرون زدن پیدا کن، مقایسه کن و با خیال راحت انتخاب کن.",
+    "کسب‌وکارهای نزدیکت را جست‌وجو کن و نشانی، ساعت کاری و راه تماس را ببین.",
   icons: { icon: "/beeroon-logo.png", apple: "/beeroon-logo.png" },
   openGraph: {
-    title: "بیرون | قبل از بیرون زدن، بیرون رو چک کن",
+    title: "بیرون | قبل از بیرون زدن، بیرون رو چک کن.",
     description:
-      "کسب‌وکارها و خدمات محلی ایران را پیدا کن، مقایسه کن و با خیال راحت انتخاب کن.",
+      "در بیرون کسب‌وکارهای محلی را پیدا کن؛ نشانی، ساعت کاری و راه تماس را ببین.",
     type: "website",
     locale: "fa_IR",
     siteName: "بیرون",
@@ -43,7 +43,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <main>{children}</main>
         <footer className="border-t border-[#eadfe3] bg-white">
           <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-8 text-xs text-[#8b7b84] sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
-            <span>© {new Date().getFullYear()} بیرون · ساخته‌شده برای کشف کسب‌وکارهای واقعی</span>
+            <span>© {new Date().getFullYear()} بیرون · فهرست کسب‌وکارهای محلی</span>
             <div className="flex gap-4">
               <a href="/#directory">دسته‌بندی‌ها</a>
               <a href="/register-business">ثبت کسب‌وکار</a>

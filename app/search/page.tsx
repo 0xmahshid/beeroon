@@ -9,7 +9,7 @@ import { getNeighborhoodBySlug } from "@/lib/neighborhoods";
 import { DEFAULT_CITY_SLUG } from "@/lib/cities";
 import { newUuid } from "@/lib/analytics";
 
-export const metadata = { title: "جست‌وجو | بیرون", description: "کسب‌وکارها و تخصص‌های شهر را در بیرون جست‌وجو کن." };
+export const metadata = { title: "جست‌وجو | بیرون", description: "کسب‌وکارهای نزدیکت را جست‌وجو کن و نشانی، ساعت کاری و راه تماس را ببین." };
 
 type SearchParams = {
   q?: string | string[];
@@ -91,18 +91,17 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
               {query && <span className="inline-flex items-center gap-1 rounded-full bg-[#f2f3f6] px-2.5 py-1 font-black text-[#545863]">🔎 «{query}»</span>}
             </div>
             <h1 className="mt-3 text-2xl font-black leading-[1.55] text-[#25252a] sm:text-3xl">
-              {query ? <>نتایج «<span className="text-[#d51f4f]">{query}</span>» برایت پیدا شد.</> : <>همه‌ی کسب‌وکارهای <span className="text-[#d51f4f]">{city.name}</span>.</>}
+              {query ? <>نتیجه‌های «<span className="text-[#d51f4f]">{query}</span>» در {city.name}</> : <>کسب‌وکارهای <span className="text-[#d51f4f]">{city.name}</span></>}
             </h1>
             <p className="mt-2 max-w-2xl text-xs leading-7 text-[#69707b] sm:text-sm">
               {businesses.length ? (
                 <>
-                  در مجموع <span className="font-black text-[#25252a]">{businesses.length.toLocaleString("fa-IR")}</span> گزینه برایت پیدا شد. از فیلترها کمک بگیر تا
-                  نزدیک‌ترین و مناسب‌ترین انتخاب را کنی.
+                  <span className="font-black text-[#25252a]">{businesses.length.toLocaleString("fa-IR")}</span> کسب‌وکار پیدا شد. برای محدودکردن نتیجه‌ها، فیلترها را انتخاب کن.
                 </>
               ) : query ? (
-                <>هنوز کسب‌وکاری در این حوالی با این عبارت پیدا نکردیم. پس از پیشنهادهای زیر یا گزینه‌های مشابه کمک بگیر.</>
+                <>با این عبارت چیزی پیدا نشد. عبارت دیگری را امتحان کن یا یکی از پیشنهادها را ببین.</>
               ) : (
-                <>به‌سادگی از دسته‌ها یا فیلترها استفاده کن تا کسب‌وکار مورد نظرت را سریع‌تر پیدا کنی.</>
+                <>اسم کسب‌وکار یا خدمتی را که لازم داری جست‌وجو کن.</>
               )}
             </p>
 
@@ -114,7 +113,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
                 name="q"
                 defaultValue={query}
                 autoFocus={!query}
-                placeholder="مثلاً لوازم اسب‌سواری نزدیک من"
+                placeholder="مثلاً کافه یا تعمیرکار"
                 className="min-w-0 flex-1 bg-transparent py-3 text-sm text-[#25252a] outline-none placeholder:text-[#9ba1aa]"
                 style={{ minHeight: "44px" }}
               />
@@ -127,7 +126,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
             </form>
 
             <div className="mt-4 flex flex-wrap items-center gap-2 text-[10px] text-[#858c96]">
-              <span className="font-bold text-[#69707b]">جست‌وجوهای محبوب:</span>
+              <span className="font-bold text-[#69707b]">جست‌وجوهای پرتکرار:</span>
               {suggestionChips.map((term) => (
                 <Link
                   key={term}
@@ -171,10 +170,9 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
                 <div className="pointer-events-none absolute inset-0 opacity-50" style={{ background: "radial-gradient(circle at 50% 0%, rgba(213,31,79,0.07), transparent 55%)" }} />
                 <div className="relative">
                   <div className="mx-auto grid h-16 w-16 place-items-center rounded-3xl bg-[#fff0f3] text-3xl">🔎</div>
-                  <h3 className="mt-5 text-lg font-black text-[#32162d] sm:text-xl">هنوز نتیجه‌ای برای «{query}» پیدا نکردیم 😔</h3>
+                  <h3 className="mt-5 text-lg font-black text-[#32162d] sm:text-xl">برای «{query}» نتیجه‌ای پیدا نشد.</h3>
                   <p className="mx-auto mt-3 max-w-xl text-xs leading-7 text-[#69707b] sm:text-sm">
-                    به‌جای آن می‌توانی گزینه‌های مشابه زیر را ببینی، عبارت دیگری را جست‌وجو کنی یا
-                    اگر صاحب کسب‌وکاری در این حوزه‌ای، ثبت رایگانش را انجام دهی.
+                    عبارت دیگری را جست‌وجو کن یا یکی از پیشنهادهای زیر را ببین.
                   </p>
                   <div className="mx-auto mt-5 flex max-w-md flex-wrap items-center justify-center gap-2">
                     {suggestionChips.slice(0, 4).map((term) => (
@@ -183,7 +181,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
                         href={"/search?q=" + encodeURIComponent(term) + "&city=" + encodeURIComponent(city.slug) + (neighborhood ? "&neighborhood=" + encodeURIComponent(neighborhood.slug) : "")}
                         className="rounded-full bg-[#f6f7fa] px-3 py-1.5 text-[10.5px] font-bold text-[#555a63] hover:bg-[#fff0f3] hover:text-[#d51f4f]"
                       >
-                        جست‌وجوی «{term}»
+                        جست‌وجوی {term}
                       </Link>
                     ))}
                   </div>
@@ -193,14 +191,14 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
                       className="inline-flex items-center gap-1.5 rounded-xl bg-[#d51f4f] px-5 py-3 text-xs font-black text-white transition hover:bg-[#b91640]"
                       style={{ minHeight: "44px" }}
                     >
-                      ثبت کسب‌وکار +
+                      ثبت کسب‌وکار
                     </Link>
                     <Link
                       href={"/" + "?city=" + encodeURIComponent(city.slug) + (neighborhood ? "&neighborhood=" + encodeURIComponent(neighborhood.slug) : "")}
                       className="inline-flex items-center gap-1.5 rounded-xl border border-[#e8eaee] bg-white px-5 py-3 text-xs font-black text-[#555a63] hover:border-[#e0a0af] hover:text-[#d51f4f]"
                       style={{ minHeight: "44px" }}
                     >
-                      ← بازگشت به صفحه اصلی
+                      ← صفحه‌ی اصلی
                     </Link>
                   </div>
                 </div>
@@ -208,9 +206,9 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
             ) : !isFiltered ? (
               <div className="rounded-3xl bg-[#fff6f8] px-6 py-10 text-center">
                 <div className="mx-auto grid h-14 w-14 place-items-center rounded-3xl bg-white text-3xl">👀</div>
-                <h3 className="mt-4 text-lg font-black text-[#32162d]">هنوز کسب‌وکاری در این محله ثبت نشده است</h3>
+                <h3 className="mt-4 text-lg font-black text-[#32162d]">در این محله کسب‌وکاری ثبت نشده.</h3>
                 <p className="mx-auto mt-2 max-w-xl text-xs leading-7 text-[#69707b] sm:text-sm">
-                  می‌توانی محله را عوض کنی، یا اولین نفری باش که کسب‌وکار خوب این محله را برای بقیه ثبت می‌کنی.
+                  محله‌ی دیگری را انتخاب کن یا کسب‌وکارت را ثبت کن.
                 </p>
                 <Link href={"/register-business?city=" + encodeURIComponent(city.slug)} className="mt-5 inline-flex rounded-xl bg-[#d51f4f] px-5 py-3 text-xs font-black text-white">
                   ثبت کسب‌وکار
@@ -219,9 +217,9 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
             ) : (
               <div className="rounded-3xl border border-dashed border-[#e5cbd2] bg-white px-6 py-10 text-center">
                 <div className="mx-auto grid h-14 w-14 place-items-center rounded-3xl bg-[#fff0f3] text-3xl">🧹</div>
-                <h3 className="mt-4 text-lg font-black text-[#32162d]">با این فیلترها گزینه‌ای نماند</h3>
+                <h3 className="mt-4 text-lg font-black text-[#32162d]">با این فیلترها نتیجه‌ای پیدا نشد.</h3>
                 <p className="mx-auto mt-2 max-w-xl text-xs leading-7 text-[#69707b] sm:text-sm">
-                  چند فیلتر را خاموش کن تا گزینه‌های بیشتری برایت نمایش داده شود.
+                  یکی از فیلترها را بردار یا عوض کن.
                 </p>
               </div>
             )}
@@ -230,8 +228,8 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
               <div className="mt-10">
                 <div className="mb-4 flex items-end justify-between">
                   <div>
-                    <span className="beeroon-section-label">گزینه‌های نزدیک</span>
-                    <h3 className="mt-2 text-lg font-black text-[#25252a]">کسب‌وکارهای دیگر این شهر</h3>
+                    <span className="beeroon-section-label">پیشنهادهای دیگر</span>
+                    <h3 className="mt-2 text-lg font-black text-[#25252a]">کسب‌وکارهای دیگر در {city.name}</h3>
                   </div>
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -253,16 +251,16 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
 
         <div className="mt-10 flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-white px-6 py-6 shadow-[0_20px_50px_-34px_rgba(60,30,45,.3)] sm:px-8">
           <div>
-            <span className="text-[10px] font-black tracking-wide text-[#d51f4f]">کسب‌وکار خودت را داری؟</span>
-            <h4 className="mt-1.5 text-base font-black text-[#25252a]">صفحه‌ی کسب‌وکارت را رایگان بساز.</h4>
-            <p className="mt-1 text-xs leading-7 text-[#69707b]">دسترسی مشتری‌های محلی به اطلاعات تماس، آدرس و مسیر مغازه‌ات را آسان کن.</p>
+            <span className="text-[10px] font-black tracking-wide text-[#d51f4f]">صاحب کسب‌وکاری؟</span>
+            <h4 className="mt-1.5 text-base font-black text-[#25252a]">اطلاعات کسب‌وکارت را ثبت کن.</h4>
+            <p className="mt-1 text-xs leading-7 text-[#69707b]">نشانی و راه‌های تماس را وارد کن تا در بیرون نمایش داده شود.</p>
           </div>
           <Link
             href={"/register-business" + placeQuery}
             className="inline-flex items-center gap-1.5 rounded-xl bg-[#d51f4f] px-5 py-3 text-xs font-black text-white transition hover:bg-[#b91640]"
             style={{ minHeight: "44px" }}
           >
-            ثبت رایگان کسب‌وکار →
+            ثبت کسب‌وکار →
           </Link>
         </div>
       </div>

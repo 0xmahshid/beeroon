@@ -23,7 +23,7 @@ export async function generateMetadata({
   if (!business) {
     return {
       title: "کسب‌وکار پیدا نشد | بیرون",
-      description: "کسب‌وکار درخواستی در بیرون پیدا نشد.",
+      description: "این کسب‌وکار در بیرون پیدا نشد.",
       robots: { index: false, follow: false },
     };
   }
@@ -43,8 +43,8 @@ export async function generateMetadata({
   if (business.short_description?.trim()) descParts.push(normalizeDisplay(business.short_description));
   else if (business.description?.trim()) descParts.push(normalizeDisplay(business.description.slice(0, 140)));
   if (category || subcategory) descParts.push(`${subcategory?.name || category?.name} در ${city.name}`);
-  if (business.address?.trim()) descParts.push(`آدرس: ${normalizeDisplay(business.address)}`);
-  descParts.push("اطلاعات تماس، مسیر و ساعت کاری");
+  if (business.address?.trim()) descParts.push(`نشانی: ${normalizeDisplay(business.address)}`);
+  descParts.push("راه‌های تماس، مسیر و ساعت کاری را ببین");
   const description = descParts.join(" · ").slice(0, 200);
 
   const ogImage = business.image_url || "/beeroon-og.png";
@@ -160,10 +160,10 @@ export default async function BusinessPage({ params, searchParams }: { params: P
       />
       <link rel="canonical" href={canonicalUrl} />
       <EmitViewBusiness businessId={business.id} city={city.slug} neighborhood={neighborhood?.slug} />
-      <div className="py-4"><Link href={categoryHref} className="text-xs font-bold text-[#8f8283] hover:text-[#c91442]">← بازگشت به نتایج</Link></div>
+      <div className="py-4"><Link href={categoryHref} className="text-xs font-bold text-[#8f8283] hover:text-[#c91442]">← برگشت به فهرست</Link></div>
       <section className="border-b border-[#f0e9ea] pb-5">
         <div className="grid h-16 w-16 place-items-center rounded-[18px] border border-[#f0e9ea] bg-[#fdfaf9] text-[#c91442]"><CategoryIcon slug={category?.slug || "services"} className="h-8 w-8" /></div>
-        <h1 className="mt-4 text-[17px] font-extrabold">{business.name} {business.is_supporter && <span className="mr-1.5 align-middle rounded-[7px] bg-[#fff6f8] px-2 py-1 text-[9.5px] font-bold text-[#c91442]">حامی پلتفرم</span>}{business.is_verified && <span className="mr-1.5 align-middle rounded-[7px] bg-[#e6f4ff] px-2 py-1 text-[9.5px] font-bold text-[#185fa7]">تأییدشده</span>}</h1>
+        <h1 className="mt-4 text-[17px] font-extrabold">{business.name} {business.is_supporter && <span className="mr-1.5 align-middle rounded-[7px] bg-[#fff6f8] px-2 py-1 text-[9.5px] font-bold text-[#c91442]">حامی بیرون</span>}{business.is_verified && <span className="mr-1.5 align-middle rounded-[7px] bg-[#e6f4ff] px-2 py-1 text-[9.5px] font-bold text-[#185fa7]">تأیید شده</span>}</h1>
         <div className="mt-2 flex flex-wrap gap-3 text-[11px] text-[#8f8283]"><span>{city.name}{business.address ? " · " + business.address : ""}</span>{category && <span>{category.name}{subcategory ? " · " + subcategory.name : ""}</span>}</div>
         <div className="mt-3 flex flex-wrap gap-1.5">
           {business.phone && <a className="social-contact" href={"tel:" + business.phone} aria-label="تماس" title="تماس"><InfoIcon type="phone" /><span className="social-contact-label">تماس</span></a>}
@@ -172,18 +172,18 @@ export default async function BusinessPage({ params, searchParams }: { params: P
           {mapUrl && <a className="social-contact" href={mapUrl} target="_blank" rel="noreferrer noopener" aria-label="نشان" title="نشان"><NeshanIcon className="h-4 w-4 text-[#ed0b55]" /><span className="social-contact-label">نشان</span></a>}
         </div>
       </section>
-      <div className="sample-section-head mt-5"><h2>درباره و راه‌های ارتباطی</h2></div>
+      <div className="sample-section-head mt-5"><h2>اطلاعات و راه‌های تماس</h2></div>
       <div className="border-t border-[#f0e9ea]">
-        {business.address && <div className="sample-row"><div className="sample-contact text-[#c91442]"><InfoIcon type="pin" /></div><div className="sample-row-body"><div className="sample-row-title">آدرس</div><div className="sample-row-meta">{business.address}</div></div></div>}
+        {business.address && <div className="sample-row"><div className="sample-contact text-[#c91442]"><InfoIcon type="pin" /></div><div className="sample-row-body"><div className="sample-row-title">نشانی</div><div className="sample-row-meta">{business.address}</div></div></div>}
         {business.phone && <div className="sample-row"><div className="sample-contact text-[#c91442]"><InfoIcon type="phone" /></div><div className="sample-row-body"><div className="sample-row-title">تماس</div><div className="sample-row-meta">{business.phone}</div></div></div>}
         {business.hours && <div className="sample-row"><div className="sample-contact text-[#c91442]"><InfoIcon type="clock" /></div><div className="sample-row-body"><div className="sample-row-title">ساعت کاری</div><div className="sample-row-meta">{business.hours}</div></div></div>}
         {business.description?.trim() && <div className="sample-row border-t border-[#f7f0f2]"><div className="sample-contact text-[#6b5962]"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="h-4 w-4"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" /><path d="M14 2v6h6" /><path d="M16 13H8" /><path d="M16 17H8" /><path d="M10 9H8" /></svg></div><div className="sample-row-body"><div className="sample-row-title">توضیحات</div><div className="sample-row-meta leading-6 whitespace-pre-wrap">{business.description}</div></div></div>}
       </div>
       <div className="mt-4 flex flex-wrap items-center gap-3">
-        <a href={business.phone ? "tel:" + business.phone : categoryHref} className="sample-primary flex-1">تماس مستقیم با {business.name}</a>
-        <button type="button" disabled className="sample-claim inline-flex items-center gap-2 rounded-xl border border-dashed border-[#c9b4bb] bg-[#fffdfd] px-4 py-3 text-xs font-bold text-[#6b5962] transition hover:border-[#d51f4f] hover:text-[#d51f4f] disabled:cursor-not-allowed disabled:opacity-70" title="به‌زودی">
+        <a href={business.phone ? "tel:" + business.phone : categoryHref} className="sample-primary flex-1">تماس با {business.name}</a>
+        <button type="button" disabled className="sample-claim inline-flex items-center gap-2 rounded-xl border border-dashed border-[#c9b4bb] bg-[#fffdfd] px-4 py-3 text-xs font-bold text-[#6b5962] transition hover:border-[#d51f4f] hover:text-[#d51f4f] disabled:cursor-not-allowed disabled:opacity-70" title="به‌زودی فعال می‌شود">
           <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 7 9 18l-5-5" /></svg>
-          این کسب‌وکار مال من است
+          درخواست مدیریت این کسب‌وکار
         </button>
       </div>
       <div className="mt-8">

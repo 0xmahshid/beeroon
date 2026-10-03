@@ -111,15 +111,15 @@ export function isOpenNow(rawHours: string | null | undefined, date: Date = new 
 export function formatOpenStatus(status: OpenStatus): string {
   switch (status.kind) {
     case "open_24":
-      return "باز است — ۲۴ ساعته";
+      return "شبانه‌روزی باز است";
     case "open_until":
-      return "باز است تا " + status.until;
+      return "تا " + status.until + " باز است";
     case "closed_opening_at":
-      return "بسته است — از " + status.at + " باز می‌شود";
+      return "بسته است؛ ساعت " + status.at + " باز می‌شود";
     case "closed_today":
       return "امروز تعطیل است";
     case "no_hours":
-      return "ساعات کاری ثبت نشده";
+      return "ساعت کاری ثبت نشده";
   }
 }
 

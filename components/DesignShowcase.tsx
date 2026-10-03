@@ -54,11 +54,11 @@ export default function DesignShowcase({ categories, subcategories }: Props) {
             </span>
             <span>
               <span className="block text-lg font-black text-[#ed0b55]">بیرون</span>
-              <span className="block text-[10px] font-bold text-[#9a7b82]">سه مسیر برای کشف بهتر</span>
+              <span className="block text-[10px] font-bold text-[#9a7b82]">سه راه برای شروع جست‌وجو</span>
             </span>
           </Link>
           <Link href="/" className="text-sm font-black text-[#806f70] transition hover:text-[#ed0b55]">
-            بازگشت به خانه ←
+            صفحه‌ی اصلی ←
           </Link>
         </div>
       </header>
@@ -67,23 +67,22 @@ export default function DesignShowcase({ categories, subcategories }: Props) {
         <section className="mx-auto max-w-3xl text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-[#ed0b55]/15 bg-[#ed0b55]/[0.06] px-4 py-2 text-xs font-black text-[#c70d46]">
             <span className="h-2 w-2 rounded-full bg-[#ed0b55]" />
-            صفحه‌ی مقایسه‌ی تجربه
+            سه راه برای شروع
           </span>
           <h1 className="mt-5 text-4xl font-black leading-[1.35] text-[#241b1c] sm:text-6xl">
-            سه راه برای اینکه
-            <span className="block text-[#ed0b55]">زودتر به جواب برسی.</span>
+            برای پیدا کردن کسب‌وکار،
+            <span className="block text-[#ed0b55]">از کجا شروع کنی؟</span>
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-[#756565] sm:text-lg">
-            هویت بیرون ثابت می‌ماند؛ چیزی که عوض می‌شود، نقطه‌ی شروع کاربر است.
-            هر کارت یک مسیر واقعی برای صفحه‌ی اول است.
+            می‌توانی با جست‌وجو، دیدن اطراف یا انتخاب یک دسته شروع کنی.
           </p>
         </section>
 
         <div className="mx-auto mt-10 grid max-w-5xl gap-3 sm:grid-cols-3">
           {[
-            ["search", "A", "اول جست‌وجو", "وقتی کاربر جواب مشخص می‌خواهد."],
-            ["nearby", "B", "اول اطراف", "وقتی نزدیکی و همین حالا مهم است."],
-            ["mood", "C", "اول حال‌وهوا", "وقتی هنوز اسم خدمت را نمی‌داند."],
+            ["search", "A", "جست‌وجو", "وقتی اسم چیزی را که می‌خواهی می‌دانی."],
+            ["nearby", "B", "دیدن اطراف", "وقتی می‌خواهی گزینه‌های نزدیک را ببینی."],
+            ["mood", "C", "انتخاب از دسته‌ها", "وقتی هنوز نمی‌دانی دنبال چه چیزی بگردی."],
           ].map(([key, letter, title, description]) => (
             <button
               key={key}
@@ -103,13 +102,13 @@ export default function DesignShowcase({ categories, subcategories }: Props) {
               <div className="absolute -left-16 -top-20 h-56 w-56 rounded-full bg-[#ffb09d]/30 blur-2xl" />
               <div className="absolute -bottom-24 -right-16 h-64 w-64 rounded-full bg-[#ffd77e]/25 blur-2xl" />
               <div className="relative flex items-start justify-between">
-                <span className="rounded-full bg-white/80 px-3 py-1.5 text-[11px] font-black text-[#c70d46]">A · SEARCH FIRST</span>
+                <span className="rounded-full bg-white/80 px-3 py-1.5 text-[11px] font-black text-[#c70d46]">جست‌وجو</span>
                 <span className="grid h-11 w-11 place-items-center rounded-2xl bg-white text-xl shadow-sm">⌕</span>
               </div>
               <div className="relative mt-14 text-right">
-                <p className="text-sm font-black text-[#c70d46]">سریع و بی‌حاشیه</p>
+                <p className="text-sm font-black text-[#c70d46]">جست‌وجوی مستقیم</p>
                 <h2 className="mt-3 text-3xl font-black leading-[1.45] text-[#3b2527]">دنبال چی می‌گردی؟</h2>
-                <p className="mt-3 text-sm leading-7 text-[#806b68]">یک کلمه بگو؛ بقیه‌اش با بیرون.</p>
+                <p className="mt-3 text-sm leading-7 text-[#806b68]">اسم چیزی را که لازم داری بنویس.</p>
               </div>
               <div className="relative mt-7 rounded-2xl border border-white bg-white p-2 shadow-[0_16px_30px_-22px_rgba(95,40,35,.8)]">
                 <div className="flex items-center gap-2 rounded-xl bg-[#fff8f5] px-3 py-3">
@@ -134,15 +133,15 @@ export default function DesignShowcase({ categories, subcategories }: Props) {
               <div className="rounded-2xl border border-[#f3e5e0] bg-[#fffaf8] p-4">
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-xs font-black text-[#3b2d2e]">نتیجه، نه توضیح اضافه</p>
-                    <p className="mt-1 text-xs leading-6 text-[#8a7b79]">مستقیم برو سراغ دسته یا خدمت موردنظر.</p>
+                    <p className="text-xs font-black text-[#3b2d2e]">نتیجه‌ها را ببین</p>
+                    <p className="mt-1 text-xs leading-6 text-[#8a7b79]">گزینه‌های مرتبط را ببین و یکی را انتخاب کن.</p>
                   </div>
                   <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#fff0f2] text-lg">↗</span>
                 </div>
               </div>
-              <p className="mt-5 text-xs font-black leading-6 text-[#8a7b79]">بهترین برای کاربری که اسم چیزی را که می‌خواهد می‌داند.</p>
+              <p className="mt-5 text-xs font-black leading-6 text-[#8a7b79]">برای وقتی که می‌دانی دنبال چه چیزی هستی.</p>
               <button onClick={() => selectDirection("search")} className="mt-5 w-full rounded-2xl bg-[#ed0b55] px-4 py-3.5 text-sm font-black text-white transition hover:bg-[#c70d46]">
-                این مسیر را ادامه بده
+                این راه را انتخاب کن
               </button>
             </div>
           </article>
@@ -152,13 +151,13 @@ export default function DesignShowcase({ categories, subcategories }: Props) {
               <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#9edfd0]/35 blur-2xl" />
               <div className="absolute -bottom-24 -left-16 h-64 w-64 rounded-full bg-[#ffd77e]/25 blur-2xl" />
               <div className="relative flex items-start justify-between">
-                <span className="rounded-full bg-white/80 px-3 py-1.5 text-[11px] font-black text-[#2f8f7d]">B · NEARBY NOW</span>
+                <span className="rounded-full bg-white/80 px-3 py-1.5 text-[11px] font-black text-[#2f8f7d]">دیدن اطراف</span>
                 <span className="grid h-11 w-11 place-items-center rounded-2xl bg-white text-xl shadow-sm">⌖</span>
               </div>
               <div className="relative mt-14 text-right">
-                <p className="text-sm font-black text-[#2f8f7d]">مشهد · همین دوروبر</p>
-                <h2 className="mt-3 text-3xl font-black leading-[1.45] text-[#26423e]">الان اطراف من چه خبره؟</h2>
-                <p className="mt-3 text-sm leading-7 text-[#66817b]">چیزهای نزدیکت را کشف کن، بدون جست‌وجوی طولانی.</p>
+                <p className="text-sm font-black text-[#2f8f7d]">مشهد · نزدیک تو</p>
+                <h2 className="mt-3 text-3xl font-black leading-[1.45] text-[#26423e]">دنبال جایی نزدیک می‌گردی؟</h2>
+                <p className="mt-3 text-sm leading-7 text-[#66817b]">کسب‌وکارهای اطراف را ببین و یکی را انتخاب کن.</p>
               </div>
               <div className="relative mt-7 grid grid-cols-2 gap-3">
                 {quickLinks.slice(0, 4).map((item, index) => (
@@ -174,13 +173,13 @@ export default function DesignShowcase({ categories, subcategories }: Props) {
               <div className="flex items-center gap-3 rounded-2xl border border-[#d9eee8] bg-[#f5fcfa] p-4">
                 <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#d9f1eb] text-[#2f8f7d]">●</span>
                 <div>
-                  <p className="text-xs font-black text-[#345e57]">یک قدم تا اطراف تو</p>
-                  <p className="mt-1 text-xs leading-6 text-[#78928d]">موقعیتت را انتخاب کن و نزدیک‌ترین‌ها را ببین.</p>
+                  <p className="text-xs font-black text-[#345e57]">گزینه‌های نزدیکت</p>
+                  <p className="mt-1 text-xs leading-6 text-[#78928d]">محدوده‌ات را انتخاب کن تا کسب‌وکارهای نزدیک را ببینی.</p>
                 </div>
               </div>
-              <p className="mt-5 text-xs font-black leading-6 text-[#8a7b79]">بهترین برای کاربری که دنبال گزینه‌ی نزدیک و قابل‌دسترس است.</p>
+              <p className="mt-5 text-xs font-black leading-6 text-[#8a7b79]">برای وقتی که نزدیکی مهم است.</p>
               <button onClick={() => selectDirection("nearby")} className="mt-5 w-full rounded-2xl bg-[#2f9a86] px-4 py-3.5 text-sm font-black text-white transition hover:bg-[#267d6d]">
-                این مسیر را ادامه بده
+                این راه را انتخاب کن
               </button>
             </div>
           </article>
@@ -190,20 +189,20 @@ export default function DesignShowcase({ categories, subcategories }: Props) {
               <div className="absolute -left-20 -top-20 h-64 w-64 rounded-full bg-[#ffd77e]/35 blur-2xl" />
               <div className="absolute -bottom-24 -right-20 h-64 w-64 rounded-full bg-[#ffb8c6]/25 blur-2xl" />
               <div className="relative flex items-start justify-between">
-                <span className="rounded-full bg-white/80 px-3 py-1.5 text-[11px] font-black text-[#a37422]">C · MOOD DISCOVERY</span>
+                <span className="rounded-full bg-white/80 px-3 py-1.5 text-[11px] font-black text-[#a37422]">انتخاب از دسته‌ها</span>
                 <span className="grid h-11 w-11 place-items-center rounded-2xl bg-white text-xl shadow-sm">✦</span>
               </div>
               <div className="relative mt-14 text-right">
-                <p className="text-sm font-black text-[#a37422]">از حس امروزت شروع کن</p>
-                <h2 className="mt-3 text-3xl font-black leading-[1.45] text-[#4b3922]">امروز دلت چی می‌خواد؟</h2>
-                <p className="mt-3 text-sm leading-7 text-[#8d7955]">لازم نیست اسم دقیق خدمت را بدانی.</p>
+                <p className="text-sm font-black text-[#a37422]">از یک دسته شروع کن</p>
+                <h2 className="mt-3 text-3xl font-black leading-[1.45] text-[#4b3922]">دنبال چه چیزی هستی؟</h2>
+                <p className="mt-3 text-sm leading-7 text-[#8d7955]">اگر اسم دقیقش را نمی‌دانی، یک دسته را انتخاب کن.</p>
               </div>
               <div className="relative mt-7 grid grid-cols-2 gap-3">
                 {[
-                  ["یه قهوه می‌چسبه", "food", "☕"],
-                  ["وقت خرید دارم", "shopping", "🛍️"],
-                  ["چیزی یاد بگیرم", "education", "✦"],
-                  ["کارم رو راه بندازم", "business", "↗"],
+                  ["کافه و غذا", "food", "☕"],
+                  ["خرید", "shopping", "🛍️"],
+                  ["آموزش", "education", "✦"],
+                  ["خدمات", "business", "↗"],
                 ].map(([label, slug, glyph]) => (
                   <Link key={slug} href={"/category/" + slug} className="rounded-2xl border border-white/90 bg-white/80 p-3 text-right transition hover:-translate-y-0.5 hover:bg-white">
                     <span className="text-xl">{glyph}</span>
@@ -214,12 +213,12 @@ export default function DesignShowcase({ categories, subcategories }: Props) {
             </div>
             <div className="p-6">
               <div className="rounded-2xl border border-[#f1e4c8] bg-[#fffaf0] p-4">
-                <p className="text-xs font-black text-[#6f572e]">کشف کردن، نه فقط پیدا کردن</p>
-                <p className="mt-1 text-xs leading-6 text-[#998463]">بیرون به کاربر کمک می‌کند از حسش به یک انتخاب برسد.</p>
+                <p className="text-xs font-black text-[#6f572e]">انتخاب از دسته‌ها</p>
+                <p className="mt-1 text-xs leading-6 text-[#998463]">دسته‌ای را انتخاب کن تا گزینه‌های مربوط را ببینی.</p>
               </div>
-              <p className="mt-5 text-xs font-black leading-6 text-[#8a7b79]">بهترین برای ساختن یک برند گرم‌تر و به‌یادماندنی‌تر.</p>
+              <p className="mt-5 text-xs font-black leading-6 text-[#8a7b79]">برای وقتی که هنوز اسم دقیق چیزی را نمی‌دانی.</p>
               <button onClick={() => selectDirection("mood")} className="mt-5 w-full rounded-2xl bg-[#d48b2b] px-4 py-3.5 text-sm font-black text-white transition hover:bg-[#b87420]">
-                این مسیر را ادامه بده
+                این راه را انتخاب کن
               </button>
             </div>
           </article>
@@ -228,18 +227,18 @@ export default function DesignShowcase({ categories, subcategories }: Props) {
         <section id="decision" className="mx-auto mt-10 max-w-5xl rounded-[2rem] border border-[#f0dfe0] bg-white p-6 shadow-[0_18px_55px_-42px_rgba(77,30,36,.8)] sm:p-8">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-xs font-black tracking-[0.18em] text-[#ed0b55]">SHARED PRINCIPLES</p>
-              <h2 className="mt-2 text-2xl font-black text-[#3b2d2e]">هر مسیری را انتخاب کنیم، این‌ها ثابت می‌مانند.</h2>
+              <p className="text-xs font-black text-[#ed0b55]">چیزهایی که ثابت می‌مانند</p>
+              <h2 className="mt-2 text-2xl font-black text-[#3b2d2e]">در هر راه، اطلاعات روشن و قابل‌استفاده می‌بینی.</h2>
             </div>
             <span className="rounded-full bg-[#fff0f2] px-4 py-2 text-xs font-black text-[#c70d46]">
-              {selected ? "انتخاب شد: " + (selected === "search" ? "A" : selected === "nearby" ? "B" : "C") : "هنوز انتخاب نشده"}
+              {selected ? "راه انتخاب‌شده: " + (selected === "search" ? "جست‌وجو" : selected === "nearby" ? "دیدن اطراف" : "انتخاب از دسته‌ها") : "هنوز راهی انتخاب نکردی"}
             </span>
           </div>
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
             {[
-              ["متن کوتاه‌تر", "هر جمله باید به تصمیم بعدی کمک کند."],
-              ["اقدام واضح", "کاربر همیشه بداند قدم بعدی چیست."],
-              ["کشف راحت‌تر", "اطلاعات کمتر، انتخاب‌های بهتر."],
+              ["متن روشن", "هر جمله را کوتاه و مستقیم می‌نویسیم."],
+              ["قدم بعدی مشخص", "دکمه‌ها می‌گویند بعدش چه کار کنی."],
+              ["انتخاب راحت‌تر", "اطلاعات لازم را یک‌جا می‌بینی."],
             ].map(([title, description]) => (
               <div key={title} className="rounded-2xl bg-[#fffaf8] p-4">
                 <p className="font-black text-[#3b2d2e]">{title}</p>
@@ -249,13 +248,13 @@ export default function DesignShowcase({ categories, subcategories }: Props) {
           </div>
           {selected && (
             <p className="mt-6 rounded-2xl border border-[#c9eee4] bg-[#e8f8f2] px-4 py-3 text-sm font-bold text-[#2f806f]">
-              مسیر انتخابی ثبت شد. قدم بعدی: همین الگو را روی صفحه‌ی اصلی اجرا می‌کنیم و متن‌ها را نهایی می‌کنیم.
+              این راه را انتخاب کردی. می‌توانی گزینه‌های دیگر را هم ببینی.
             </p>
           )}
         </section>
 
         <p className="mx-auto mt-8 max-w-2xl text-center text-xs leading-7 text-[#9a8985]">
-          تعداد دسته‌ها: {categories.length} · تعداد تخصص‌ها: {subcategories.length} · داده‌های واقعی فعلی بیرون در لینک‌های این صفحه استفاده شده‌اند.
+          در این صفحه از {categories.length} دسته و {subcategories.length} تخصص فعلی بیرون استفاده شده است.
         </p>
       </main>
     </div>

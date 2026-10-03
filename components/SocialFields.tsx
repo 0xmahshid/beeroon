@@ -41,7 +41,7 @@ export default function SocialFields({ value, onChange, accent = "pink" }: Props
     <section className="space-y-4 border-t border-[#f0e5de] pt-6">
       <div>
         <h2 className="text-sm font-black text-[#4b3b3c]">شبکه‌های اجتماعی</h2>
-        <p className="mt-1 text-xs leading-6 text-[#8a7b79]">شبکه‌هایی را که کسب‌وکارت در آن‌ها فعال است انتخاب کن، سپس لینک هرکدام را اضافه کن.</p>
+        <p className="mt-1 text-xs leading-6 text-[#8a7b79]">شبکه‌هایی را که در آن‌ها فعالی انتخاب کن، بعد لینک صفحه‌ات را وارد کن.</p>
       </div>
       <div className="flex flex-wrap gap-2">
         {SOCIAL_NETWORKS.map((network) => {

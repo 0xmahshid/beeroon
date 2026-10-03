@@ -24,7 +24,7 @@ export default function AdminLogin() {
     const next = params.get("next");
     if (isSafeNextPath(next)) setNextPath(next);
     if (params.get("error") === "not-authorized") {
-      setNotice("این حساب دسترسی پنل مدیریت بیرون را ندارد.");
+      setNotice("این حساب اجازه‌ی ورود به پنل مدیریت بیرون را ندارد.");
     }
   }, []);
 
@@ -42,7 +42,7 @@ export default function AdminLogin() {
     if (error || data.user?.app_metadata?.role !== "admin") {
       if (!error) await supabase.auth.signOut();
       setBusy(false);
-      setErr(error ? "ایمیل یا رمز عبور اشتباهه." : "این حساب دسترسی مدیریت ندارد.");
+      setErr(error ? "ایمیل یا رمز عبور درست نیست." : "این حساب اجازه‌ی ورود به پنل مدیریت را ندارد.");
       return;
     }
 
@@ -54,7 +54,7 @@ export default function AdminLogin() {
   return (
     <form onSubmit={submit} className="mx-auto max-w-sm px-4 py-24">
       <h1 className="text-center text-xl font-bold">ورود مدیریت</h1>
-      <p className="mt-2 text-center text-sm text-ink-900/50">این بخش فقط برای مدیران بیرون است.</p>
+      <p className="mt-2 text-center text-sm text-ink-900/50">ورود به این بخش فقط برای مدیران بیرون است.</p>
       <div className="mt-6 space-y-3">
         <input type="email" required autoComplete="email" placeholder="ایمیل" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 outline-none focus:border-brand-500 dark:border-white/10 dark:bg-ink-900" dir="ltr" />
         <input type="password" required autoComplete="current-password" placeholder="رمز عبور" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 outline-none focus:border-brand-500 dark:border-white/10 dark:bg-ink-900" dir="ltr" />

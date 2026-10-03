@@ -69,7 +69,7 @@ export default function CategoryResults({ slug, sub, category, selected, subcate
   return (
     <div className="sample-container min-h-screen pb-6">
       <div className="flex items-center justify-between py-4">
-        <Link href={category ? "/?city=" + encodeURIComponent(city.slug) : "/"} className="text-xs font-bold text-[#8f8283] hover:text-[#c91442]">← بازگشت</Link>
+        <Link href={category ? "/?city=" + encodeURIComponent(city.slug) : "/"} className="text-xs font-bold text-[#8f8283] hover:text-[#c91442]">← دسته‌ها</Link>
         <span className="text-[11px] text-[#8f8283]">بیرون / {categoryName}</span>
       </div>
       <section className="border-b border-[#f0e9ea] pb-5">
@@ -87,19 +87,19 @@ export default function CategoryResults({ slug, sub, category, selected, subcate
           <button onClick={() => toggleType("physical")} className={"sample-chip " + (types.includes("physical") ? "active" : "")}>حضوری</button>
           <button onClick={() => toggleType("online_shop")} className={"sample-chip " + (types.includes("online_shop") ? "active" : "")}>آنلاین‌شاپ</button>
           {priceOptions.map((option) => <button key={option.value} onClick={() => togglePrice(option.value)} className={"sample-chip " + (prices.includes(option.value) ? "active" : "")}>{option.label}</button>)}
-          {((types.length > 0) || (prices.length > 0)) && <button onClick={clear} className="sample-chip text-[#c91442]">پاک کردن</button>}
+          {((types.length > 0) || (prices.length > 0)) && <button onClick={clear} className="sample-chip text-[#c91442]">حذف فیلتر</button>}
         </div>
-        <label className="flex items-center gap-2 text-[10px] font-bold text-[#8f8283]">مرتب‌سازی
+        <label className="flex items-center gap-2 text-[10px] font-bold text-[#8f8283]">مرتب‌سازی با
           <select value={sort} onChange={(event) => { const value = event.target.value as Sort; setSort(value); sync(types, prices, value); }} className="rounded-lg border border-[#f0e9ea] bg-white px-2 py-1.5 text-[10px] font-bold outline-none">
             <option value="relevant">مرتبط‌ترین</option><option value="newest">جدیدترین</option><option value="name">الفبایی</option>
           </select>
         </label>
       </div>
-      <div className="mt-2 flex items-center justify-between"><h2 className="text-sm font-extrabold">نتیجه‌ها</h2><span className="text-[11px] text-[#8f8283]">{filtered.length.toLocaleString("fa-IR")} نتیجه</span></div>
+      <div className="mt-2 flex items-center justify-between"><h2 className="text-sm font-extrabold">کسب‌وکارها</h2><span className="text-[11px] text-[#8f8283]">{filtered.length.toLocaleString("fa-IR")} نتیجه</span></div>
       {filtered.length > 0 ? <div className="sample-grid-md mt-1">{filtered.map((business) => <BusinessCard key={business.id} b={business} categoryName={category?.name} />)}</div> : <div className="my-5 rounded-2xl border border-dashed border-[#e5cbd2] bg-[#fffafb] px-5 py-12 text-center">
         <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-[#fff0f3] text-2xl text-[#d51f4f]">⌕</div>
-        <h3 className="mt-4 text-sm font-black text-[#32162d]">{businesses.length === 0 ? "هنوز کسب‌وکاری در " + city.name + " ثبت نشده" : "با این فیلتر چیزی پیدا نشد"}</h3>
-        <p className="mx-auto mt-2 max-w-sm text-xs leading-6 text-[#8f8283]">{businesses.length === 0 ? "اگر صاحب این کسب‌وکاری، جای خودت را به آدم‌های درست نشان بده." : "فیلترها را تغییر بده یا از جست‌وجوی آزاد کمک بگیر."}</p>
+        <h3 className="mt-4 text-sm font-black text-[#32162d]">{businesses.length === 0 ? "در " + city.name + " کسب‌وکاری ثبت نشده." : "با این فیلترها نتیجه‌ای پیدا نشد."}</h3>
+        <p className="mx-auto mt-2 max-w-sm text-xs leading-6 text-[#8f8283]">{businesses.length === 0 ? "کسب‌وکارت را ثبت کن تا بعد از بررسی نمایش داده شود." : "فیلترها را بردار یا عوض کن."}</p>
         <div className="mt-5 flex flex-wrap justify-center gap-2">
           {(types.length > 0 || prices.length > 0) && <button onClick={clear} className="rounded-xl border border-[#eadfe3] bg-white px-4 py-2.5 text-xs font-black text-[#6d5c65]">حذف فیلترها</button>}
           <Link href={"/register-business" + cityQuery} className="rounded-xl bg-[#d51f4f] px-4 py-2.5 text-xs font-black text-white">ثبت کسب‌وکار</Link>

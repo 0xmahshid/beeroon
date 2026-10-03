@@ -155,21 +155,21 @@ export default function BusinessCard({
         <div className="absolute right-3 top-3 z-10 flex flex-wrap items-center gap-1.5">
           {b.is_supporter && (
             <span className="inline-flex items-center gap-1 rounded-full bg-[#fff]/90 px-2.5 py-1 text-[9px] font-black text-[#d51f4f] shadow-[0_4px_12px_-4px_rgba(213,31,79,.4)] backdrop-blur">
-              ⭐ حامی
+              ⭐ حامی بیرون
             </span>
           )}
           {b.business_type === "online_shop" ? (
             <span className="rounded-full bg-[#eaf4ff]/95 px-2.5 py-1 text-[9px] font-black text-[#185fa7] shadow-[0_4px_12px_-4px_rgba(24,95,167,.35)] backdrop-blur">
-              🛒 آنلاین‌شاپ
+              🛒 فروش آنلاین
             </span>
           ) : (
             <span className="rounded-full bg-white/90 px-2.5 py-1 text-[9px] font-black text-[#3e4c6e] shadow-[0_4px_12px_-4px_rgba(62,76,110,.35)] backdrop-blur">
-              🏪 خرید حضوری
+              🏪 مراجعه حضوری
             </span>
           )}
           {b.is_verified && (
             <span className="inline-flex items-center gap-1 rounded-full bg-[#e6f4ff]/95 px-2.5 py-1 text-[9px] font-black text-[#185fa7] shadow-[0_4px_12px_-4px_rgba(24,95,167,.35)] backdrop-blur">
-              ✓ تأییدشده
+              ✓ تأیید شده
             </span>
           )}
         </div>
@@ -244,7 +244,7 @@ export default function BusinessCard({
                 rel="noreferrer noopener"
                 className="inline-flex items-center gap-1 rounded-xl bg-[#e6f8ee] px-2.5 py-1.5 text-[10px] font-black text-[#1a7d4c] ring-1 ring-[#c6ecdb] transition hover:bg-[#d2f2e0]"
                 style={{ minHeight: "32px" }}
-                title="پیام واتساپ"
+                title="پیام در واتساپ"
               >
                 <WhatsappIcon className="h-3.5 w-3.5" />
                 واتساپ
@@ -291,7 +291,7 @@ export default function BusinessCard({
                 className="inline-flex min-h-[44px] flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#1fae5a] px-3 py-3 text-[11.5px] font-black text-white shadow-[0_10px_22px_-12px_rgba(31,174,90,.6)] transition hover:bg-[#17954b]"
               >
                 <WhatsappIcon className="h-4 w-4" />
-                پیام واتساپ
+                پیام در واتساپ
               </a>
             ) : null}
             {mapUrl && (
@@ -311,7 +311,7 @@ export default function BusinessCard({
               href={"/business/" + b.id}
               className="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-xl bg-[#32162d] px-4 py-3 text-[11.5px] font-black text-white transition hover:bg-[#4c2042]"
             >
-              جزئیات →
+              دیدن صفحه →
             </Link>
           </div>
         </div>

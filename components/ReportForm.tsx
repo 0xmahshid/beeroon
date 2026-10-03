@@ -3,11 +3,11 @@
 import { useState } from "react";
 
 const REASONS: { key: string; label: string }[] = [
-  { key: "wrong_phone", label: "شماره تلفن اشتباه" },
-  { key: "wrong_address", label: "آدرس اشتباه" },
-  { key: "closed", label: "کسب‌وکار تعطیل شده" },
-  { key: "wrong_category", label: "دسته‌بندی اشتباه" },
-  { key: "other", label: "سایر" },
+  { key: "wrong_phone", label: "شماره تماس اشتباه است" },
+  { key: "wrong_address", label: "نشانی اشتباه است" },
+  { key: "closed", label: "کسب‌وکار دیگر فعال نیست" },
+  { key: "wrong_category", label: "دسته‌بندی درست نیست" },
+  { key: "other", label: "دلیل دیگر" },
 ];
 
 export default function ReportForm({ businessId }: { businessId: string }) {
@@ -21,7 +21,7 @@ export default function ReportForm({ businessId }: { businessId: string }) {
     e.preventDefault();
     if (!reason) {
       setStatus("error");
-      setErrorMsg("لطفاً دلیل گزارش را انتخاب کنید");
+      setErrorMsg("یک دلیل را انتخاب کن.");
       return;
     }
     setStatus("loading");
@@ -39,14 +39,17 @@ export default function ReportForm({ businessId }: { businessId: string }) {
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data?.error || "ارسال گزارش ناموفق بود");
+        const message = data?.error === "rate_limited"
+          ? "تعداد گزارش‌ها زیاد است. کمی بعد دوباره امتحان کن."
+          : data?.error || "گزارش ثبت نشد. دوباره تلاش کن.";
+        throw new Error(message);
       }
       setStatus("success");
       setReason("");
       setNote("");
     } catch (err) {
       setStatus("error");
-      setErrorMsg(err instanceof Error ? err.message : "ارسال گزارش ناموفق بود");
+      setErrorMsg(err instanceof Error ? err.message : "گزارش ثبت نشد. دوباره تلاش کن.");
     }
   }
 
@@ -57,7 +60,7 @@ export default function ReportForm({ businessId }: { businessId: string }) {
         onClick={() => setOpen(true)}
         className="rounded-xl border border-[#e8dcdc] bg-[#fdfafa] px-4 py-3 text-xs font-bold text-[#6b5962] transition hover:border-[#d51f4f] hover:text-[#d51f4f]"
       >
-        اطلاعات این کسب‌وکار اشتباه است؟ گزارش کنید
+        اطلاعات این کسب‌وکار اشتباه است؟ گزارش بده
       </button>
     );
   }
@@ -65,7 +68,7 @@ export default function ReportForm({ businessId }: { businessId: string }) {
   return (
     <form onSubmit={onSubmit} className="rounded-2xl border border-[#f0e9ea] bg-[#fdfafa] p-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-extrabold text-[#3a2a30]">گزارش اطلاعات اشتباه</h3>
+        <h3 className="text-sm font-extrabold text-[#3a2a30]">گزارش اشتباه در اطلاعات</h3>
         <button
           type="button"
           onClick={() => {
@@ -81,7 +84,7 @@ export default function ReportForm({ businessId }: { businessId: string }) {
 
       {status === "success" ? (
         <div className="mt-4 rounded-xl border border-[#cfe9d4] bg-[#f2fbf4] p-4 text-xs font-bold text-[#14682a]">
-          گزارش شما با موفقیت ثبت شد و به‌زودی بررسی می‌شود. ممنون از کمک شما.
+          گزارشت ثبت شد. تیم بیرون آن را بررسی می‌کند.
         </div>
       ) : (
         <div className="mt-4 space-y-4">
@@ -112,12 +115,12 @@ export default function ReportForm({ businessId }: { businessId: string }) {
           </div>
 
           <div>
-            <label className="mb-1.5 block text-xs font-bold text-[#3a2a30]">توضیحات اختیاری</label>
+            <label className="mb-1.5 block text-xs font-bold text-[#3a2a30]">توضیح بیشتر (اختیاری)</label>
             <textarea
               value={note}
               onChange={(e) => setNote(e.target.value.slice(0, 1000))}
               rows={3}
-              placeholder="جزئیات بیشتری توضیح دهید..."
+              placeholder="ایراد را توضیح بده…"
               className="w-full rounded-xl border border-[#e8dcdc] bg-white px-3 py-2.5 text-xs text-[#3a2a30] outline-none transition focus:border-[#d51f4f] focus:ring-2 focus:ring-[#ffe3eb]"
             />
             <div className="mt-1 text-[10px] text-[#8f8283]">{note.length}/1000</div>
@@ -134,11 +137,11 @@ export default function ReportForm({ businessId }: { businessId: string }) {
             disabled={status === "loading"}
             className="w-full rounded-xl bg-[#c91442] px-4 py-3 text-xs font-extrabold text-white transition hover:bg-[#b1113a] disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {status === "loading" ? "در حال ارسال..." : "ثبت گزارش"}
+            {status === "loading" ? "در حال ثبت…" : "ثبت گزارش"}
           </button>
 
           <p className="text-[10px] leading-relaxed text-[#8f8283]">
-            ثبت گزارش نیازی به ثبت‌نام ندارد. گزارش‌های شما فقط توسط تیم ادمین بررسی می‌شوند.
+            برای ثبت گزارش، لازم نیست حساب داشته باشی. تیم بیرون گزارش را بررسی می‌کند.
           </p>
         </div>
       )}

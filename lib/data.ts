@@ -87,9 +87,9 @@ function buildMatchReason(
   category: Category | undefined,
   subcategory: Subcategory | undefined,
 ): string {
-  if (intent) return `مرتبط با ${intent.name}`;
-  if (subcategory) return `در دسته ${subcategory.name}`;
-  if (category) return `در دسته ${category.name}`;
+  if (intent) return `مرتبط با جست‌وجوی ${intent.name}`;
+  if (subcategory) return `دسته: ${subcategory.name}`;
+  if (category) return `دسته: ${category.name}`;
   return "";
 }
 

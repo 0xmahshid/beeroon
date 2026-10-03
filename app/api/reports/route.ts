@@ -19,13 +19,13 @@ export async function POST(request: Request) {
   try {
     const payload = await request.json();
     if (!isValidUuid(payload?.businessId) || !reasons.has(payload?.reason)) {
-      return NextResponse.json({ ok: false, error: "اطلاعات گزارش معتبر نیست" }, { status: 400 });
+      return NextResponse.json({ ok: false, error: "اطلاعات گزارش درست نیست." }, { status: 400 });
     }
     if (payload?.note != null && typeof payload.note !== "string") {
-      return NextResponse.json({ ok: false, error: "یادداشت گزارش معتبر نیست" }, { status: 400 });
+      return NextResponse.json({ ok: false, error: "یادداشت گزارش باید متن باشد." }, { status: 400 });
     }
     if (payload?.page_source != null && typeof payload.page_source !== "string") {
-      return NextResponse.json({ ok: false, error: "page_source معتبر نیست" }, { status: 400 });
+      return NextResponse.json({ ok: false, error: "منبع گزارش باید متن باشد." }, { status: 400 });
     }
     const supabase = await createSupabaseServerClient();
     const { data, error } = await supabase

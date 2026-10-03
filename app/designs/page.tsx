@@ -2,8 +2,8 @@ import DesignShowcase from "@/components/DesignShowcase";
 import { getDirectory } from "@/lib/data";
 
 export const metadata = {
-  title: "انتخاب مسیر طراحی | بیرون",
-  description: "سه مسیر پیشنهادی برای تجربه‌ی کشف بیرون.",
+  title: "راه‌های جست‌وجو | بیرون",
+  description: "سه راه برای پیدا کردن کسب‌وکارهای بیرون را مقایسه کن.",
 };
 
 export default async function DesignDirectionsPage() {

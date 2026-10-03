@@ -42,11 +42,11 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
               <span>✨</span> قبل از بیرون زدن، بیرون رو چک کن.
             </span>
             <h1 className="mt-5 text-3xl font-black leading-[1.5] tracking-tight text-[#25252a] sm:text-4xl md:text-5xl">
-              هر چیزی لازم داری،<br />
-              <span className="text-[#d51f4f]">از نزدیک‌ترین مغازه پیدا کن.</span>
+              دنبال چی می‌گردی؟<br />
+              <span className="text-[#d51f4f]">از نزدیک‌ترین جا پیداش کن.</span>
             </h1>
             <p className="mt-5 max-w-2xl text-sm leading-8 text-[#69707b] sm:text-base md:leading-9">
-              بیرون کمک می‌کنه بدون رفت‌وگرد، کافه، رستوران، آرایشگاه، مغازه و خدمت مورد نیازت رو نزدیک‌تر، سریع‌تر و مطمئن‌تر پیدا کنی.
+              کافه، فروشگاه یا خدمتی را که لازم داری جست‌وجو کن. نشانی، ساعت کاری و راه تماس را هم ببین.
             </p>
             <form action="/search" method="get" role="search" className="mt-7 flex max-w-3xl items-center gap-2 rounded-2xl border border-[#dfe2e7] bg-white p-2 shadow-[0_20px_48px_-24px_rgba(32,35,42,.45)] focus-within:border-[#e0a0af]">
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#fff0f3] text-2xl leading-none text-[#d51f4f] sm:h-14 sm:w-14">⌕</span>
@@ -54,7 +54,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
               {neighborhood && <input type="hidden" name="neighborhood" value={neighborhood.slug} />}
               <input
                 name="q"
-                placeholder="دنبال چه چیزی می‌گردی؟ مثلاً کافه یا آرایشگاه"
+                placeholder="مثلاً کافه، تعمیرکار یا فروشگاه"
                 className="min-w-0 flex-1 bg-transparent py-3 text-sm text-[#25252a] outline-none placeholder:text-[#9ba1aa] sm:text-base md:py-4"
                 style={{ minHeight: "52px" }}
               />
@@ -68,7 +68,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
 
             <div className="mt-5">
               <div className="mb-2 flex items-center gap-2 text-[10.5px] font-bold text-[#858c96]">
-                <span>🪄 جست‌وجوی سریع:</span>
+                <span>جست‌وجوی سریع:</span>
               </div>
               <div className="flex flex-wrap gap-2">
                 {heroQuickSearch.map((item) => (
@@ -92,7 +92,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
             <div className="relative">
               <div className="flex items-center justify-between pb-4">
                 <div>
-                  <p className="text-[10.5px] font-bold text-[#9097a3]">📍 امروز در</p>
+                  <p className="text-[10.5px] font-bold text-[#9097a3]">📍 جست‌وجو در</p>
                   <h2 className="mt-1 text-2xl font-black text-[#25252a]">{neighborhood ? neighborhood.name : city.name}</h2>
                 </div>
                 <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#fff0f3] text-2xl">⌖</span>
@@ -114,15 +114,15 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
               <div className="mt-5 space-y-2.5">
                 <div className="flex items-center gap-2.5 rounded-xl bg-white px-3 py-2.5 text-[10.5px] font-bold text-[#555a63] shadow-[0_4px_12px_-8px_rgba(60,30,45,.3)]">
                   <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-[#fff0f3] text-[#d51f4f]">✓</span>
-                  <span>تأیید شماره تماس و آدرس</span>
+                  <span>بررسی شماره تماس و نشانی</span>
                 </div>
                 <div className="flex items-center gap-2.5 rounded-xl bg-white px-3 py-2.5 text-[10.5px] font-bold text-[#555a63] shadow-[0_4px_12px_-8px_rgba(60,30,45,.3)]">
                   <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-[#fff0f3] text-[#d51f4f]">🗺️</span>
-                  <span>لینک مستقیم مسیریابی نشان</span>
+                  <span>مسیریابی با نشان</span>
                 </div>
                 <div className="flex items-center gap-2.5 rounded-xl bg-white px-3 py-2.5 text-[10.5px] font-bold text-[#555a63] shadow-[0_4px_12px_-8px_rgba(60,30,45,.3)]">
                   <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-[#fff0f3] text-[#d51f4f]">⏰</span>
-                  <span>نشان باز/بسته و ساعت کاری</span>
+                  <span>ساعت کاری و وضعیت باز بودن</span>
                 </div>
               </div>
             </div>
@@ -134,16 +134,16 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           <div className="text-center">
             <span className="beeroon-section-label">راهنمای استفاده</span>
-            <h2 className="mt-3 text-2xl font-black text-[#25252a] sm:text-3xl">استفاده از بیرون، اینجور ساده‌ست.</h2>
+            <h2 className="mt-3 text-2xl font-black text-[#25252a] sm:text-3xl">چطور از بیرون استفاده کنی؟</h2>
             <p className="mx-auto mt-3 max-w-xl text-xs leading-8 text-[#69707b] sm:text-sm">
-              حتی بچه ۹ ساله هم می‌تونه با ۳ قدم ساده، چیزی که می‌خواد رو پیدا کنه.
+              شهر و محله‌ات را انتخاب کن، بعد چیزی را که دنبالش هستی بنویس.
             </p>
           </div>
           <div className="mt-9 grid gap-5 md:grid-cols-3">
             {[
-              { step: "۱", title: "شهر و محله را انتخاب کن", desc: "ابتدا بفهم ما دنبال چی تو کجا می‌گردیم. شهر و محله را از هدر انتخاب کن.", icon: "📍", bg: "#fff0f3" },
-              { step: "۲", title: "نیازت را جست‌وجو کن", desc: "همون‌طور که فکر می‌کنی بنویس: «کافه برای دو نفر»، «تعمیرات موبایل» یا «پوشاک بچگانه».", icon: "🔍", bg: "#fff3ec" },
-              { step: "۳", title: "تماس بگیر یا مسیر را بگیر", desc: "روی دکمه‌ی تماس کلیک کن، یا از طریق نشان مستقیم مسیر را شروع کن.", icon: "📞", bg: "#eaf5ff" },
+              { step: "۱", title: "شهر و محله‌ات را انتخاب کن", desc: "محدوده‌ای را انتخاب کن که می‌خواهی در آن بگردی.", icon: "📍", bg: "#fff0f3" },
+              { step: "۲", title: "اسمش را جست‌وجو کن", desc: "نام کسب‌وکار یا خدمتی را که لازم داری بنویس؛ مثلاً کافه یا تعمیرکار.", icon: "🔍", bg: "#fff3ec" },
+              { step: "۳", title: "اطلاعاتش را ببین", desc: "نشانی و ساعت کاری را بررسی کن؛ بعد تماس بگیر یا مسیر را باز کن.", icon: "📞", bg: "#eaf5ff" },
             ].map((s) => (
               <div key={s.step} className="group relative overflow-hidden rounded-3xl border border-[#eef0f4] bg-white p-6 transition hover:-translate-y-1 hover:border-[#e6c0cb] hover:shadow-[0_30px_50px_-24px_rgba(60,30,45,.25)] sm:p-7">
                 <div className="absolute left-4 top-4 inline-flex h-9 w-9 items-center justify-center rounded-2xl text-[13px] font-black text-[#d51f4f]" style={{ background: s.bg }}>
@@ -164,12 +164,12 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
         <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between gap-4">
             <div>
-              <span className="beeroon-section-label">شروع کن</span>
-              <h2 className="mt-2 text-2xl font-black text-[#25252a] sm:text-3xl">دسته‌های محبوب</h2>
-              <p className="mt-2 text-sm text-[#858c96]">برای پیدا کردن جای مناسب، از یک دسته شروع کن.</p>
+              <span className="beeroon-section-label">دسته‌ها</span>
+              <h2 className="mt-2 text-2xl font-black text-[#25252a] sm:text-3xl">دنبال چه چیزی هستی؟</h2>
+              <p className="mt-2 text-sm text-[#858c96]">یک دسته را انتخاب کن تا کسب‌وکارهای مرتبط را ببینی.</p>
             </div>
             <Link href={"/search" + cityQuery} className="shrink-0 rounded-full bg-[#fff0f3] px-4 py-2 text-xs font-black text-[#d51f4f] transition hover:bg-[#ffe4ea] sm:text-sm">
-              همه دسته‌ها ←
+              دیدن همه دسته‌ها ←
             </Link>
           </div>
           <div className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-4 md:gap-4 lg:grid-cols-8">
@@ -185,7 +185,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
                     <CategoryIcon slug={category.slug} className="h-7 w-7 text-[#d51f4f]" />
                   </span>
                   <strong className="mt-4 block truncate text-[12px] font-black text-[#353942] group-hover:text-[#d51f4f] sm:text-sm">{category.name}</strong>
-                  <span className="mt-1 block text-[10px] text-[#9299a3]">{count ? count.toLocaleString("fa-IR") + " تخصص" : "مشاهده گزینه‌ها"}</span>
+                  <span className="mt-1 block text-[10px] text-[#9299a3]">{count ? count.toLocaleString("fa-IR") + " تخصص" : "دیدن گزینه‌ها"}</span>
                 </Link>
               );
             })}
@@ -197,12 +197,12 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
         <div className="mx-auto max-w-7xl px-4 py-11 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between gap-4">
             <div>
-              <span className="beeroon-section-label">برای شروع</span>
-              <h2 className="mt-2 text-2xl font-black text-[#25252a] sm:text-3xl">کسب‌وکارهای منتخب {city.name}</h2>
-              <p className="mt-2 text-sm text-[#858c96]">اطلاعات تماس و مسیر هر کسب‌وکار را یک‌جا ببین.</p>
+              <span className="beeroon-section-label">نزدیک تو</span>
+              <h2 className="mt-2 text-2xl font-black text-[#25252a] sm:text-3xl">کسب‌وکارهای {city.name}</h2>
+              <p className="mt-2 text-sm text-[#858c96]">نشانی، ساعت کاری و راه تماس را ببین.</p>
             </div>
             <Link href={"/search" + cityQuery} className="shrink-0 text-sm font-black text-[#d51f4f] hover:underline">
-              مشاهده همه ←
+              دیدن همه ←
             </Link>
           </div>
           {featured.length > 0 ? (
@@ -214,10 +214,10 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
           ) : (
             <div className="mt-7 rounded-3xl border border-dashed border-[#decbd1] bg-white px-6 py-14 text-center">
               <div className="mx-auto grid h-16 w-16 place-items-center rounded-3xl bg-[#fff0f3] text-3xl">🏪</div>
-              <h3 className="mt-4 text-lg font-black text-[#25252a]">هنوز انتخابی در این شهر ثبت نشده.</h3>
-              <p className="mx-auto mt-2 max-w-lg text-sm text-[#858c96]">اولین کسب‌وکاری باش که در {city.name} دیده می‌شود.</p>
+              <h3 className="mt-4 text-lg font-black text-[#25252a]">هنوز کسب‌وکاری در {city.name} ثبت نشده.</h3>
+              <p className="mx-auto mt-2 max-w-lg text-sm text-[#858c96]">کسب‌وکارت را ثبت کن تا بعد از بررسی اینجا نمایش داده شود.</p>
               <Link href={"/register-business" + cityQuery} className="mt-5 inline-flex rounded-xl bg-[#d51f4f] px-6 py-3 text-sm font-black text-white">
-                ثبت کسب‌وکار رایگان
+                ثبت کسب‌وکار
               </Link>
             </div>
           )}
@@ -229,19 +229,18 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
         <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           <div className="grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-center">
             <div>
-              <span className="beeroon-section-label">چرا بیرون؟</span>
+              <span className="beeroon-section-label">بیرون چطور کمک می‌کند؟</span>
               <h2 className="mt-3 text-2xl font-black text-[#25252a] sm:text-3xl">
-                بیرون از جست‌وجوی سرزنده، سریع‌تر و مطمئن‌تره.
+                اطلاعات کسب‌وکارهای نزدیکت را یک‌جا ببین.
               </h2>
               <p className="mt-4 max-w-xl text-sm leading-8 text-[#69707b]">
-                ما فقط کسب‌وکارهای واقعی را که اطلاعات تماس و آدرس معتبر دارند نمایش می‌دهیم. از اطلاعات باز/بسته گرفته تا مسیریابی مستقیم، همه‌چیز برای رسیدن سریعِ تو آماده است.
+                نشانی، ساعت کاری، شماره تماس و مسیر را پیش از رفتن بررسی کن.
               </p>
               <div className="mt-7 grid gap-4 sm:grid-cols-2">
                 {[
-                  { icon: "⭐", title: "اطلاعات تأییدشده", desc: "کسب‌وکارها توسط تیم بیرون مرور و تأیید می‌شوند." },
-                  { icon: "🧭", title: "مسیر با یک کلیک", desc: "لینک مستقیم مسیریابی برای رسیدن سریع‌تر." },
-                  { icon: "💬", title: "تماس با یک دکمه", desc: "پیام واتساپ یا تماس مستقیم با کسب‌وکار." },
-                  { icon: "👶", title: "برای همه سن‌ها", desc: "رابط کاربری ساده، حتی برای استفاده راحت بچه‌ها." },
+                  { icon: "⭐", title: "اطلاعات بررسی‌شده", desc: "شماره تماس و نشانی کسب‌وکارها بررسی می‌شود." },
+                  { icon: "🧭", title: "مسیریابی با نشان", desc: "با یک دکمه مسیر را در نشان باز کن." },
+                  { icon: "💬", title: "راه تماس روشن", desc: "تماس بگیر یا در واتساپ پیام بده." },
                 ].map((f) => (
                   <div key={f.title} className="flex gap-3 rounded-2xl border border-[#eef0f4] bg-[#fbfbfc] p-4">
                     <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-white text-2xl shadow-[0_4px_12px_-6px_rgba(60,30,45,.25)]">{f.icon}</div>
@@ -258,28 +257,28 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
               <div className="rounded-[28px] border border-[#e8eaee] bg-gradient-to-b from-[#fff1f4] to-white p-6 shadow-[0_40px_80px_-34px_rgba(213,31,79,.35)] sm:p-8">
                 <div className="flex items-center justify-between">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-[10px] font-black text-[#d51f4f] shadow-[0_4px_12px_-6px_rgba(213,31,79,.3)]">
-                    <span>🌟</span> برای صاحبان کسب‌وکار
+                    <span>🌟</span> برای کسب‌وکارها
                   </span>
-                  <span className="text-[10px] font-bold text-[#9097a3]">بیش از ۱۰۰+ کسب‌وکار</span>
+                  <span className="text-[10px] font-bold text-[#9097a3]">کسب‌وکارهای محلی</span>
                 </div>
                 <h3 className="mt-6 text-2xl font-black leading-[1.5] text-[#25252a]">
-                  کسب‌وکارت را در جای درست، به مشتری‌های واقعی معرفی کن.
+                  کسب‌وکارت را در بیرون ثبت کن.
                 </h3>
                 <p className="mt-4 text-sm leading-8 text-[#69707b]">
-                  یک صفحه‌ی معتبر بساز تا مشتری‌ها از جست‌وجو، آدرس دقیق، ساعات کاری، شبکه‌های اجتماعی، تماس و مسیر مغازه‌ات را با هم ببینند.
+                  نشانی، ساعت کاری، راه تماس و صفحه‌های اجتماعی‌ات را وارد کن تا دیگران راحت‌تر پیدایت کنند.
                 </p>
                 <div className="mt-6 grid gap-2.5 text-[11px] font-bold text-[#555a63]">
                   <div className="flex items-center gap-2.5 rounded-xl bg-white px-3 py-2.5 shadow-[0_4px_12px_-8px_rgba(60,30,45,.2)]">
                     <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-[#fff0f3] text-[#d51f4f]">📊</span>
-                    آمار کلیک تماس و مسیریابی
+                    آمار تماس و مسیریابی
                   </div>
                   <div className="flex items-center gap-2.5 rounded-xl bg-white px-3 py-2.5 shadow-[0_4px_12px_-8px_rgba(60,30,45,.2)]">
                     <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-[#fff0f3] text-[#d51f4f]">🔍</span>
-                    دیده‌شدن در جست‌وجوهای محلی گوگل
+                    صفحه‌ی کسب‌وکارت در بیرون
                   </div>
                   <div className="flex items-center gap-2.5 rounded-xl bg-white px-3 py-2.5 shadow-[0_4px_12px_-8px_rgba(60,30,45,.2)]">
                     <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-[#fff0f3] text-[#d51f4f]">🔐</span>
-                    پنجاه درصد امکانات Pro، تا اطلاع ثانوی رایگان
+                    ثبت کسب‌وکار فعلاً رایگان است
                   </div>
                 </div>
                 <div className="mt-7 flex flex-col gap-2.5 sm:flex-row sm:items-center">
@@ -288,12 +287,12 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
                     className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#d51f4f] px-6 py-3.5 text-sm font-black text-white transition hover:bg-[#b91640]"
                     style={{ minHeight: "50px" }}
                   >
-                    ثبت رایگان کسب‌وکار →
+                    ثبت کسب‌وکار →
                   </Link>
                   <Link href={"/register-online-shop" + cityQuery} className="inline-flex items-center justify-center rounded-xl border border-[#e6c0cb] bg-white px-6 py-3.5 text-sm font-black text-[#d51f4f]"
                     style={{ minHeight: "50px" }}
                   >
-                    ثبت آنلاین‌شاپ
+                    ثبت آنلاین‌شاپ →
                   </Link>
                 </div>
               </div>
