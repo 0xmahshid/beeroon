@@ -69,7 +69,7 @@ async function compressLogo(file: File): Promise<File> {
   throw new Error("logo-cannot-fit-size-limit");
 }
 
-export default function ImageUploadField({ value, onChange }: Props) {
+export default function ImageUploadField({ value, onChange, onProcessingChange }: Props) {
   const [preview, setPreview] = useState(value || "");
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState("");
