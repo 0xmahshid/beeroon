@@ -13,6 +13,7 @@ export default function RegisterBusiness() {
   const [form, setForm] = useState({ name: "", address: "", phone: "", neshan: "", hours: "", city_id: DEFAULT_CITY_SLUG });
   const [socialLinks, setSocialLinks] = useState<SocialLinks>({});
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [compressingLogo, setCompressingLogo] = useState(false);
   const [sent, setSent] = useState(false);
   const [err, setErr] = useState("");
 
@@ -20,6 +21,7 @@ export default function RegisterBusiness() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault(); setErr("");
+    if (compressingLogo) return;
     const businessId = crypto.randomUUID();
     let imageUrl: string | null = null;
     if (imageFile) {
@@ -44,7 +46,7 @@ export default function RegisterBusiness() {
     <form onSubmit={submit} className="mx-auto max-w-xl px-4 py-10"><div className="rounded-[2rem] border border-[#f0dfe0] bg-white p-6 shadow-[0_20px_60px_-42px_rgba(77,30,36,0.55)] sm:p-9">
       <div className="mb-5 flex items-center gap-3"><img src="/beeroon-logo.png" alt="نشان بیرون" className="h-14 w-14 rounded-2xl object-cover shadow-sm" /><div><p className="text-xs font-black text-[#ed0b55]">بیرون</p><p className="mt-1 text-[11px] text-[#8a7b79]">کسب‌وکارهای نزدیکت را پیدا کن</p></div></div><p className="text-xs font-black text-[#ed0b55]">برای کسب‌وکارهای محلی</p><h1 className="mt-2 text-2xl font-black text-[#241b1c]">ثبت کسب‌وکار</h1><p className="mt-2 text-sm leading-7 text-[#80716f]">نام، نشانی و راه‌های تماس را وارد کن تا کسب‌وکارت برای بررسی فرستاده شود.</p>
       <div className="mt-7 grid gap-4 sm:grid-cols-2"><label className="text-sm font-bold text-[#4b3b3c]">شهر *<select required value={form.city_id} onChange={(e) => set("city_id", e.target.value)} className="mt-2 w-full rounded-2xl border border-[#f0dfe0] bg-[#fffaf8] px-4 py-3 font-normal outline-none transition focus:border-[#ed0b55] focus:ring-4 focus:ring-[#ed0b55]/10">{seedCities.map((city) => <option key={city.id} value={city.id}>{city.name}</option>)}</select></label>{[["name", "نام کسب‌وکار", true], ["address", "نشانی", true], ["phone", "شماره تماس", true], ["hours", "ساعت کاری", false], ["neshan", "لینک مکان در نشان", false]].map(([key, label, required]) => <label key={key as string} className="text-sm font-bold text-[#4b3b3c]">{label as string}<input required={required as boolean} value={form[key as keyof typeof form]} onChange={(e) => set(key as string, e.target.value)} className="mt-2 w-full rounded-2xl border border-[#f0dfe0] bg-[#fffaf8] px-4 py-3 font-normal outline-none transition focus:border-[#ed0b55] focus:ring-4 focus:ring-[#ed0b55]/10" /></label>)}</div>
-      <div className="mt-5"><ImageUploadField onChange={setImageFile} /></div><SocialFields value={socialLinks} onChange={setSocialLinks} />{err && <p className="mt-4 text-sm text-[#d4134e]">{err}</p>}<button className="mt-7 w-full rounded-full bg-[#ed0b55] py-3.5 font-bold text-white transition hover:bg-[#c70d46]">ارسال اطلاعات</button>
+      <div className="mt-5"><ImageUploadField onChange={setImageFile} onProcessingChange={setCompressingLogo} /></div><SocialFields value={socialLinks} onChange={setSocialLinks} />{err && <p className="mt-4 text-sm text-[#d4134e]">{err}</p>}<button disabled={compressingLogo} className="mt-7 w-full rounded-full bg-[#ed0b55] py-3.5 font-bold text-white transition hover:bg-[#c70d46] disabled:opacity-50">{compressingLogo ? "در حال آماده‌سازی لوگو…" : "ارسال اطلاعات"}</button>
     </div></form>
   </>;
 }
