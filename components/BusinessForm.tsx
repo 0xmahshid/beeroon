@@ -21,6 +21,7 @@ export default function BusinessForm({ categories, cities, initial, businessId }
     is_supporter: initial?.is_supporter || false, status: initial?.status || "approved",
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [compressingLogo, setCompressingLogo] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
@@ -28,7 +29,9 @@ export default function BusinessForm({ categories, cities, initial, businessId }
   function set(key: string, value: any) { setForm((current) => ({ ...current, [key]: value })); }
 
   async function submit(e: React.FormEvent) {
-    e.preventDefault(); setSaving(true); setError("");
+    e.preventDefault();
+    if (compressingLogo) return;
+    setSaving(true); setError("");
     const recordId = businessId || (imageFile ? crypto.randomUUID() : undefined);
     let imageUrl = existingImageUrl;
     if (imageFile) {
@@ -63,11 +66,11 @@ export default function BusinessForm({ categories, cities, initial, businessId }
       <div className="grid grid-cols-2 gap-3"><input placeholder="عرض جغرافیایی (lat)" value={form.lat} onChange={(e) => set("lat", e.target.value)} className="rounded-xl border border-black/10 bg-white px-3 py-2 dark:border-white/10 dark:bg-ink-900" dir="ltr" /><input placeholder="طول جغرافیایی (lng)" value={form.lng} onChange={(e) => set("lng", e.target.value)} className="rounded-xl border border-black/10 bg-white px-3 py-2 dark:border-white/10 dark:bg-ink-900" dir="ltr" /></div>
       <input placeholder="شماره تماس" value={form.phone} onChange={(e) => set("phone", e.target.value)} className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 dark:border-white/10 dark:bg-ink-900" dir="ltr" />
        <input placeholder="ساعت کاری" value={form.hours} onChange={(e) => set("hours", e.target.value)} className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 dark:border-white/10 dark:bg-ink-900" />
-      <ImageUploadField value={existingImageUrl} onChange={setImageFile} />
+      <ImageUploadField value={existingImageUrl} onChange={setImageFile} onProcessingChange={setCompressingLogo} />
       <SocialFields value={form.social_links} onChange={(value) => set("social_links", value)} />
        <div className="flex items-center gap-3"><label className="text-sm">محدوده‌ی قیمت</label><select value={form.price_tier} onChange={(e) => set("price_tier", e.target.value)} className="rounded-xl border border-black/10 bg-white px-3 py-2 dark:border-white/10 dark:bg-ink-900"><option value={1}>$</option><option value={2}>$$</option><option value={3}>$$$</option></select><label className="flex items-center gap-1 text-sm"><input type="checkbox" checked={form.is_supporter} onChange={(e) => set("is_supporter", e.target.checked)} />حامی بیرون</label></div>
       {error && <p className="text-sm text-red-600">{error}</p>}
-      <button disabled={saving} className="w-full rounded-full bg-brand-500 py-2.5 font-medium text-white hover:bg-brand-600 disabled:opacity-50">{saving ? "در حال ذخیره…" : "ذخیره"}</button>
+      <button disabled={saving || compressingLogo} className="w-full rounded-full bg-brand-500 py-2.5 font-medium text-white hover:bg-brand-600 disabled:opacity-50">{saving ? "در حال ذخیره…" : compressingLogo ? "در حال آماده‌سازی لوگو…" : "ذخیره"}</button>
     </form>
   );
 }
