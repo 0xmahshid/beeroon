@@ -2,7 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 
-type Props = { value?: string | null; onChange: (file: File | null) => void };
+type Props = {
+  value?: string | null;
+  onChange: (file: File | null) => void;
+  onProcessingChange?: (processing: boolean) => void;
+};
 
 const MAX_SOURCE_BYTES = 5 * 1024 * 1024;
 const MAX_LOGO_BYTES = 10 * 1024;
@@ -101,6 +105,7 @@ export default function ImageUploadField({ value, onChange }: Props) {
     }
 
     setProcessing(true);
+    onProcessingChange?.(true);
     try {
       const compressed = await compressLogo(file);
       if (compressed.size >= MAX_LOGO_BYTES) throw new Error("logo-size-limit-exceeded");
@@ -113,6 +118,7 @@ export default function ImageUploadField({ value, onChange }: Props) {
       setError("فشرده‌سازی لوگو به کمتر از ۱۰ کیلوبایت انجام نشد؛ لطفاً تصویر ساده‌تری انتخاب کن.");
     } finally {
       setProcessing(false);
+      onProcessingChange?.(false);
     }
   }
 
