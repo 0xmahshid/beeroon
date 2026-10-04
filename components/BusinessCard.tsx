@@ -138,78 +138,48 @@ export default function BusinessCard({
 
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-[22px] border border-[#eadfe3] bg-white shadow-[0_10px_30px_-26px_rgba(58,20,45,.55)] transition duration-200 hover:-translate-y-1 hover:border-[#e6a8b6] hover:shadow-[0_30px_50px_-30px_rgba(213,31,79,.35)]">
-      <div className="relative aspect-[16/9] overflow-hidden border-b border-[#f1dfe3] bg-[linear-gradient(135deg,#3f1a37_0%,#d51f4f_50%,#f4a261_100%)]">
-        {imageUrl ? (
-          <img
-            src={imageUrl}
-            alt={"عکس " + b.name}
-            className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
-            loading="lazy"
-          />
-        ) : (
-          <div className="absolute inset-0 grid place-items-center text-5xl font-black text-white/80" style={{ backgroundImage: "radial-gradient(circle at 30% 20%, rgba(255,255,255,.18), transparent 55%), radial-gradient(circle at 80% 100%, rgba(255,210,150,.35), transparent 50%)" }}>
-            {initials}
-          </div>
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#32162d]/60 via-transparent to-black/10" />
-        <div className="absolute right-3 top-3 z-10 flex flex-wrap items-center gap-1.5">
-          {b.is_supporter && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-[#fff]/90 px-2.5 py-1 text-[9px] font-black text-[#d51f4f] shadow-[0_4px_12px_-4px_rgba(213,31,79,.4)] backdrop-blur">
-              ⭐ حامی بیرون
-            </span>
-          )}
-          {b.business_type === "online_shop" ? (
-            <span className="rounded-full bg-[#eaf4ff]/95 px-2.5 py-1 text-[9px] font-black text-[#185fa7] shadow-[0_4px_12px_-4px_rgba(24,95,167,.35)] backdrop-blur">
-              🛒 فروش آنلاین
-            </span>
+      <div className="flex items-center gap-3 border-b border-[#f3e8eb] px-4 py-3">
+        <div className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-2xl bg-[#fff0f3] ring-1 ring-[#f4d4dc]">
+          {imageUrl ? (
+            <img src={imageUrl} alt={"لوگوی " + b.name} className="h-full w-full object-contain p-1.5" loading="lazy" />
           ) : (
-            <span className="rounded-full bg-white/90 px-2.5 py-1 text-[9px] font-black text-[#3e4c6e] shadow-[0_4px_12px_-4px_rgba(62,76,110,.35)] backdrop-blur">
-              🏪 مراجعه حضوری
-            </span>
-          )}
-          {b.is_verified && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-[#e6f4ff]/95 px-2.5 py-1 text-[9px] font-black text-[#185fa7] shadow-[0_4px_12px_-4px_rgba(24,95,167,.35)] backdrop-blur">
-              ✓ تأیید شده
-            </span>
+            <span className="grid h-full w-full place-items-center bg-[linear-gradient(135deg,#3f1a37_0%,#d51f4f_100%)] text-xl font-black text-white">{initials}</span>
           )}
         </div>
-        {b.distanceKm != null && (
-          <div className="absolute left-3 top-3 z-10 inline-flex items-center gap-1 rounded-full bg-white/95 px-2.5 py-1 text-[9px] font-black text-[#d51f4f] shadow-[0_4px_12px_-4px_rgba(213,31,79,.35)] backdrop-blur">
-            📍 {b.distanceKm.toLocaleString("fa-IR")} کیلومتر
+        <div className="min-w-0 flex-1">
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0 flex-1">
+              <h3 className="truncate text-[15px] font-black text-[#32162d]">
+                <Link href={"/business/" + b.id} className="hover:text-[#d51f4f]">{b.name}</Link>
+              </h3>
+              <p className="mt-1 truncate text-[11px] text-[#93828a]">{categoryName || "کسب‌وکار محلی"}</p>
+            </div>
+            {b.price_tier && (
+              <span className="beeroon-pill shrink-0 bg-[#fff5d9] text-[#9c761e] ring-1 ring-[#f2e3b7]" title={priceLabel[b.price_tier]}>
+                {priceLabel[b.price_tier]}
+              </span>
+            )}
           </div>
-        )}
-        <div className="absolute bottom-[-18px] right-4 z-10 grid h-16 w-16 place-items-center rounded-[20px] border-4 border-white bg-[#d51f4f] text-[26px] font-black text-white shadow-[0_14px_28px_-14px_rgba(213,31,79,.6)]">
-          {initials}
+          <div className="mt-2 flex flex-wrap items-center gap-1">
+            {b.is_supporter && <span className="rounded-full bg-[#fff0f3] px-2 py-0.5 text-[9px] font-black text-[#d51f4f]">⭐ حامی بیرون</span>}
+            {b.business_type === "online_shop" ? (
+              <span className="rounded-full bg-[#eaf4ff] px-2 py-0.5 text-[9px] font-black text-[#185fa7]">فروش آنلاین</span>
+            ) : (
+              <span className="rounded-full bg-[#f4f4f8] px-2 py-0.5 text-[9px] font-black text-[#3e4c6e]">مراجعه حضوری</span>
+            )}
+            {b.is_verified && <span className="rounded-full bg-[#e6f4ff] px-2 py-0.5 text-[9px] font-black text-[#185fa7]">✓ تأیید شده</span>}
+            {b.distanceKm != null && <span className="rounded-full bg-[#fff5f7] px-2 py-0.5 text-[9px] font-black text-[#d51f4f]">{b.distanceKm.toLocaleString("fa-IR")} کیلومتر</span>}
+          </div>
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col p-4 pt-7">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0 flex-1">
-            <h3 className="truncate text-[15px] font-black text-[#32162d]">
-              <Link href={"/business/" + b.id} className="hover:text-[#d51f4f]">
-                {b.name}
-              </Link>
-            </h3>
-            <p className="mt-1 truncate text-[11px] text-[#93828a]">
-              {categoryName || "کسب‌وکار محلی"}
-            </p>
-            {b.matchReason && (
-              <p className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-[#fff0f3] px-2.5 py-1 text-[10px] font-black text-[#c04870]">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#d51f4f]" />
-                {b.matchReason}
-              </p>
-            )}
-          </div>
-          {b.price_tier && (
-            <span
-              className="beeroon-pill shrink-0 bg-[#fff5d9] text-[#9c761e] ring-1 ring-[#f2e3b7]"
-              title={priceLabel[b.price_tier]}
-            >
-              {priceLabel[b.price_tier]}
-            </span>
-          )}
-        </div>
+      <div className="flex flex-1 flex-col p-4">
+        {b.matchReason && (
+          <p className="mb-3 inline-flex items-center gap-1 rounded-full bg-[#fff0f3] px-2.5 py-1 text-[10px] font-black text-[#c04870]">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#d51f4f]" />
+            {b.matchReason}
+          </p>
+        )}
 
         <div className="mt-4 flex flex-wrap items-center gap-1.5 text-[10.5px]">
           <span
