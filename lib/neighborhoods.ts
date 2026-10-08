@@ -24,7 +24,7 @@ export const seedNeighborhoods: Neighborhood[] = [
 const configured = !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 function remoteToNeighborhood(row: Record<string, unknown>): Neighborhood | null {
-  const citySlug = typeof row.city_slug === "string" ? row.city_slug : typeof row.citySlug === "string" ? row.citySlug : undefined;
+  const citySlug = typeof row.city_id === "string" ? row.city_id : typeof row.city_slug === "string" ? row.city_slug : typeof row.citySlug === "string" ? row.citySlug : undefined;
   const slug = typeof row.slug === "string" ? row.slug : undefined;
   const name = typeof row.name === "string" ? row.name : undefined;
   const id = typeof row.id === "string" ? row.id : (citySlug && slug ? `${citySlug}-${slug}` : undefined);
@@ -39,13 +39,11 @@ export async function getNeighborhoods(citySlug?: string): Promise<Neighborhood[
     return citySlug ? seedNeighborhoods.filter((item) => item.citySlug === citySlug) : [...seedNeighborhoods];
   }
   try {
-    let q = supabase.from("neighborhoods").select("*");
-    if (typeof (q as any).eq === "function") {
-      // active filter if column exists
-    }
+    let query = supabase.from("neighborhoods").select("*").eq("active", true);
+    if (citySlug) query = query.eq("city_id", citySlug);
     const { data, error } = await (citySlug
-      ? supabase.from("neighborhoods").select("*").eq("city_slug", citySlug).order("name")
-      : supabase.from("neighborhoods").select("*").order("city_slug").order("name"));
+      ? query.order("name")
+      : query.order("city_id").order("name"));
     const remote: Neighborhood[] = [];
     if (!error && Array.isArray(data)) {
       for (const row of data) {
@@ -62,9 +60,10 @@ export async function getNeighborhoods(citySlug?: string): Promise<Neighborhood[
 }
 
 export async function getNeighborhoodBySlug(citySlug?: string, slug?: string): Promise<Neighborhood | null> {
-  if (!citySlug || !slug) return null;
+  if (!slug) return null;
   const list = await getNeighborhoods(citySlug);
-  return list.find((item) => item.citySlug === citySlug && item.slug === slug) || null;
+  const matches = list.filter((item) => item.slug === slug && (!citySlug || item.citySlug === citySlug));
+  return matches.length === 1 ? matches[0] : null;
 }
 
 export function getNeighborhoodsSync(citySlug?: string): Neighborhood[] {

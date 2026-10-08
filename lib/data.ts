@@ -1,7 +1,7 @@
 import { supabase } from "./supabase";
 import { seedBusinesses, seedCategories, seedSubcategories } from "./seed";
 import { seedCities, DEFAULT_CITY_SLUG } from "./cities";
-import { getNeighborhoodBySlugSync } from "./neighborhoods";
+import { getNeighborhoodBySlug } from "./neighborhoods";
 import { classifySearchIntent, type SearchIntent } from "./search-intent";
 import { normalizeSearch, tokenize, buildSearchText } from "./persian";
 import { computeScore, sortBusinesses, type SortMode } from "./ranking";
@@ -208,7 +208,11 @@ export async function getBusinesses(params: {
   filters?: BusinessFilters;
 }): Promise<Business[]> {
   const directory = await getDirectory();
-  const neighborhood = getNeighborhoodBySlugSync(params.citySlug, params.neighborhoodSlug);
+  const neighborhood = params.neighborhoodSlug
+    ? await getNeighborhoodBySlug(params.citySlug, params.neighborhoodSlug)
+    : null;
+  if (params.neighborhoodSlug && !neighborhood) return [];
+  const citySlug = params.citySlug || neighborhood?.citySlug;
   let list: Business[];
 
   if (!configured) {
@@ -226,8 +230,8 @@ export async function getBusinesses(params: {
       if (subcategoryError || !subcategoryRow) return [];
       query = query.eq("subcategory_id", (subcategoryRow as { id: string }).id);
     }
-    if (params.citySlug) {
-      const city = await getCityBySlug(params.citySlug);
+    if (citySlug) {
+      const city = await getCityBySlug(citySlug);
       query = query.eq("city_id", city.id);
     }
     if (params.neighborhoodSlug) {
@@ -246,7 +250,7 @@ export async function getBusinesses(params: {
     const demoCategory = demo && directory.categories.find((category) => category.id === demo.category_id);
     const demoSubcategory = demo && directory.subcategories.find((subcategory) => subcategory.id === demo.subcategory_id);
     const demoMatches = demo &&
-      (!params.citySlug || demo.city_id === params.citySlug) &&
+      (!citySlug || demo.city_id === citySlug) &&
       (!params.neighborhoodSlug || demo.neighborhood_slug === params.neighborhoodSlug) &&
       (!params.categorySlug || demoCategory?.slug === params.categorySlug) &&
       (!params.subcategorySlug || demoSubcategory?.slug === params.subcategorySlug)
@@ -267,14 +271,14 @@ export async function getBusinesses(params: {
     );
     list = list.filter((business) => business.subcategory_id === subcategory?.id);
   }
-  if (params.citySlug && !configured) {
-    list = list.filter((business) => business.city_id === params.citySlug);
+  if (citySlug && !configured) {
+    list = list.filter((business) => business.city_id === citySlug);
   }
   if (params.neighborhoodSlug && !configured) {
     list = list.filter((business) => business.neighborhood_slug === params.neighborhoodSlug);
   }
 
-  const ranked = rankBusinesses(list, params, directory.categories, directory.subcategories, neighborhood);
+  const ranked = rankBusinesses(list, { ...params, citySlug }, directory.categories, directory.subcategories, neighborhood);
 
   const f = params.filters || {};
   return ranked.filter((b) => {
