@@ -10,8 +10,8 @@ export type Neighborhood = {
   citySlug: string;
   name: string;
   slug: string;
-  centerLat: number;
-  centerLng: number;
+  centerLat: number | null;
+  centerLng: number | null;
 };
 
 export type Category = {

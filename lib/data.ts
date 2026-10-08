@@ -102,7 +102,7 @@ function rankBusinesses(
 ): Business[] {
   const intents = classifySearchIntent(params.query);
   const prepared = list.map((business) => {
-    const dist = neighborhood && business.lat != null && business.lng != null
+    const dist = neighborhood && neighborhood.centerLat != null && neighborhood.centerLng != null && business.lat != null && business.lng != null
       ? Number(distanceKm(neighborhood.centerLat, neighborhood.centerLng, business.lat, business.lng).toFixed(1))
       : undefined;
     const rel = relevance(business, params.query, categories, subcategories, intents);

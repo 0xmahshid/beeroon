@@ -1,4 +1,5 @@
 import { supabase } from "./supabase";
+import { neighborhoodCatalog } from "./neighborhood-catalog";
 import type { Neighborhood } from "@/lib/types";
 
 export const seedNeighborhoods: Neighborhood[] = [
@@ -21,23 +22,42 @@ export const seedNeighborhoods: Neighborhood[] = [
   { id: "karaj-central", citySlug: "karaj", name: "مرکز شهر", slug: "central", centerLat: 35.8400, centerLng: 50.9391 },
 ];
 
+function normalizedName(name: string): string {
+  return name.normalize("NFKC").replace(/[ك]/g, "ک").replace(/[يى]/g, "ی").replace(/[\u200c\s\-–—().,؛،]/g, "").toLowerCase();
+}
+
+function neighborhoodKey(citySlug: string, name: string): string {
+  return citySlug + ":" + normalizedName(name);
+}
+
+const legacyNames = new Set(seedNeighborhoods.map((item) => neighborhoodKey(item.citySlug, item.name)));
+const catalogFallback: Neighborhood[] = neighborhoodCatalog
+  .filter((item) => !legacyNames.has(neighborhoodKey(item.citySlug, item.name)))
+  .map((item) => ({
+    id: item.citySlug + "-" + item.slug,
+    citySlug: item.citySlug,
+    name: item.name,
+    slug: item.slug,
+    centerLat: null,
+    centerLng: null,
+  }));
+const fallbackNeighborhoods: Neighborhood[] = [...seedNeighborhoods, ...catalogFallback];
+
 const configured = !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 function remoteToNeighborhood(row: Record<string, unknown>): Neighborhood | null {
   const citySlug = typeof row.city_id === "string" ? row.city_id : typeof row.city_slug === "string" ? row.city_slug : typeof row.citySlug === "string" ? row.citySlug : undefined;
   const slug = typeof row.slug === "string" ? row.slug : undefined;
   const name = typeof row.name === "string" ? row.name : undefined;
-  const id = typeof row.id === "string" ? row.id : (citySlug && slug ? `${citySlug}-${slug}` : undefined);
+  const id = typeof row.id === "string" ? row.id : citySlug && slug ? citySlug + "-" + slug : undefined;
   if (!id || !citySlug || !slug || !name) return null;
-  const lat = typeof row.center_lat === "number" ? row.center_lat : typeof row.centerLat === "number" ? row.centerLat : 0;
-  const lng = typeof row.center_lng === "number" ? row.center_lng : typeof row.centerLng === "number" ? row.centerLng : 0;
+  const lat = typeof row.center_lat === "number" ? row.center_lat : typeof row.centerLat === "number" ? row.centerLat : null;
+  const lng = typeof row.center_lng === "number" ? row.center_lng : typeof row.centerLng === "number" ? row.centerLng : null;
   return { id, citySlug, name, slug, centerLat: lat, centerLng: lng };
 }
 
 export async function getNeighborhoods(citySlug?: string): Promise<Neighborhood[]> {
-  if (!configured) {
-    return citySlug ? seedNeighborhoods.filter((item) => item.citySlug === citySlug) : [...seedNeighborhoods];
-  }
+  if (!configured) return getNeighborhoodsSync(citySlug);
   try {
     let query = supabase.from("neighborhoods").select("*").eq("active", true);
     if (citySlug) query = query.eq("city_id", citySlug);
@@ -51,11 +71,12 @@ export async function getNeighborhoods(citySlug?: string): Promise<Neighborhood[
         if (n) remote.push(n);
       }
     }
-    const seedFallback = citySlug ? seedNeighborhoods.filter((item) => item.citySlug === citySlug) : [...seedNeighborhoods];
-    const remoteKeys = new Set(remote.map((n) => `${n.citySlug}:${n.slug}`));
-    return [...remote, ...seedFallback.filter((n) => !remoteKeys.has(`${n.citySlug}:${n.slug}`))];
+    const seedFallback = getNeighborhoodsSync(citySlug);
+    const remoteKeys = new Set(remote.map((n) => n.citySlug + ":" + n.slug));
+    const remoteNames = new Set(remote.map((n) => neighborhoodKey(n.citySlug, n.name)));
+    return [...remote, ...seedFallback.filter((n) => !remoteKeys.has(n.citySlug + ":" + n.slug) && !remoteNames.has(neighborhoodKey(n.citySlug, n.name)))];
   } catch {
-    return citySlug ? seedNeighborhoods.filter((item) => item.citySlug === citySlug) : [...seedNeighborhoods];
+    return getNeighborhoodsSync(citySlug);
   }
 }
 
@@ -67,10 +88,10 @@ export async function getNeighborhoodBySlug(citySlug?: string, slug?: string): P
 }
 
 export function getNeighborhoodsSync(citySlug?: string): Neighborhood[] {
-  return citySlug ? seedNeighborhoods.filter((item) => item.citySlug === citySlug) : [...seedNeighborhoods];
+  return citySlug ? fallbackNeighborhoods.filter((item) => item.citySlug === citySlug) : [...fallbackNeighborhoods];
 }
 
 export function getNeighborhoodBySlugSync(citySlug?: string, slug?: string): Neighborhood | null {
   if (!citySlug || !slug) return null;
-  return seedNeighborhoods.find((item) => item.citySlug === citySlug && item.slug === slug) || null;
+  return fallbackNeighborhoods.find((item) => item.citySlug === citySlug && item.slug === slug) || null;
 }

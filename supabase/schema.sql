@@ -65,6 +65,7 @@ insert into cities (id, name, slug, active) values
   ('rasht', 'رشت', 'rasht', true),
   ('zahedan', 'زاهدان', 'zahedan', true),
   ('kerman', 'کرمان', 'kerman', true),
+  ('hamadan', 'همدان', 'hamadan', true),
   ('yazd', 'یزد', 'yazd', true),
   ('ardabil', 'اردبیل', 'ardabil', true),
   ('bandar-abbas', 'بندرعباس', 'bandar-abbas', true),
