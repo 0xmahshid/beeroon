@@ -4,7 +4,6 @@ import "./globals.css";
 import Header from "@/components/Header";
 import HydrateLocationFromStorage from "@/components/HydrateLocationFromStorage";
 import { getCities } from "@/lib/data";
-import { getNeighborhoods } from "@/lib/neighborhoods";
 
 export const metadata: Metadata = {
   metadataBase: process.env.NEXT_PUBLIC_SITE_URL
@@ -30,12 +29,11 @@ export const viewport: Viewport = { themeColor: "#d51f4f" };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const cities = await getCities();
-  const neighborhoods = await getNeighborhoods();
   return (
     <html lang="fa" dir="rtl">
       <body>
         <Suspense fallback={<div className="h-[75px] bg-white" />}>
-          <Header cities={cities} neighborhoods={neighborhoods} />
+          <Header cities={cities} />
         </Suspense>
         <Suspense fallback={null}>
           <HydrateLocationFromStorage />

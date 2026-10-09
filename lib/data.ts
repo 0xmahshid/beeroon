@@ -1,13 +1,12 @@
 import { supabase } from "./supabase";
 import { seedBusinesses, seedCategories, seedSubcategories } from "./seed";
 import { seedCities, DEFAULT_CITY_SLUG } from "./cities";
-import { getNeighborhoodBySlug } from "./neighborhoods";
 import { classifySearchIntent, type SearchIntent } from "./search-intent";
 import { normalizeSearch, tokenize, buildSearchText } from "./persian";
 import { computeScore, sortBusinesses, type SortMode } from "./ranking";
 import { isOpenNow } from "./business-hours";
 import { computeProfileCompleteness, daysSince } from "./profile-completeness";
-import { Business, Category, City, Neighborhood, Subcategory } from "./types";
+import { Business, Category, City, Subcategory } from "./types";
 
 const configured = !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
@@ -30,14 +29,6 @@ function normalizeSeedBusiness(business: Business | null | undefined, categories
   const seedSubcategory = seedSubcategories.find((subcategory) => subcategory.id === business.subcategory_id);
   const subcategory = subcategories.find((item) => item.category_id === category?.id && item.slug === seedSubcategory?.slug);
   return { ...business, category_id: category?.id || business.category_id, subcategory_id: subcategory?.id || business.subcategory_id };
-}
-
-function distanceKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
-  const earthRadius = 6371;
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLng = (lng2 - lng1) * Math.PI / 180;
-  const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng / 2) ** 2;
-  return earthRadius * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
 function relevance(
@@ -95,23 +86,18 @@ function buildMatchReason(
 
 function rankBusinesses(
   list: Business[],
-  params: { citySlug?: string; neighborhoodSlug?: string; query?: string; sortMode?: SortMode },
+  params: { query?: string; sortMode?: SortMode },
   categories: Category[],
   subcategories: Subcategory[],
-  neighborhood: Neighborhood | null,
 ): Business[] {
   const intents = classifySearchIntent(params.query);
   const prepared = list.map((business) => {
-    const dist = neighborhood && neighborhood.centerLat != null && neighborhood.centerLng != null && business.lat != null && business.lng != null
-      ? Number(distanceKm(neighborhood.centerLat, neighborhood.centerLng, business.lat, business.lng).toFixed(1))
-      : undefined;
     const rel = relevance(business, params.query, categories, subcategories, intents);
     const openNow = isOpenNow(business.hours) ?? false;
     const profileCompleteness = computeProfileCompleteness(business);
     const updatedDaysAgo = daysSince((business as any).updated_at || business.created_at);
     const score = computeScore({
       relevance: rel.score,
-      distanceKm: dist,
       openNow,
       profileCompleteness,
       verified: Boolean(business.is_verified),
@@ -120,7 +106,6 @@ function rankBusinesses(
     const matchReason = buildMatchReason(rel.matchedIntent, rel.matchedCategory, rel.matchedSubcategory);
     return {
       ...business,
-      distanceKm: dist,
       score,
       matchReason,
       _relevance: rel.score,
@@ -202,17 +187,12 @@ export async function getBusinesses(params: {
   categorySlug?: string;
   subcategorySlug?: string;
   citySlug?: string;
-  neighborhoodSlug?: string;
   query?: string;
   sortMode?: SortMode;
   filters?: BusinessFilters;
 }): Promise<Business[]> {
   const directory = await getDirectory();
-  const neighborhood = params.neighborhoodSlug
-    ? await getNeighborhoodBySlug(params.citySlug, params.neighborhoodSlug)
-    : null;
-  if (params.neighborhoodSlug && !neighborhood) return [];
-  const citySlug = params.citySlug || neighborhood?.citySlug;
+  const citySlug = params.citySlug;
   let list: Business[];
 
   if (!configured) {
@@ -234,10 +214,6 @@ export async function getBusinesses(params: {
       const city = await getCityBySlug(citySlug);
       query = query.eq("city_id", city.id);
     }
-    if (params.neighborhoodSlug) {
-      query = query.eq("neighborhood_slug", params.neighborhoodSlug);
-    }
-
     const result = await query;
     if (result.error) return [];
     list = result.data as Business[];
@@ -251,7 +227,6 @@ export async function getBusinesses(params: {
     const demoSubcategory = demo && directory.subcategories.find((subcategory) => subcategory.id === demo.subcategory_id);
     const demoMatches = demo &&
       (!citySlug || demo.city_id === citySlug) &&
-      (!params.neighborhoodSlug || demo.neighborhood_slug === params.neighborhoodSlug) &&
       (!params.categorySlug || demoCategory?.slug === params.categorySlug) &&
       (!params.subcategorySlug || demoSubcategory?.slug === params.subcategorySlug)
       ? [demo]
@@ -274,11 +249,7 @@ export async function getBusinesses(params: {
   if (citySlug && !configured) {
     list = list.filter((business) => business.city_id === citySlug);
   }
-  if (params.neighborhoodSlug && !configured) {
-    list = list.filter((business) => business.neighborhood_slug === params.neighborhoodSlug);
-  }
-
-  const ranked = rankBusinesses(list, { ...params, citySlug }, directory.categories, directory.subcategories, neighborhood);
+  const ranked = rankBusinesses(list, params, directory.categories, directory.subcategories);
 
   const f = params.filters || {};
   return ranked.filter((b) => {

@@ -5,7 +5,6 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { City } from "@/lib/types";
 
 const LS_CITY = "beeroon:lastCity";
-const LS_NEIGHBORHOOD = "beeroon:lastNeighborhood";
 
 export default function CityPicker({ cities }: { cities: City[] }) {
   const router = useRouter();
@@ -28,7 +27,6 @@ export default function CityPicker({ cities }: { cities: City[] }) {
     params.delete("neighborhood");
     try {
       localStorage.setItem(LS_CITY, value);
-      localStorage.removeItem(LS_NEIGHBORHOOD);
     } catch {
       /* storage not available */
     }

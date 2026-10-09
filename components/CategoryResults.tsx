@@ -15,14 +15,13 @@ type Props = {
   subcategories: Subcategory[];
   businesses: Business[];
   city: City;
-  neighborhoodSlug?: string;
   initialQuery?: { type?: string; price?: string; sort?: string };
 };
 type Sort = "relevant" | "newest" | "name";
 type BusinessType = Business["business_type"];
 type Price = 1 | 2 | 3;
 
-export default function CategoryResults({ slug, sub, category, selected, subcategories, businesses, city, neighborhoodSlug, initialQuery }: Props) {
+export default function CategoryResults({ slug, sub, category, selected, subcategories, businesses, city, initialQuery }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const [types, setTypes] = useState<BusinessType[]>(initialQuery?.type?.split(",").filter((value): value is BusinessType => value === "physical" || value === "online_shop") || []);
@@ -30,7 +29,7 @@ export default function CategoryResults({ slug, sub, category, selected, subcate
   const [sort, setSort] = useState<Sort>(initialQuery?.sort === "newest" || initialQuery?.sort === "name" ? initialQuery.sort : "relevant");
   const title = selected?.name || category?.name || "دسته‌بندی";
   const categoryName = category?.name || "دسته‌بندی";
-  const cityQuery = "?city=" + encodeURIComponent(city.slug) + (neighborhoodSlug ? "&neighborhood=" + encodeURIComponent(neighborhoodSlug) : "");
+  const cityQuery = "?city=" + encodeURIComponent(city.slug);
   const priceOptions: { value: Price; label: string }[] = [
     { value: 1, label: "اقتصادی" },
     { value: 2, label: "متوسط" },

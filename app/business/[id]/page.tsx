@@ -5,13 +5,12 @@ import CategoryIcon from "@/components/CategoryIcon";
 import EmitViewBusiness from "@/components/EmitViewBusiness";
 import ReportForm from "@/components/ReportForm";
 import { getBusinessById, getCityBySlug, getDirectory } from "@/lib/data";
-import { getNeighborhoodBySlug } from "@/lib/neighborhoods";
 import { mergeSocialLinks, SOCIAL_NETWORKS, socialUrl } from "@/lib/social";
 import { normalizeDisplay } from "@/lib/persian";
 import SocialIcon from "@/components/SocialIcon";
 
 type PageParams = Promise<{ id: string }>;
-type PageSearchParams = Promise<{ city?: string | string[]; neighborhood?: string | string[] }>;
+type PageSearchParams = Promise<{ city?: string | string[] }>;
 
 export async function generateMetadata({
   params,
@@ -135,11 +134,9 @@ export default async function BusinessPage({ params, searchParams }: { params: P
   const { id } = await params;
   const qp = await searchParams;
   const citySlugFromUrl = typeof qp.city === "string" ? qp.city : undefined;
-  const neighborhoodSlugFromUrl = typeof qp.neighborhood === "string" ? qp.neighborhood : undefined;
   const [business, directory] = await Promise.all([getBusinessById(id), getDirectory()]);
   if (!business) notFound();
   const city = await getCityBySlug(citySlugFromUrl || business.city_id);
-  const neighborhood = neighborhoodSlugFromUrl ? await getNeighborhoodBySlug(city.slug, neighborhoodSlugFromUrl) : null;
   const category = directory.categories.find((item) => item.id === business.category_id);
   const subcategory = directory.subcategories.find((item) => item.id === business.subcategory_id);
   const categoryName = subcategory?.name || category?.name;
@@ -159,7 +156,7 @@ export default async function BusinessPage({ params, searchParams }: { params: P
         dangerouslySetInnerHTML={{ __html: JSON.stringify(ldJson) }}
       />
       <link rel="canonical" href={canonicalUrl} />
-      <EmitViewBusiness businessId={business.id} city={city.slug} neighborhood={neighborhood?.slug} />
+      <EmitViewBusiness businessId={business.id} city={city.slug} />
       <div className="py-4"><Link href={categoryHref} className="text-xs font-bold text-[#8f8283] hover:text-[#c91442]">← برگشت به فهرست</Link></div>
       <section className="border-b border-[#f0e9ea] pb-5">
         <div className="grid h-16 w-16 place-items-center rounded-[18px] border border-[#f0e9ea] bg-[#fdfaf9] text-[#c91442]"><CategoryIcon slug={category?.slug || "services"} className="h-8 w-8" /></div>

@@ -84,7 +84,6 @@ function localTrack(args: Omit<TrackArgs, "eventName"> & Pick<TrackArgs, "eventN
   if (args.searchId) body.search_id = args.searchId;
   if (args.query) body.query = args.query;
   if (args.city) body.city = args.city;
-  if (args.neighborhood) body.neighborhood = args.neighborhood;
   void fetch("/api/events", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -98,14 +97,12 @@ export default function BusinessCard({
   searchId,
   query,
   city,
-  neighborhood,
 }: {
   b: Business;
   categoryName?: string;
   searchId?: string;
   query?: string;
   city?: string;
-  neighborhood?: string;
 }) {
   const effSearchId = searchId || "";
   function track(eventName: TrackArgs["eventName"]) {
@@ -115,7 +112,6 @@ export default function BusinessCard({
       searchId: effSearchId || undefined,
       query,
       city,
-      neighborhood,
     });
   }
   const mapUrl = b.neshan

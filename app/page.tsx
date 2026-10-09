@@ -3,7 +3,6 @@ import CategoryIcon from "@/components/CategoryIcon";
 import BusinessCard from "@/components/BusinessCard";
 import { getBusinesses, getCityBySlug, getDirectory } from "@/lib/data";
 import { DEFAULT_CITY_SLUG } from "@/lib/cities";
-import { getNeighborhoodBySlug } from "@/lib/neighborhoods";
 
 const popularSlugs = ["food", "shopping", "fashion", "beauty", "health", "education", "home", "technical"];
 const heroQuickSearch = [
@@ -17,13 +16,11 @@ const heroQuickSearch = [
   { label: "بچگانه", icon: "🧸", q: "بچگانه" },
 ];
 
-export default async function Home({ searchParams }: { searchParams: Promise<{ city?: string | string[]; neighborhood?: string | string[] }> }) {
+export default async function Home({ searchParams }: { searchParams: Promise<{ city?: string | string[] }> }) {
   const query = await searchParams;
   const citySlug = typeof query.city === "string" ? query.city : DEFAULT_CITY_SLUG;
-  const neighborhoodSlug = typeof query.neighborhood === "string" ? query.neighborhood : undefined;
-  const [{ categories, subcategories }, businesses, city] = await Promise.all([getDirectory(), getBusinesses({ citySlug, neighborhoodSlug }), getCityBySlug(citySlug)]);
-  const neighborhood = await getNeighborhoodBySlug(city.slug, neighborhoodSlug);
-  const cityQuery = "?city=" + encodeURIComponent(city.slug) + (neighborhood ? "&neighborhood=" + encodeURIComponent(neighborhood.slug) : "");
+  const [{ categories, subcategories }, businesses, city] = await Promise.all([getDirectory(), getBusinesses({ citySlug }), getCityBySlug(citySlug)]);
+  const cityQuery = "?city=" + encodeURIComponent(city.slug);
   const categoryMap = new Map(categories.map((category) => [category.slug, category]));
   const popularCategories = popularSlugs.flatMap((slug) => {
     const category = categoryMap.get(slug);
@@ -51,7 +48,6 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
             <form action="/search" method="get" role="search" className="mt-7 flex max-w-3xl items-center gap-2 rounded-2xl border border-[#dfe2e7] bg-white p-2 shadow-[0_20px_48px_-24px_rgba(32,35,42,.45)] focus-within:border-[#e0a0af]">
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#fff0f3] text-2xl leading-none text-[#d51f4f] sm:h-14 sm:w-14">⌕</span>
               <input type="hidden" name="city" value={city.slug} />
-              {neighborhood && <input type="hidden" name="neighborhood" value={neighborhood.slug} />}
               <input
                 name="q"
                 placeholder="مثلاً کافه، تعمیرکار یا فروشگاه"
@@ -74,7 +70,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
                 {heroQuickSearch.map((item) => (
                   <Link
                     key={item.q}
-                    href={"/search?q=" + encodeURIComponent(item.q) + "&city=" + encodeURIComponent(city.slug) + (neighborhood ? "&neighborhood=" + encodeURIComponent(neighborhood.slug) : "")}
+                    href={"/search?q=" + encodeURIComponent(item.q) + "&city=" + encodeURIComponent(city.slug)}
                     className="group inline-flex items-center gap-1.5 rounded-full border border-[#e6e8ee] bg-white px-4 py-2 text-[11px] font-bold text-[#555a63] shadow-[0_2px_8px_-4px_rgba(60,30,45,.2)] transition hover:-translate-y-0.5 hover:border-[#e0a0af] hover:text-[#d51f4f] hover:shadow-[0_6px_16px_-6px_rgba(213,31,79,.25)]"
                     style={{ minHeight: "40px" }}
                   >
@@ -93,7 +89,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
               <div className="flex items-center justify-between pb-4">
                 <div>
                   <p className="text-[10.5px] font-bold text-[#9097a3]">📍 جست‌وجو در</p>
-                  <h2 className="mt-1 text-2xl font-black text-[#25252a]">{neighborhood ? neighborhood.name : city.name}</h2>
+                  <h2 className="mt-1 text-2xl font-black text-[#25252a]">{city.name}</h2>
                 </div>
                 <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#fff0f3] text-2xl">⌖</span>
               </div>
@@ -136,12 +132,12 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
             <span className="beeroon-section-label">راهنمای استفاده</span>
             <h2 className="mt-3 text-2xl font-black text-[#25252a] sm:text-3xl">چطور از بیرون استفاده کنی؟</h2>
             <p className="mx-auto mt-3 max-w-xl text-xs leading-8 text-[#69707b] sm:text-sm">
-              شهر و محله‌ات را انتخاب کن، بعد چیزی را که دنبالش هستی بنویس.
+              شهر را انتخاب کن و کسب‌وکارهای همان شهر را ببین یا جست‌وجو کن.
             </p>
           </div>
           <div className="mt-9 grid gap-5 md:grid-cols-3">
             {[
-              { step: "۱", title: "شهر و محله‌ات را انتخاب کن", desc: "محدوده‌ای را انتخاب کن که می‌خواهی در آن بگردی.", icon: "📍", bg: "#fff0f3" },
+              { step: "۱", title: "شهرت را انتخاب کن", desc: "کسب‌وکارهای ثبت‌شده در همان شهر را ببین.", icon: "📍", bg: "#fff0f3" },
               { step: "۲", title: "اسمش را جست‌وجو کن", desc: "نام کسب‌وکار یا خدمتی را که لازم داری بنویس؛ مثلاً کافه یا تعمیرکار.", icon: "🔍", bg: "#fff3ec" },
               { step: "۳", title: "اطلاعاتش را ببین", desc: "نشانی و ساعت کاری را بررسی کن؛ بعد تماس بگیر یا مسیر را باز کن.", icon: "📞", bg: "#eaf5ff" },
             ].map((s) => (
