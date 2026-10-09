@@ -16,6 +16,7 @@ export const seedCities: City[] = [
   { id: "rasht", name: "رشت", slug: "rasht", active: true },
   { id: "zahedan", name: "زاهدان", slug: "zahedan", active: true },
   { id: "kerman", name: "کرمان", slug: "kerman", active: true },
+  { id: "hamadan", name: "همدان", slug: "hamadan", active: true },
   { id: "yazd", name: "یزد", slug: "yazd", active: true },
   { id: "ardabil", name: "اردبیل", slug: "ardabil", active: true },
   { id: "bandar-abbas", name: "بندرعباس", slug: "bandar-abbas", active: true },

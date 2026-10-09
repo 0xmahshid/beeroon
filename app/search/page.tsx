@@ -5,7 +5,6 @@ import EmitSearchEvents from "@/components/EmitSearchEvents";
 import SearchFilters from "@/components/SearchFilters";
 import { parseFiltersFromUrl } from "@/lib/search-filters";
 import { getBusinesses, getCityBySlug, getDirectory } from "@/lib/data";
-import { getNeighborhoodBySlug } from "@/lib/neighborhoods";
 import { DEFAULT_CITY_SLUG } from "@/lib/cities";
 import { newUuid } from "@/lib/analytics";
 
@@ -14,7 +13,6 @@ export const metadata = { title: "جست‌وجو | بیرون", description: "�
 type SearchParams = {
   q?: string | string[];
   city?: string | string[];
-  neighborhood?: string | string[];
   sort?: string | string[];
   open?: string | string[];
   verified?: string | string[];
@@ -28,7 +26,6 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
   const params = await searchParams;
   const query = typeof params.q === "string" ? params.q.trim() : "";
   const citySlug = typeof params.city === "string" ? params.city : DEFAULT_CITY_SLUG;
-  const neighborhoodSlug = typeof params.neighborhood === "string" ? params.neighborhood : undefined;
   const searchId = newUuid();
 
   const urlParams = new URLSearchParams();
@@ -41,12 +38,9 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
     getDirectory(),
     getCityBySlug(citySlug),
   ]);
-  const neighborhood = await getNeighborhoodBySlug(city.slug, neighborhoodSlug);
-
   const [businesses, fallbackAll] = await Promise.all([
     getBusinesses({
       citySlug,
-      neighborhoodSlug,
       query,
       sortMode: filters.sort,
       filters: {
@@ -58,14 +52,14 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
         onlineOnly: filters.onlineOnly,
       },
     }),
-    !query && !neighborhoodSlug
+    !query
       ? Promise.resolve([])
       : getBusinesses({ citySlug, sortMode: "relevance" }).then((all) => all.slice(0, 6)),
   ]);
 
   const categoryById = new Map(categories.map((item) => [item.id, item]));
   const subcategoryById = new Map(subcategories.map((item) => [item.id, item]));
-  const placeQuery = "&city=" + encodeURIComponent(city.slug) + (neighborhood ? "&neighborhood=" + encodeURIComponent(neighborhood.slug) : "");
+  const placeQuery = "&city=" + encodeURIComponent(city.slug);
 
   const isFiltered =
     filters.openNow || filters.verifiedOnly || filters.hasPhone || filters.hasDirections || filters.inPersonOnly || filters.onlineOnly;
@@ -79,7 +73,6 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
           searchId={searchId}
           query={query || undefined}
           city={city.slug}
-          neighborhood={neighborhood?.slug}
           resultsCount={businesses.length}
         />
 
@@ -87,7 +80,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
           <div className="pointer-events-none absolute inset-0 opacity-70" style={{ background: "radial-gradient(circle at 100% 0%, rgba(213,31,79,0.08), transparent 55%), radial-gradient(circle at 0% 100%, rgba(243,150,117,0.1), transparent 45%)" }} />
           <div className="relative">
             <div className="flex flex-wrap items-center gap-2 text-[10px]">
-              <span className="inline-flex items-center gap-1 rounded-full bg-[#fff0f3] px-2.5 py-1 font-black text-[#d51f4f]">📍 {city.name}{neighborhood ? " · " + neighborhood.name : ""}</span>
+              <span className="inline-flex items-center gap-1 rounded-full bg-[#fff0f3] px-2.5 py-1 font-black text-[#d51f4f]">📍 {city.name}</span>
               {query && <span className="inline-flex items-center gap-1 rounded-full bg-[#f2f3f6] px-2.5 py-1 font-black text-[#545863]">🔎 «{query}»</span>}
             </div>
             <h1 className="mt-3 text-2xl font-black leading-[1.55] text-[#25252a] sm:text-3xl">
@@ -108,7 +101,6 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
             <form action="/search" method="get" className="mt-5 flex max-w-3xl items-center gap-2 rounded-2xl border border-[#dfe2e7] bg-white p-1.5 shadow-[0_16px_30px_-20px_rgba(32,35,42,.35)] focus-within:border-[#e0a0af]">
               <span className="px-2 text-2xl leading-none text-[#9097a3]">⌕</span>
               <input type="hidden" name="city" value={city.slug} />
-              {neighborhood && <input type="hidden" name="neighborhood" value={neighborhood.slug} />}
               <input
                 name="q"
                 defaultValue={query}
@@ -130,7 +122,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
               {suggestionChips.map((term) => (
                 <Link
                   key={term}
-                  href={"/search?q=" + encodeURIComponent(term) + "&city=" + encodeURIComponent(city.slug) + (neighborhood ? "&neighborhood=" + encodeURIComponent(neighborhood.slug) : "")}
+                  href={"/search?q=" + encodeURIComponent(term) + "&city=" + encodeURIComponent(city.slug)}
                   className="rounded-full border border-[#e3e6eb] bg-white px-3 py-1.5 font-bold transition hover:border-[#e0a0af] hover:text-[#d51f4f]"
                   style={{ minHeight: "32px" }}
                 >
@@ -158,7 +150,6 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
                   searchId={searchId}
                   query={query || undefined}
                   city={city.slug}
-                  neighborhood={neighborhood?.slug}
                 />
               ))}
             </div>
@@ -178,7 +169,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
                     {suggestionChips.slice(0, 4).map((term) => (
                       <Link
                         key={term}
-                        href={"/search?q=" + encodeURIComponent(term) + "&city=" + encodeURIComponent(city.slug) + (neighborhood ? "&neighborhood=" + encodeURIComponent(neighborhood.slug) : "")}
+                        href={"/search?q=" + encodeURIComponent(term) + "&city=" + encodeURIComponent(city.slug)}
                         className="rounded-full bg-[#f6f7fa] px-3 py-1.5 text-[10.5px] font-bold text-[#555a63] hover:bg-[#fff0f3] hover:text-[#d51f4f]"
                       >
                         جست‌وجوی {term}
@@ -194,7 +185,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
                       ثبت کسب‌وکار
                     </Link>
                     <Link
-                      href={"/" + "?city=" + encodeURIComponent(city.slug) + (neighborhood ? "&neighborhood=" + encodeURIComponent(neighborhood.slug) : "")}
+                      href={"/" + "?city=" + encodeURIComponent(city.slug)}
                       className="inline-flex items-center gap-1.5 rounded-xl border border-[#e8eaee] bg-white px-5 py-3 text-xs font-black text-[#555a63] hover:border-[#e0a0af] hover:text-[#d51f4f]"
                       style={{ minHeight: "44px" }}
                     >
@@ -206,9 +197,9 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
             ) : !isFiltered ? (
               <div className="rounded-3xl bg-[#fff6f8] px-6 py-10 text-center">
                 <div className="mx-auto grid h-14 w-14 place-items-center rounded-3xl bg-white text-3xl">👀</div>
-                <h3 className="mt-4 text-lg font-black text-[#32162d]">در این محله کسب‌وکاری ثبت نشده.</h3>
+                <h3 className="mt-4 text-lg font-black text-[#32162d]">در {city.name} کسب‌وکاری ثبت نشده.</h3>
                 <p className="mx-auto mt-2 max-w-xl text-xs leading-7 text-[#69707b] sm:text-sm">
-                  محله‌ی دیگری را انتخاب کن یا کسب‌وکارت را ثبت کن.
+                  شهر دیگری را انتخاب کن یا کسب‌وکارت را ثبت کن.
                 </p>
                 <Link href={"/register-business?city=" + encodeURIComponent(city.slug)} className="mt-5 inline-flex rounded-xl bg-[#d51f4f] px-5 py-3 text-xs font-black text-white">
                   ثبت کسب‌وکار
@@ -240,7 +231,6 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
                       categoryName={subcategoryById.get(b.subcategory_id || "")?.name || categoryById.get(b.category_id)?.name}
                       searchId={searchId}
                       city={city.slug}
-                      neighborhood={neighborhood?.slug}
                     />
                   ))}
                 </div>

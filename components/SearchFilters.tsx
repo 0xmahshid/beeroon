@@ -44,7 +44,6 @@ export default function SearchFilters({ totalResults }: Props) {
 
   const sortButtons: { key: SortMode; label: string; icon: string }[] = [
     { key: "relevance", label: "مرتبط‌ترین", icon: "🎯" },
-    { key: "distance", label: "نزدیک‌ترین", icon: "📍" },
     { key: "newest", label: "جدیدترین", icon: "✨" },
   ];
 

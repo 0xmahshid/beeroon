@@ -7,11 +7,10 @@ type Props = {
   searchId: string;
   query?: string;
   city?: string;
-  neighborhood?: string;
   resultsCount: number;
 };
 
-export default function EmitSearchEvents({ searchId, query, city, neighborhood, resultsCount }: Props) {
+export default function EmitSearchEvents({ searchId, query, city, resultsCount }: Props) {
   const firedRef = useRef(false);
   useEffect(() => {
     if (firedRef.current) return;
@@ -23,7 +22,6 @@ export default function EmitSearchEvents({ searchId, query, city, neighborhood, 
     };
     if (query) common.query = query;
     if (city) common.city = city;
-    if (neighborhood) common.neighborhood = neighborhood;
     void fetch("/api/events", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -36,6 +34,6 @@ export default function EmitSearchEvents({ searchId, query, city, neighborhood, 
         body: JSON.stringify({ eventName: "search_no_results", ...common }),
       }).catch(() => undefined);
     }
-  }, [searchId, query, city, neighborhood, resultsCount]);
+  }, [searchId, query, city, resultsCount]);
   return null;
 }

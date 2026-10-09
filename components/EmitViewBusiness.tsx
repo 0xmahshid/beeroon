@@ -6,10 +6,9 @@ import { getAnonymousSessionId } from "@/lib/analytics";
 type Props = {
   businessId: string;
   city?: string;
-  neighborhood?: string;
 };
 
-export default function EmitViewBusiness({ businessId, city, neighborhood }: Props) {
+export default function EmitViewBusiness({ businessId, city }: Props) {
   const firedRef = useRef(false);
   useEffect(() => {
     if (firedRef.current) return;
@@ -21,12 +20,11 @@ export default function EmitViewBusiness({ businessId, city, neighborhood }: Pro
       businessId,
     };
     if (city) body.city = city;
-    if (neighborhood) body.neighborhood = neighborhood;
     void fetch("/api/events", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     }).catch(() => undefined);
-  }, [businessId, city, neighborhood]);
+  }, [businessId, city]);
   return null;
 }

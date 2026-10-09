@@ -5,15 +5,6 @@ export type City = {
   active: boolean;
 };
 
-export type Neighborhood = {
-  id: string;
-  citySlug: string;
-  name: string;
-  slug: string;
-  centerLat: number;
-  centerLng: number;
-};
-
 export type Category = {
   id: string;
   name: string;
