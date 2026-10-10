@@ -15,6 +15,7 @@ export default function BusinessForm({ categories, cities, initial, businessId }
   const existingImageUrl = getBusinessImageUrl(initial?.image_url, initial?.social_links);
   const [form, setForm] = useState({
     name: initial?.name || "", address: initial?.address || "", phone: initial?.phone || "",
+    neshan: initial?.neshan || "",
     social_links: mergeSocialLinks(initial?.social_links, initial), hours: initial?.hours || "",
     lat: initial?.lat || "", lng: initial?.lng || "", price_tier: initial?.price_tier || 1,
     category_id: initial?.category_id || categories[0]?.id || "", city_id: initial?.city_id || cities[0]?.id || "mashhad",
@@ -43,6 +44,7 @@ export default function BusinessForm({ categories, cities, initial, businessId }
       ...form, social_links: socialLinks,
       instagram: form.social_links.instagram || null, telegram: form.social_links.telegram || null,
       bale: form.social_links.bale || null, whatsapp: form.social_links.whatsapp || null,
+      neshan: form.neshan.trim() || null,
       lat: form.lat ? Number(form.lat) : null, lng: form.lng ? Number(form.lng) : null,
       price_tier: Number(form.price_tier), city_id: form.city_id,
     };
@@ -62,6 +64,9 @@ export default function BusinessForm({ categories, cities, initial, businessId }
       <input placeholder="نشانی" value={form.address} onChange={(e) => set("address", e.target.value)} className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 dark:border-white/10 dark:bg-ink-900" />
       <div className="grid grid-cols-2 gap-3"><input placeholder="عرض جغرافیایی (lat)" value={form.lat} onChange={(e) => set("lat", e.target.value)} className="rounded-xl border border-black/10 bg-white px-3 py-2 dark:border-white/10 dark:bg-ink-900" dir="ltr" /><input placeholder="طول جغرافیایی (lng)" value={form.lng} onChange={(e) => set("lng", e.target.value)} className="rounded-xl border border-black/10 bg-white px-3 py-2 dark:border-white/10 dark:bg-ink-900" dir="ltr" /></div>
       <input placeholder="شماره تماس" value={form.phone} onChange={(e) => set("phone", e.target.value)} className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 dark:border-white/10 dark:bg-ink-900" dir="ltr" />
+      <label className="block text-sm font-medium">لینک مکان در نشان
+        <input type="url" placeholder="https://neshan.org/maps/..." value={form.neshan} onChange={(e) => set("neshan", e.target.value)} className="mt-1 w-full rounded-xl border border-black/10 bg-white px-3 py-2 dark:border-white/10 dark:bg-ink-900" dir="ltr" />
+      </label>
        <input placeholder="ساعت کاری" value={form.hours} onChange={(e) => set("hours", e.target.value)} className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 dark:border-white/10 dark:bg-ink-900" />
       <ImageUploadField value={existingImageUrl} onChange={setImageFile} />
       <SocialFields value={form.social_links} onChange={(value) => set("social_links", value)} />

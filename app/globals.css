@@ -1,4 +1,11 @@
-@import url("https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css");
+@font-face {
+  font-family: "Arad";
+  src: url("/fonts/AradVF.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -16,7 +23,8 @@
 
 * { box-sizing: border-box; scrollbar-width: thin; scrollbar-color: #d8c9ce #fcf8f7; }
 html { scroll-behavior: smooth; }
-body { background: var(--beeroon-canvas); color: var(--beeroon-ink); font-family: "Vazirmatn", sans-serif; -webkit-font-smoothing: antialiased; }
+body, button, input, textarea, select, option { font-family: "Arad", sans-serif; }
+body { background: var(--beeroon-canvas); color: var(--beeroon-ink); -webkit-font-smoothing: antialiased; }
 a, button, input, textarea, select { -webkit-tap-highlight-color: transparent; }
 button:disabled { cursor: wait; }
 input:focus, textarea:focus, select:focus { border-color: var(--beeroon-red) !important; box-shadow: 0 0 0 3px rgba(213, 31, 79, .11); }

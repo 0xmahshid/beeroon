@@ -12,7 +12,11 @@ type Props = {
 
 export default function SocialFields({ value, onChange, accent = "pink" }: Props) {
   const [selected, setSelected] = useState<SocialNetworkKey[]>(() =>
-    SOCIAL_NETWORKS.filter((network) => Boolean(value[network.key])).map((network) => network.key),
+    SOCIAL_NETWORKS
+      .filter((network) =>
+        Boolean(value[network.key]) || network.key === "instagram" || network.key === "telegram_channel",
+      )
+      .map((network) => network.key),
   );
   const focusClass = accent === "green"
     ? "focus:border-[#38a18f] focus:ring-[#38a18f]/10"
@@ -21,7 +25,7 @@ export default function SocialFields({ value, onChange, accent = "pink" }: Props
   function set(key: SocialNetworkKey, next: string) {
     const trimmed = next.trim();
     const updated = { ...value };
-    if (trimmed) updated[key] = next;
+    if (trimmed) updated[key] = trimmed;
     else delete updated[key];
     onChange(updated);
   }
